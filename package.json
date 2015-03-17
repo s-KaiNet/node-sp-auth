@@ -1,0 +1,13 @@
+﻿{
+	"version": "0.0.1",
+	"name": "node-sp-auth",
+	"description": "Contains sample implementation for node js SharePoint authentication (windows for on premise and saml based for SharePoint Online)",
+	"repository": {
+		"type": "git",
+		"url": "git clone https://github.com/s-KaiNet/node-sp-auth.git"
+	},
+	"devDependencies": {		
+		"httpntlm": "1.5.2",
+		"sharepoint": "git://github.com/s-KaiNet/node-sharepoint.git"
+	}
+}
