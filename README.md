@@ -1,2 +1,8 @@
 # node-sp-auth
-Contains sample implementation for node js SharePoint authentication (windows for on premise and SAML based for SharePoint Online)
+  
+
+###Installation:   
+1. Clone the repository
+2. Run `npm install`
+3. Fill required values in the config.json
+4. Run `node sp_windows_auth.js` or `node sp_online_auth.js` to test different auth methods.

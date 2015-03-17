@@ -1,0 +1,14 @@
+{
+	"onprem": {
+		"siteUrl": "http://my.local.sharepoint.com",
+		"username": "[username]",
+		"password": "[password]",
+		"workstation": "[optional workstation]",
+		"domain": "[optional domain]"
+	},
+	"online": {
+		"siteUrl": "https://my.online.sharepoint.com/",
+		"username": "[username]",
+		"password": "[password]"
+	}
+}
