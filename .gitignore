@@ -1,1 +1,11 @@
-**/node_modules
+demo
+node_modules
+reports
+test/integration/config.ts
+test/performance/config.ts
+test/performance/files/*
+/lib
+*.js
+*.js.map
+!gulpfile.js
+!build/**
