@@ -1,7 +1,7 @@
 import * as Promise from 'bluebird';
 import * as _ from 'lodash';
 import * as url from 'url';
-import * as rp from 'request-promise';
+import * as request from 'request-promise';
 import {IncomingMessage} from 'http';
 
 let ntlm: any = require('httpntlm').ntlm;
@@ -24,7 +24,7 @@ export class OnpremiseUserCredentials implements IAuthResolver {
 
       let keepaliveAgent: any = isHttps ? new agent.HttpsAgent() : new agent();
 
-      rp(<any>{
+      request(<any>{
         url: authOptions.siteUrl,
         method: 'GET',
         headers: {

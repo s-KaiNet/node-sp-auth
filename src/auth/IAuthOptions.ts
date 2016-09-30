@@ -8,11 +8,11 @@ export interface IBasicOAuthOption {
   clientId: string;
 }
 
-export interface IAppOnlyOnline extends IUrlOption, IBasicOAuthOption {
+export interface IAddinOnlyOnline extends IUrlOption, IBasicOAuthOption {
   clientSecret: string;
 }
 
-export interface IAppOnlyOnPremise extends IUrlOption, IBasicOAuthOption {
+export interface IAddinOnlyOnPremise extends IUrlOption, IBasicOAuthOption {
   realm: string;
   issuerId: string;
   rsaPrivateKeyPath: string;
@@ -29,14 +29,14 @@ export interface IUserCredentialsOnPremise extends IUserCredentialsOnline {
   workstation?: string;
 }
 
-export type IAuthOptions = IAppOnlyOnline | IAppOnlyOnPremise | IUserCredentialsOnline | IUserCredentialsOnPremise;
+export type IAuthOptions = IAddinOnlyOnline | IAddinOnlyOnPremise | IUserCredentialsOnline | IUserCredentialsOnPremise;
 
-export function isAppOnlyOnline(T: IAuthOptions): T is IAppOnlyOnline {
-  return (<IAppOnlyOnline>T).clientSecret !== undefined;
+export function isAppOnlyOnline(T: IAuthOptions): T is IAddinOnlyOnline {
+  return (<IAddinOnlyOnline>T).clientSecret !== undefined;
 }
 
-export function isAppOnlyOnpremise(T: IAuthOptions): T is IAppOnlyOnPremise {
-  return (<IAppOnlyOnPremise>T).shaThumbprint !== undefined;
+export function isAppOnlyOnpremise(T: IAuthOptions): T is IAddinOnlyOnPremise {
+  return (<IAddinOnlyOnPremise>T).shaThumbprint !== undefined;
 }
 
 export function isUserCredentialsOnline(T: IAuthOptions): T is IUserCredentialsOnline {

@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/150227f1870c71ff602da2cf1281878ed925a44c/jsonwebtoken/jsonwebtoken.d.ts",
+    "raw": "registry:dt/jsonwebtoken#0.0.0+20160720062725",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/150227f1870c71ff602da2cf1281878ed925a44c/jsonwebtoken/jsonwebtoken.d.ts"
+  }
+}

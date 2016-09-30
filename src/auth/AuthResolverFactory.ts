@@ -3,8 +3,8 @@ import { IAuthOptions } from './IAuthOptions';
 import { IAuthResolver } from './IAuthResolver';
 import { OnpremiseUserCredentials } from './resolvers/OnpremiseUserCredentials';
 import { OnlineUserCredentials } from './resolvers/OnlineUserCredentials';
-import { OnlineAppOnly } from './resolvers/OnlineAppOnly';
-import { OnpremiseAppOnly } from './resolvers/OnpremiseAppOnly';
+import { OnlineAddinOnly } from './resolvers/OnlineAddinOnly';
+import { OnpremiseAddinOnly } from './resolvers/OnpremiseAddinOnly';
 import * as authOptions from './IAuthOptions';
 
 export class AuthResolverFactory {
@@ -19,11 +19,11 @@ export class AuthResolverFactory {
     }
 
     if (authOptions.isAppOnlyOnline(options)) {
-      return new OnlineAppOnly();
+      return new OnlineAddinOnly();
     }
 
     if (authOptions.isAppOnlyOnpremise(options)) {
-      return new OnpremiseAppOnly();
+      return new OnpremiseAddinOnly();
     }
 
     throw new Error('Error while resolving authentication class');

@@ -7,7 +7,7 @@ var emitError = !!$.yargs.argv.emitError;
     return gulp.src(['src/**/*.ts', 'test/**/*.ts'])
       .pipe($.tslint({
         configuration: './tslint.json',
-        formatter: "verbose"
+        formatter: 'verbose'
       }))
       .pipe($.tslint.report({
         summarizeFailureOutput: true,

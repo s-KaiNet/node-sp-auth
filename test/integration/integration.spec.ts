@@ -1,57 +1,95 @@
 import { expect } from 'chai';
-import * as request from 'request';
+import * as request from 'request-promise';
 import * as _ from 'lodash';
+import { IncomingMessage } from 'http';
 
-
-import { IUserCredentialsOnline, IUserCredentialsOnPremise } from './../../src/auth/IAuthOptions';
+import { IAuthOptions } from './../../src/auth/IAuthOptions';
 import * as spauth from './../../src/index';
 
+interface ITestInfo {
+  name: string;
+  creds: IAuthOptions;
+}
+
 let config: any = require('./config');
-let onlineCreds: IUserCredentialsOnline = config.onlineCreds;
-let onpremCreds: IUserCredentialsOnPremise = config.onpremCreds;
 
-describe(`sp-request: integration`, () => {
+let tests: ITestInfo[] = [
+  {
+    name: 'on-premise user credentials',
+    creds: config.onpremCreds
+  },
+  {
+    name: 'online user credentials',
+    creds: config.onlineCreds
+  },
+  {
+    name: 'on-premise addin only',
+    creds: config.onpremAddinOnly
+  },
+  {
+    name: 'online addin only',
+    creds: config.onlineAddinOnly
+  }
+];
 
-  xit('should do online', function (done: MochaDone): void {
-    this.timeout(20 * 1000);
+tests.forEach(test => {
+  describe(`node-sp-auth: integration - ${test.name}`, () => {
 
-    spauth.getHeaders(onlineCreds)
-      .then(response => {
-        request.get(<request.OptionsWithUrl>{
-          url: `${onlineCreds.siteUrl}_api/web/lists`,
-          json: true,
-          headers: _.assign({}, response.headers)
-        }, (err, response, data) => {
-          if (err) {
-            done(err);
-            return;
-          }
-          //console.log(data);
+    it('should get list title', function (done: MochaDone): void {
+      this.timeout(20 * 1000);
+      let documentTitle: string = 'Documents';
+
+      spauth.getHeaders(test.creds)
+        .then(response => {
+          let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
+          _.assign(options.headers, response.headers);
+          _.assign(options, response.options);
+          options.url = `${test.creds.siteUrl}_api/web/lists/getbytitle('${documentTitle}')`;
+
+          return request.get(options);
+        })
+        .then((data: IncomingMessage) => {
+          expect((<any>data).body.d.Title).to.equal(documentTitle);
           done();
-        });
-      });
-  });
+        })
+        .catch(done);
+    });
 
-  it('should do onprem', function (done: MochaDone): void {
-    this.timeout(20 * 1000);
+    it('should get Title field', function (done: MochaDone): void {
+      this.timeout(20 * 1000);
+      let fieldTitle: string = 'Title';
 
-    spauth.getHeaders(onpremCreds)
-      .then(response => {
-        let opts: request.OptionsWithUrl = <request.OptionsWithUrl>_.assign({}, response.options);
-        opts.headers = _.assign({}, response.headers);
-        opts.url = `${onpremCreds.siteUrl}_api/web/lists`;
-        opts.json = true;
-        opts['Accept'] = 'application/json;odata=verbose';
-        opts['Content-Type'] = 'application/json;odata=verbose';
-        request.get(opts, (err, response, data) => {
-          if (err) {
-            done(err);
-            return;
-          }
-          console.log(data);
+      spauth.getHeaders(test.creds)
+        .then(response => {
+          let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
+          _.assign(options.headers, response.headers);
+          _.assign(options, response.options);
+          options.url = `${test.creds.siteUrl}_api/web/fields/getbytitle('${fieldTitle}')`;
+
+          return request.get(options);
+        })
+        .then(data => {
+          expect((<any>data).body.d.Title).to.equal(fieldTitle);
           done();
-        });
-      });
+        })
+        .catch(done);
+    });
+
   });
 });
 
+function getDefaultHeaders(): request.RequestPromiseOptions {
+  let options: request.RequestPromiseOptions = <request.RequestPromiseOptions>_.assign({}, <request.RequestPromiseOptions>{
+    headers: {
+      'Accept': 'application/json;odata=verbose',
+      'Content-Type': 'application/json;odata=verbose'
+    },
+    json: true,
+    strictSSL: false,
+    'rejectunauthorized': false,
+    resolveWithFullResponse: true,
+    simple: true
+  });
+
+  return options;
+}
