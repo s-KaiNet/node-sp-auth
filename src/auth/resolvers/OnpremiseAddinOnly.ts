@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as url from 'url';
 
 import { IAuthResolver } from './../IAuthResolver';
-import { IAddinOnlyOnPremise } from './../IAuthOptions';
+import { IOnPremiseAddinCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
 
@@ -14,10 +14,10 @@ export class OnpremiseAddinOnly implements IAuthResolver {
   private static TokenCache: Cache = new Cache();
   private static SharePointServicePrincipal: string = '00000003-0000-0ff1-ce00-000000000000';
 
-  public getAuthHeaders(authOptions: IAddinOnlyOnPremise): Promise<IAuthResponse> {
+  public getAuthHeaders(siteUrl: string, authOptions: IOnPremiseAddinCredentials): Promise<IAuthResponse> {
     return new Promise<IAuthResponse>((resolve, reject) => {
 
-      let sharepointhostname: string = url.parse(authOptions.siteUrl).hostname;
+      let sharepointhostname: string = url.parse(siteUrl).hostname;
       let audience: string = `${OnpremiseAddinOnly.SharePointServicePrincipal}/${sharepointhostname}@${authOptions.realm}`;
       let fullIssuerIdentifier: string = `${authOptions.issuerId}@${authOptions.realm}`;
 

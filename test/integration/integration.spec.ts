@@ -9,6 +9,7 @@ import * as spauth from './../../src/index';
 interface ITestInfo {
   name: string;
   creds: IAuthOptions;
+  url: string;
 }
 
 let config: any = require('./config');
@@ -16,19 +17,23 @@ let config: any = require('./config');
 let tests: ITestInfo[] = [
   {
     name: 'on-premise user credentials',
-    creds: config.onpremCreds
+    creds: config.onpremCreds,
+    url: config.onpremUrl
   },
   {
     name: 'online user credentials',
-    creds: config.onlineCreds
+    creds: config.onlineCreds,
+    url: config.onlineUrl
   },
   {
     name: 'on-premise addin only',
-    creds: config.onpremAddinOnly
+    creds: config.onpremAddinOnly,
+    url: config.onpremUrl
   },
   {
     name: 'online addin only',
-    creds: config.onlineAddinOnly
+    creds: config.onlineAddinOnly,
+    url: config.onlineUrl
   }
 ];
 
@@ -39,12 +44,12 @@ tests.forEach(test => {
       this.timeout(20 * 1000);
       let documentTitle: string = 'Documents';
 
-      spauth.getHeaders(test.creds)
+      spauth.getHeaders(test.url, test.creds)
         .then(response => {
           let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
           _.assign(options.headers, response.headers);
           _.assign(options, response.options);
-          options.url = `${test.creds.siteUrl}_api/web/lists/getbytitle('${documentTitle}')`;
+          options.url = `${test.url}_api/web/lists/getbytitle('${documentTitle}')`;
 
           return request.get(options);
         })
@@ -59,12 +64,12 @@ tests.forEach(test => {
       this.timeout(20 * 1000);
       let fieldTitle: string = 'Title';
 
-      spauth.getHeaders(test.creds)
+      spauth.getHeaders(test.url, test.creds)
         .then(response => {
           let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
           _.assign(options.headers, response.headers);
           _.assign(options, response.options);
-          options.url = `${test.creds.siteUrl}_api/web/fields/getbytitle('${fieldTitle}')`;
+          options.url = `${test.url}_api/web/fields/getbytitle('${fieldTitle}')`;
 
           return request.get(options);
         })

@@ -8,13 +8,13 @@ import { OnpremiseAddinOnly } from './resolvers/OnpremiseAddinOnly';
 import * as authOptions from './IAuthOptions';
 
 export class AuthResolverFactory {
-  public resolve(options: IAuthOptions): IAuthResolver {
+  public resolve(siteUrl: string, options: IAuthOptions): IAuthResolver {
 
-    if (authOptions.isUserCredentialsOnpremise(options)) {
+    if (authOptions.isUserCredentialsOnpremise(siteUrl, options)) {
       return new OnpremiseUserCredentials();
     }
 
-    if (authOptions.isUserCredentialsOnline(options)) {
+    if (authOptions.isUserCredentialsOnline(siteUrl, options)) {
       return new OnlineUserCredentials();
     }
 

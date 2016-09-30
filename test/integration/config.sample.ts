@@ -1,7 +1,6 @@
-import {IUserCredentialsOnline} from './../../src/auth/IAuthOptions';
+import {IUserCredentials} from './../../src/auth/IAuthOptions';
 
-export var onlineCreds: IUserCredentialsOnline = {
+export var onlineCreds: IUserCredentials = {
   username: 'username',
-  password: 'password',
-  siteUrl: 'siteUrl'
+  password: 'password'
 };

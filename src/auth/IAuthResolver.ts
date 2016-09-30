@@ -4,5 +4,5 @@ import {IAuthResponse} from './IAuthResponse';
 import {IAuthOptions} from './IAuthOptions';
 
 export interface IAuthResolver {
-  getAuthHeaders: (authOptions: IAuthOptions) => Promise<IAuthResponse>;
+  getAuthHeaders: (siteUrl: string, authOptions: IAuthOptions) => Promise<IAuthResponse>;
 }

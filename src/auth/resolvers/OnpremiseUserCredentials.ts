@@ -8,24 +8,24 @@ let ntlm: any = require('httpntlm').ntlm;
 let agent: any = require('agentkeepalive');
 
 import { IAuthResolver } from './../IAuthResolver';
-import { IUserCredentialsOnPremise } from './../IAuthOptions';
+import { IOnpremiseUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 
 export class OnpremiseUserCredentials implements IAuthResolver {
-  public getAuthHeaders(authOptions: IUserCredentialsOnPremise): Promise<IAuthResponse> {
+  public getAuthHeaders(siteUrl: string, authOptions: IOnpremiseUserCredentials): Promise<IAuthResponse> {
     return new Promise<IAuthResponse>((resolve, reject) => {
       _.defaults(authOptions, { domain: '', workstation: '' });
       let ntlmOptions: any = _.assign({}, authOptions);
-      ntlmOptions.url = authOptions.siteUrl;
+      ntlmOptions.url = siteUrl;
 
       let type1msg: any = ntlm.createType1Message(ntlmOptions);
 
-      let isHttps: boolean = url.parse(authOptions.siteUrl).protocol === 'https:';
+      let isHttps: boolean = url.parse(siteUrl).protocol === 'https:';
 
       let keepaliveAgent: any = isHttps ? new agent.HttpsAgent() : new agent();
 
       request(<any>{
-        url: authOptions.siteUrl,
+        url: siteUrl,
         method: 'GET',
         headers: {
           'Connection': 'keep-alive',

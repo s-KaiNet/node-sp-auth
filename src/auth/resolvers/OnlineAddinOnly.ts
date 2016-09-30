@@ -4,7 +4,7 @@ import { IncomingMessage } from 'http';
 import * as url from 'url';
 
 import { IAuthResolver } from './../IAuthResolver';
-import { IAddinOnlyOnline } from './../IAuthOptions';
+import { IOnlineAddinCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
 
@@ -13,9 +13,9 @@ export class OnlineAddinOnly implements IAuthResolver {
   private static TokenCache: Cache = new Cache();
   private static SharePointServicePrincipal: string = '00000003-0000-0ff1-ce00-000000000000';
 
-  public getAuthHeaders(authOptions: IAddinOnlyOnline): Promise<IAuthResponse> {
+  public getAuthHeaders(siteUrl: string, authOptions: IOnlineAddinCredentials): Promise<IAuthResponse> {
     return new Promise<IAuthResponse>((resolve, reject) => {
-      let sharepointhostname: string = url.parse(authOptions.siteUrl).hostname;
+      let sharepointhostname: string = url.parse(siteUrl).hostname;
       let cacheKey: string = authOptions.clientSecret;
 
       let cachedToken: string = OnlineAddinOnly.TokenCache.get<string>(cacheKey);
@@ -28,7 +28,7 @@ export class OnlineAddinOnly implements IAuthResolver {
         });
         return;
       }
-      this.getRealm(authOptions.siteUrl)
+      this.getRealm(siteUrl)
         .then(realm => {
           let resource: string = `${OnlineAddinOnly.SharePointServicePrincipal}/${sharepointhostname}@${realm}`;
           let fullClientId: string = `${authOptions.clientId}@${realm}`;

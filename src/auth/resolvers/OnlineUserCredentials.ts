@@ -6,7 +6,7 @@ import * as util from 'util';
 let sp: any = require('node-spoauth');
 
 import { IAuthResolver } from './../IAuthResolver';
-import { IUserCredentialsOnline } from './../IAuthOptions';
+import { IUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
 
@@ -14,9 +14,9 @@ export class OnlineUserCredentials implements IAuthResolver {
 
   private static _cookieCache: Cache = new Cache();
 
-  public getAuthHeaders(authOptions: IUserCredentialsOnline): Promise<IAuthResponse> {
+  public getAuthHeaders(siteUrl: string, authOptions: IUserCredentials): Promise<IAuthResponse> {
     return new Promise<IAuthResponse>((resolve, reject) => {
-      let host: string = url.parse(authOptions.siteUrl).host;
+      let host: string = url.parse(siteUrl).host;
       let cacheKey: string = util.format('%s@%s', host, authOptions.username);
       let cachedCookie: string = OnlineUserCredentials._cookieCache.get<string>(cacheKey);
 
@@ -30,7 +30,7 @@ export class OnlineUserCredentials implements IAuthResolver {
         return;
       }
 
-      let service: any = new sp.RestService(authOptions.siteUrl);
+      let service: any = new sp.RestService(siteUrl);
 
       let signin: (username: string, password: string) => Promise<any> =
         Promise.promisify<any, string, string>(service.signin, { context: service });
