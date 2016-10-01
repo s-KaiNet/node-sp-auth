@@ -2,7 +2,7 @@ import * as Promise from 'bluebird';
 import * as _ from 'lodash';
 import * as url from 'url';
 import * as request from 'request-promise';
-import {IncomingMessage} from 'http';
+import { IncomingMessage } from 'http';
 
 let ntlm: any = require('httpntlm').ntlm;
 let agent: any = require('agentkeepalive');
@@ -12,20 +12,23 @@ import { IOnpremiseUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 
 export class OnpremiseUserCredentials implements IAuthResolver {
-  public getAuthHeaders(siteUrl: string, authOptions: IOnpremiseUserCredentials): Promise<IAuthResponse> {
+
+  constructor(private _siteUrl: string, private _authOptions: IOnpremiseUserCredentials) { }
+
+  public getAuth(): Promise<IAuthResponse> {
     return new Promise<IAuthResponse>((resolve, reject) => {
-      _.defaults(authOptions, { domain: '', workstation: '' });
-      let ntlmOptions: any = _.assign({}, authOptions);
-      ntlmOptions.url = siteUrl;
+      _.defaults(this._authOptions, { domain: '', workstation: '' });
+      let ntlmOptions: any = _.assign({}, this._authOptions);
+      ntlmOptions.url = this._siteUrl;
 
       let type1msg: any = ntlm.createType1Message(ntlmOptions);
 
-      let isHttps: boolean = url.parse(siteUrl).protocol === 'https:';
+      let isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
 
       let keepaliveAgent: any = isHttps ? new agent.HttpsAgent() : new agent();
 
       request(<any>{
-        url: siteUrl,
+        url: this._siteUrl,
         method: 'GET',
         headers: {
           'Connection': 'keep-alive',

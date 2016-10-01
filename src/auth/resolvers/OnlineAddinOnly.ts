@@ -13,10 +13,12 @@ export class OnlineAddinOnly implements IAuthResolver {
   private static TokenCache: Cache = new Cache();
   private static SharePointServicePrincipal: string = '00000003-0000-0ff1-ce00-000000000000';
 
-  public getAuthHeaders(siteUrl: string, authOptions: IOnlineAddinCredentials): Promise<IAuthResponse> {
+  constructor(private _siteUrl: string, private _authOptions: IOnlineAddinCredentials) { }
+
+  public getAuth(): Promise<IAuthResponse> {
     return new Promise<IAuthResponse>((resolve, reject) => {
-      let sharepointhostname: string = url.parse(siteUrl).hostname;
-      let cacheKey: string = authOptions.clientSecret;
+      let sharepointhostname: string = url.parse(this._siteUrl).hostname;
+      let cacheKey: string = this._authOptions.clientSecret;
 
       let cachedToken: string = OnlineAddinOnly.TokenCache.get<string>(cacheKey);
 
@@ -28,10 +30,10 @@ export class OnlineAddinOnly implements IAuthResolver {
         });
         return;
       }
-      this.getRealm(siteUrl)
+      this.getRealm(this._siteUrl)
         .then(realm => {
           let resource: string = `${OnlineAddinOnly.SharePointServicePrincipal}/${sharepointhostname}@${realm}`;
-          let fullClientId: string = `${authOptions.clientId}@${realm}`;
+          let fullClientId: string = `${this._authOptions.clientId}@${realm}`;
 
           this.getAuthUrl(realm)
             .then(authUrl => {
@@ -40,7 +42,7 @@ export class OnlineAddinOnly implements IAuthResolver {
                 form: {
                   'grant_type': 'client_credentials',
                   'client_id': fullClientId,
-                  'client_secret': authOptions.clientSecret,
+                  'client_secret': this._authOptions.clientSecret,
                   'resource': resource
                 }
               });

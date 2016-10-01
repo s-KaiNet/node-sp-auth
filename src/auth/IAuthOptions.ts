@@ -27,11 +27,11 @@ export interface IOnpremiseUserCredentials extends IUserCredentials {
 
 export type IAuthOptions = IOnlineAddinCredentials | IOnPremiseAddinCredentials | IUserCredentials | IOnpremiseUserCredentials;
 
-export function isAppOnlyOnline(T: IAuthOptions): T is IOnlineAddinCredentials {
+export function isAddinOnlyOnline(T: IAuthOptions): T is IOnlineAddinCredentials {
   return (<IOnlineAddinCredentials>T).clientSecret !== undefined;
 }
 
-export function isAppOnlyOnpremise(T: IAuthOptions): T is IOnPremiseAddinCredentials {
+export function isAddinOnlyOnpremise(T: IAuthOptions): T is IOnPremiseAddinCredentials {
   return (<IOnPremiseAddinCredentials>T).shaThumbprint !== undefined;
 }
 

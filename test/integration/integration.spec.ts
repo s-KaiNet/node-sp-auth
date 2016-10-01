@@ -44,7 +44,7 @@ tests.forEach(test => {
       this.timeout(20 * 1000);
       let documentTitle: string = 'Documents';
 
-      spauth.getHeaders(test.url, test.creds)
+      spauth.getAuth(test.url, test.creds)
         .then(response => {
           let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
           _.assign(options.headers, response.headers);
@@ -64,7 +64,7 @@ tests.forEach(test => {
       this.timeout(20 * 1000);
       let fieldTitle: string = 'Title';
 
-      spauth.getHeaders(test.url, test.creds)
+      spauth.getAuth(test.url, test.creds)
         .then(response => {
           let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
           _.assign(options.headers, response.headers);

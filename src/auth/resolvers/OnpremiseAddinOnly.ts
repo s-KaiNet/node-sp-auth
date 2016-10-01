@@ -14,15 +14,17 @@ export class OnpremiseAddinOnly implements IAuthResolver {
   private static TokenCache: Cache = new Cache();
   private static SharePointServicePrincipal: string = '00000003-0000-0ff1-ce00-000000000000';
 
-  public getAuthHeaders(siteUrl: string, authOptions: IOnPremiseAddinCredentials): Promise<IAuthResponse> {
+  constructor(private _siteUrl: string, private _authOptions: IOnPremiseAddinCredentials) { }
+
+  public getAuth(): Promise<IAuthResponse> {
     return new Promise<IAuthResponse>((resolve, reject) => {
 
-      let sharepointhostname: string = url.parse(siteUrl).hostname;
-      let audience: string = `${OnpremiseAddinOnly.SharePointServicePrincipal}/${sharepointhostname}@${authOptions.realm}`;
-      let fullIssuerIdentifier: string = `${authOptions.issuerId}@${authOptions.realm}`;
+      let sharepointhostname: string = url.parse(this._siteUrl).hostname;
+      let audience: string = `${OnpremiseAddinOnly.SharePointServicePrincipal}/${sharepointhostname}@${this._authOptions.realm}`;
+      let fullIssuerIdentifier: string = `${this._authOptions.issuerId}@${this._authOptions.realm}`;
 
       let options: any = {
-        key: fs.readFileSync(authOptions.rsaPrivateKeyPath)
+        key: fs.readFileSync(this._authOptions.rsaPrivateKeyPath)
       };
 
       let dateref: number = parseInt(((new Date()).getTime() / 1000).toString(), 10);
@@ -30,13 +32,13 @@ export class OnpremiseAddinOnly implements IAuthResolver {
       let rs256: any = {
         typ: 'JWT',
         alg: 'RS256',
-        x5t: authOptions.shaThumbprint
+        x5t: this._authOptions.shaThumbprint
       };
 
       let actortoken: any = {
         aud: audience,
         iss: fullIssuerIdentifier,
-        nameid: authOptions.clientId + '@' + authOptions.realm,
+        nameid: this._authOptions.clientId + '@' + this._authOptions.realm,
         nbf: (dateref - OnpremiseAddinOnly.HighTrustTokenLifeTime).toString(),
         exp: (dateref + OnpremiseAddinOnly.HighTrustTokenLifeTime).toString(),
         trustedfordelegation: true

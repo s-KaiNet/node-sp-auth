@@ -8,22 +8,22 @@ import { OnpremiseAddinOnly } from './resolvers/OnpremiseAddinOnly';
 import * as authOptions from './IAuthOptions';
 
 export class AuthResolverFactory {
-  public resolve(siteUrl: string, options: IAuthOptions): IAuthResolver {
+  public static resolve(siteUrl: string, options: IAuthOptions): IAuthResolver {
 
     if (authOptions.isUserCredentialsOnpremise(siteUrl, options)) {
-      return new OnpremiseUserCredentials();
+      return new OnpremiseUserCredentials(siteUrl, options);
     }
 
     if (authOptions.isUserCredentialsOnline(siteUrl, options)) {
-      return new OnlineUserCredentials();
+      return new OnlineUserCredentials(siteUrl, options);
     }
 
-    if (authOptions.isAppOnlyOnline(options)) {
-      return new OnlineAddinOnly();
+    if (authOptions.isAddinOnlyOnline(options)) {
+      return new OnlineAddinOnly(siteUrl, options);
     }
 
-    if (authOptions.isAppOnlyOnpremise(options)) {
-      return new OnpremiseAddinOnly();
+    if (authOptions.isAddinOnlyOnpremise(options)) {
+      return new OnpremiseAddinOnly(siteUrl, options);
     }
 
     throw new Error('Error while resolving authentication class');

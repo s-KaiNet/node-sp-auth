@@ -14,10 +14,12 @@ export class OnlineUserCredentials implements IAuthResolver {
 
   private static _cookieCache: Cache = new Cache();
 
-  public getAuthHeaders(siteUrl: string, authOptions: IUserCredentials): Promise<IAuthResponse> {
+  constructor(private _siteUrl: string, private _authOptions: IUserCredentials) { }
+
+  public getAuth(): Promise<IAuthResponse> {
     return new Promise<IAuthResponse>((resolve, reject) => {
-      let host: string = url.parse(siteUrl).host;
-      let cacheKey: string = util.format('%s@%s', host, authOptions.username);
+      let host: string = url.parse(this._siteUrl).host;
+      let cacheKey: string = util.format('%s@%s', host, this._authOptions.username);
       let cachedCookie: string = OnlineUserCredentials._cookieCache.get<string>(cacheKey);
 
       if (cachedCookie) {
@@ -30,15 +32,15 @@ export class OnlineUserCredentials implements IAuthResolver {
         return;
       }
 
-      let service: any = new sp.RestService(siteUrl);
+      let service: any = new sp.RestService(this._siteUrl);
 
       let signin: (username: string, password: string) => Promise<any> =
         Promise.promisify<any, string, string>(service.signin, { context: service });
 
-      authOptions.username = authOptions.username.replace(/&amp;/g, '&').replace(/&/g, '&amp;');
-      authOptions.password = authOptions.password.replace(/&amp;/g, '&').replace(/&/g, '&amp;');
+      this._authOptions.username = this._authOptions.username.replace(/&amp;/g, '&').replace(/&/g, '&amp;');
+      this._authOptions.password = this._authOptions.password.replace(/&amp;/g, '&').replace(/&/g, '&amp;');
 
-      signin(authOptions.username, authOptions.password)
+      signin(this._authOptions.username, this._authOptions.password)
         .then((auth) => {
           let cookie: string = `FedAuth=${auth.FedAuth}; rtFa=${auth.rtFa}`;
           OnlineUserCredentials._cookieCache.set(cacheKey, cookie, 30 * 60);
