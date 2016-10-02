@@ -18,7 +18,7 @@ let tests: ITestInfo[] = [
   {
     name: 'on-premise user credentials',
     creds: config.onpremCreds,
-    url: config.onpremUrl
+    url: config.onpremNtlmUrl
   },
   {
     name: 'online user credentials',
@@ -28,7 +28,7 @@ let tests: ITestInfo[] = [
   {
     name: 'on-premise addin only',
     creds: config.onpremAddinOnly,
-    url: config.onpremUrl
+    url: config.onpremAdfsUrl
   },
   {
     name: 'online addin only',
@@ -41,7 +41,7 @@ tests.forEach(test => {
   describe(`node-sp-auth: integration - ${test.name}`, () => {
 
     it('should get list title', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(30 * 1000);
       let documentTitle: string = 'Documents';
 
       spauth.getAuth(test.url, test.creds)
@@ -61,7 +61,7 @@ tests.forEach(test => {
     });
 
     it('should get Title field', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(30 * 1000);
       let fieldTitle: string = 'Title';
 
       spauth.getAuth(test.url, test.creds)

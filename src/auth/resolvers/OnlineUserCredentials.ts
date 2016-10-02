@@ -25,8 +25,7 @@ export class OnlineUserCredentials implements IAuthResolver {
       if (cachedCookie) {
         resolve({
           headers: {
-            'Cookie': cachedCookie,
-            'secureOptions': consts.SSL_OP_NO_TLSv1_2
+            'Cookie': cachedCookie
           }
         });
         return;

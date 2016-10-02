@@ -1,9 +1,9 @@
-# node-sp-auth - nodejs SharePoint unattended http authentication
+# node-sp-auth - nodejs to SharePoint unattended http authentication
 [![NPM](https://nodei.co/npm/node-sp-auth.png?mini=true)](https://nodei.co/npm/node-sp-auth/)
 
 [![npm version](https://badge.fury.io/js/node-sp-auth.svg)](https://badge.fury.io/js/node-sp-auth)
 
-`node-sp-auth` allows you to perform SharePoint unattended http authentication with nodejs using different authentication techniques.  
+`node-sp-auth` allows you to perform SharePoint unattended (without user interaction) http authentication with nodejs using different authentication techniques. `node-sp-auth` also takes care about caching authentication data for performance (no need for you to think about how long authentication will be available, that's a task for `node-sp-auth`, as soon as authentication will be expired, `node-sp-auth` will renew it internally).  
 Versions supported:
  * SharePoint 2013, 2016
  * SharePoint Online
@@ -56,7 +56,7 @@ authOptions
 ## API:
 ### getAuth(url, credentialOptions)
 #### return value:
-Promise, resolving into object with following properties:
+Promise resolving into object with following properties:
  - `headers` - http headers (normally contain `Authorization` header, may contain any other heraders as well)
  - `options` - any additional options you may need to include for succesful request. For example, in case of on premise user credentials authentication, you need to set `agent` property on corresponding http client
 
@@ -67,26 +67,18 @@ Promise, resolving into object with following properties:
  Possible values for `credentialOptions` (depending on authentication strategy):
 
  - SharePoint on premise (2013, 2016):
-    - Addin only permissions:
-      - `clientId` - required string, client id obtained when registering the addin
-      - `issuerId` - required string, issuer id you provided when registering the addin
-      - `realm` - required string, actually this is your farm id, you can get realm by running `Get-SPFarm | Select Id` or `Get-SPAuthenticationRealm`, value will be the same
-      - `rsaPrivateKeyPath` - required string, path to your private part of .pfx certificate you created when registering the addin
-      - `shaThumbprint` - required string, sha thumbprint of the .pfs certificate
-    - User credentials through the http ntlm handshake:
-      - `username` - required string, username
-      - `password` - required string, password
-      - `domain` - optional string, domain. Be aware, that either domain or workstation should be provided
-      - `workstation` - optional string, workstation. Be aware, that either domain or workstation should be provided
- - SharePoint Online: 
-   - Addin only permissions:
-     - `clientId` - required string, client id obtained when registering the addin
-     - `clientSecret` - required string, client secret obtained when registering the addin
-   - SAML based with user credentials
-     - `username` - required string, username, for example `[your user]@[your company].onmicrosoft.com`
-     - `password` - required string, password
+    - Addin only permissions:  
+      `clientId`, `issuerId`, `realm`, `rsaPrivateKeyPath`, `shaThumbprint`
+    - User credentials through the http ntlm handshake:  
+      `username`, `password`, `domain`, `workstation`  
 
-Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) to read about how you can configure your environment in order to use any of aforementioned authentication options.
+ - SharePoint Online: 
+   - Addin only permissions:  
+     `clientId`, `clientSecret`
+   - SAML based with user credentials  
+     `username` , `password`
+
+Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) to see how you can configure your environment in order to use any of this authentication options.
 
 ## Examples
 
