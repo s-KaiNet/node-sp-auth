@@ -66,15 +66,15 @@ Promise resolving into object with following properties:
 Possible values for `credentialOptions` (depending on authentication strategy):
 
  - SharePoint on premise (2013, 2016):
-    - [Addin only permissions:](../../wiki/SharePoint%20on-premise%20addin%20only%20authentication)  
+    - [Addin only permissions:](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20on-premise%20addin%20only%20authentication)  
       `clientId`, `issuerId`, `realm`, `rsaPrivateKeyPath`, `shaThumbprint`
-    - [User credentials through the http ntlm handshake:](../../wiki/SharePoint%20on-premise%20user%20credentials%20authentication)  
+    - [User credentials through the http ntlm handshake:](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20on-premise%20user%20credentials%20authentication)  
       `username`, `password`, `domain`, `workstation`  
 
  - SharePoint Online: 
-   - [Addin only permissions:](../../wiki/SharePoint%20Online%20addin%20only%20authentication)  
+   - [Addin only permissions:](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20addin%20only%20authentication)  
      `clientId`, `clientSecret`
-   - [SAML based with user credentials](../../wiki/SharePoint%20Online%20user%20credentials%20authentication)  
+   - [SAML based with user credentials](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20user%20credentials%20authentication)  
      `username` , `password`
 
 Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) to see how you can configure your environment in order to use any of this authentication options.
