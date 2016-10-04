@@ -63,7 +63,7 @@ Promise resolving into object with following properties:
  - `url` - string, url to SharePoint site, `https://sp2013/sites/dev/` or `https:/[your tenant].sharepoint.com/sites/dev/`
  - `credentialOptions` - object in a form of key-value. Each authentication option requires predefined credential object, depending on authentication type. Based on credentials provided, `node-sp-auth` automatically determines which authentication strategy to use (strategies listed in the top of the readme file).  
  
- Possible values for `credentialOptions` (depending on authentication strategy):
+Possible values for `credentialOptions` (depending on authentication strategy):
 
  - SharePoint on premise (2013, 2016):
     - [Addin only permissions:](../../wiki/SharePoint%20on-premise%20addin%20only%20authentication)  
