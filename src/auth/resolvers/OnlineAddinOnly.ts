@@ -7,63 +7,58 @@ import { IAuthResolver } from './../IAuthResolver';
 import { IOnlineAddinCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
+import {UrlHelper} from './../../utils/UrlHelper';
+import * as consts from './../../Consts';
 
 export class OnlineAddinOnly implements IAuthResolver {
 
   private static TokenCache: Cache = new Cache();
-  private static SharePointServicePrincipal: string = '00000003-0000-0ff1-ce00-000000000000';
 
   constructor(private _siteUrl: string, private _authOptions: IOnlineAddinCredentials) { }
 
   public getAuth(): Promise<IAuthResponse> {
-    return new Promise<IAuthResponse>((resolve, reject) => {
-      let sharepointhostname: string = url.parse(this._siteUrl).hostname;
-      let cacheKey: string = this._authOptions.clientSecret;
+    let sharepointhostname: string = url.parse(this._siteUrl).hostname;
+    let cacheKey: string = this._authOptions.clientSecret;
 
-      let cachedToken: string = OnlineAddinOnly.TokenCache.get<string>(cacheKey);
+    let cachedToken: string = OnlineAddinOnly.TokenCache.get<string>(cacheKey);
 
-      if (cachedToken) {
-        resolve({
-          headers: {
-            'Authorization': `Bearer ${cachedToken}`
-          }
-        });
-        return;
-      }
-      this.getRealm(this._siteUrl)
-        .then(realm => {
-          let resource: string = `${OnlineAddinOnly.SharePointServicePrincipal}/${sharepointhostname}@${realm}`;
-          let fullClientId: string = `${this._authOptions.clientId}@${realm}`;
+    if (cachedToken) {
+      return Promise.resolve({
+        headers: {
+          'Authorization': `Bearer ${cachedToken}`
+        }
+      });
+    }
 
-          this.getAuthUrl(realm)
-            .then(authUrl => {
-              return request.post(authUrl, {
-                json: true,
-                form: {
-                  'grant_type': 'client_credentials',
-                  'client_id': fullClientId,
-                  'client_secret': this._authOptions.clientSecret,
-                  'resource': resource
-                }
-              });
-            })
-            .then(data => {
-              let expiration: number = parseInt(data.expires_in, 10);
-              OnlineAddinOnly.TokenCache.set(cacheKey, data.access_token, expiration - 60);
+    return this.getRealm(this._siteUrl)
+      .then(realm => {
+        let resource: string = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${realm}`;
+        let fullClientId: string = `${this._authOptions.clientId}@${realm}`;
 
-              resolve({
-                headers: {
-                  'Authorization': `Bearer ${data.access_token}`
-                }
-              });
+        return this.getAuthUrl(realm)
+          .then(authUrl => {
+            return request.post(authUrl, {
+              json: true,
+              form: {
+                'grant_type': 'client_credentials',
+                'client_id': fullClientId,
+                'client_secret': this._authOptions.clientSecret,
+                'resource': resource
+              }
             });
-        });
-    });
-  };
+          })
+          .then(data => {
+            let expiration: number = parseInt(data.expires_in, 10);
+            OnlineAddinOnly.TokenCache.set(cacheKey, data.access_token, expiration - 60);
 
-  public removeTrailingSlash(url: string): string {
-    return url.replace(/(\/$)|(\\$)/, '');
-  }
+            return {
+              headers: {
+                'Authorization': `Bearer ${data.access_token}`
+              }
+            };
+          });
+      });
+  };
 
   private getAuthUrl(realm: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
@@ -82,20 +77,18 @@ export class OnlineAddinOnly implements IAuthResolver {
   }
 
   private getRealm(siteUrl: string): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      request.post(`${this.removeTrailingSlash(siteUrl)}/vti_bin/client.svc`, {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer '
-        },
-        resolveWithFullResponse: true,
-        simple: false
-      })
-        .then((data: IncomingMessage) => {
-          let header: string = data.headers['www-authenticate'];
-          let index: number = header.indexOf('Bearer realm="');
-          resolve(header.substring(index + 14, index + 50));
-        });
-    });
+    return <Promise<string>>request.post(`${UrlHelper.removeTrailingSlash(siteUrl)}/vti_bin/client.svc`, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer '
+      },
+      resolveWithFullResponse: true,
+      simple: false
+    })
+      .then((data: IncomingMessage) => {
+        let header: string = data.headers['www-authenticate'];
+        let index: number = header.indexOf('Bearer realm="');
+        return header.substring(index + 14, index + 50);
+      });
   }
 }

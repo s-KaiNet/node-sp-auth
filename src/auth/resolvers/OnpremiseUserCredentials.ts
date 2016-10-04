@@ -16,50 +16,46 @@ export class OnpremiseUserCredentials implements IAuthResolver {
   constructor(private _siteUrl: string, private _authOptions: IOnpremiseUserCredentials) { }
 
   public getAuth(): Promise<IAuthResponse> {
-    return new Promise<IAuthResponse>((resolve, reject) => {
-      _.defaults(this._authOptions, { domain: '', workstation: '' });
-      let ntlmOptions: any = _.assign({}, this._authOptions);
-      ntlmOptions.url = this._siteUrl;
 
-      let type1msg: any = ntlm.createType1Message(ntlmOptions);
+    _.defaults(this._authOptions, { domain: '', workstation: '' });
+    let ntlmOptions: any = _.assign({}, this._authOptions);
+    ntlmOptions.url = this._siteUrl;
 
-      let isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
+    let type1msg: any = ntlm.createType1Message(ntlmOptions);
 
-      let keepaliveAgent: any = isHttps ? new agent.HttpsAgent() : new agent();
+    let isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
 
-      request(<any>{
-        url: this._siteUrl,
-        method: 'GET',
-        headers: {
-          'Connection': 'keep-alive',
-          'Authorization': type1msg,
-          'Accept': 'application/json;odata=verbose'
-        },
-        agent: keepaliveAgent,
-        resolveWithFullResponse: true,
-        simple: false,
-        rejectUnauthorized: false,
-        strictSSL: false
-      })
-        .then((response: IncomingMessage) => {
-          let type2msg: any = ntlm.parseType2Message(response.headers['www-authenticate']);
-          let type3msg: any = ntlm.createType3Message(type2msg, ntlmOptions);
+    let keepaliveAgent: any = isHttps ? new agent.HttpsAgent() : new agent();
 
-          resolve({
-            headers: {
-              'Connection': 'Close',
-              'Authorization': type3msg
-            },
-            options: {
-              strictSSL: false,
-              agent: keepaliveAgent,
-              rejectUnauthorized: false
-            }
-          });
+    return <Promise<IAuthResponse>>request(<any>{
+      url: this._siteUrl,
+      method: 'GET',
+      headers: {
+        'Connection': 'keep-alive',
+        'Authorization': type1msg,
+        'Accept': 'application/json;odata=verbose'
+      },
+      agent: keepaliveAgent,
+      resolveWithFullResponse: true,
+      simple: false,
+      rejectUnauthorized: false,
+      strictSSL: false
+    })
+      .then((response: IncomingMessage) => {
+        let type2msg: any = ntlm.parseType2Message(response.headers['www-authenticate']);
+        let type3msg: any = ntlm.createType3Message(type2msg, ntlmOptions);
 
-          return null;
-        })
-        .catch(reject);
-    });
+        return {
+          headers: {
+            'Connection': 'Close',
+            'Authorization': type3msg
+          },
+          options: {
+            strictSSL: false,
+            agent: keepaliveAgent,
+            rejectUnauthorized: false
+          }
+        };
+      });
   };
 }

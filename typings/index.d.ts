@@ -1,3 +1,4 @@
+/// <reference path="globals/cookie/index.d.ts" />
 /// <reference path="globals/es6-promise/index.d.ts" />
 /// <reference path="globals/jsonwebtoken/index.d.ts" />
 /// <reference path="globals/mocha/index.d.ts" />

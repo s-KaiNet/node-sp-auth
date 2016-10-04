@@ -7,20 +7,17 @@ import { IAuthResolver } from './../IAuthResolver';
 import { IOnPremiseAddinCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
+import * as consts from './../../Consts';
 
 export class OnpremiseAddinOnly implements IAuthResolver {
-
-  private static HighTrustTokenLifeTime: number = 12 * 60 * 60;
   private static TokenCache: Cache = new Cache();
-  private static SharePointServicePrincipal: string = '00000003-0000-0ff1-ce00-000000000000';
 
   constructor(private _siteUrl: string, private _authOptions: IOnPremiseAddinCredentials) { }
 
   public getAuth(): Promise<IAuthResponse> {
-    return new Promise<IAuthResponse>((resolve, reject) => {
 
       let sharepointhostname: string = url.parse(this._siteUrl).hostname;
-      let audience: string = `${OnpremiseAddinOnly.SharePointServicePrincipal}/${sharepointhostname}@${this._authOptions.realm}`;
+      let audience: string = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${this._authOptions.realm}`;
       let fullIssuerIdentifier: string = `${this._authOptions.issuerId}@${this._authOptions.realm}`;
 
       let options: any = {
@@ -39,8 +36,8 @@ export class OnpremiseAddinOnly implements IAuthResolver {
         aud: audience,
         iss: fullIssuerIdentifier,
         nameid: this._authOptions.clientId + '@' + this._authOptions.realm,
-        nbf: (dateref - OnpremiseAddinOnly.HighTrustTokenLifeTime).toString(),
-        exp: (dateref + OnpremiseAddinOnly.HighTrustTokenLifeTime).toString(),
+        nbf: (dateref - consts.HighTrustTokenLifeTime).toString(),
+        exp: (dateref + consts.HighTrustTokenLifeTime).toString(),
         trustedfordelegation: true
       };
 
@@ -52,15 +49,13 @@ export class OnpremiseAddinOnly implements IAuthResolver {
         accessToken = cachedToken;
       } else {
         accessToken = jwt.sign(actortoken, options.key, { header: rs256 });
-        OnpremiseAddinOnly.TokenCache.set(cacheKey, accessToken, OnpremiseAddinOnly.HighTrustTokenLifeTime - 60);
+        OnpremiseAddinOnly.TokenCache.set(cacheKey, accessToken, consts.HighTrustTokenLifeTime - 60);
       }
 
-      resolve({
+      return Promise.resolve({
         headers: {
           'Authorization': `Bearer ${accessToken}`
         }
       });
-
-    });
   };
 }

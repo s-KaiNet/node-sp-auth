@@ -14,9 +14,9 @@ Authentication options:
    * User credentials through the http ntlm handshake
  * SharePoint Online:
    * Addin only permissions
-   * SAML based with user credentials and Microsoft Online STS (`https://login.microsoftonline.com/extSTS.srf`)  
+   * SAML based with user credentials  
 
-[Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) contains detailed steps you need to perform in order to use any of authentication options. 
+[Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) contains detailed steps you need to perform in order to use any of authentication options as well as sample using. 
 
 ---
 
@@ -36,16 +36,15 @@ var spauth = require('node-sp-auth');
 var request = require('request-promise');
 
 //get auth options
-var authOptions = spauth.getAuth(url, credentialOptions);
-
-//perform request with any http-enabled library (request in a sample below):
-authOptions
+spauth.getAuth(url, credentialOptions)
   .then(function(options){
+
+    //perform request with any http-enabled library (request-promise in a sample below):
     var headers = options.headers;
     headers['Accept'] = 'application/json;odata=verbose';
 
     request.get({
-      url: 'https://my.sharepoint.com/sites/dev/_api/lists/getbytitle(\'Documents\')',
+      url: 'https://[your tenant].sharepoint.com/sites/dev/_api/web',
       headers: headers
     }).then(function(response){
       //process data
@@ -67,50 +66,18 @@ Promise resolving into object with following properties:
  Possible values for `credentialOptions` (depending on authentication strategy):
 
  - SharePoint on premise (2013, 2016):
-    - Addin only permissions:  
+    - [Addin only permissions:](../../wiki/SharePoint%20on-premise%20addin%20only%20authentication)  
       `clientId`, `issuerId`, `realm`, `rsaPrivateKeyPath`, `shaThumbprint`
-    - User credentials through the http ntlm handshake:  
+    - [User credentials through the http ntlm handshake:](../../wiki/SharePoint%20on-premise%20user%20credentials%20authentication)  
       `username`, `password`, `domain`, `workstation`  
 
  - SharePoint Online: 
-   - Addin only permissions:  
+   - [Addin only permissions:](../../wiki/SharePoint%20Online%20addin%20only%20authentication)  
      `clientId`, `clientSecret`
-   - SAML based with user credentials  
+   - [SAML based with user credentials](../../wiki/SharePoint%20Online%20user%20credentials%20authentication)  
      `username` , `password`
 
 Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) to see how you can configure your environment in order to use any of this authentication options.
-
-## Examples
-
-### Create auth using SharePoint online credentials and perform get request (TypeScript):
-```typescript
-import * as request from 'request-promise';
-import * as _ from 'lodash';
-import { IncomingMessage } from 'http';
-import * as spauth from 'node-sp-auth';
-
-spauth.getAuth('https://myorg.sharepoint.com/sites/dev/', {
-  clientId: '28bd7e56-8c3a-487d-bbfb-ef1a74539cbe',
-  clientSecret: 'your secret'
-  /* if you need, for example, SharePoint on premise auth with credentials, you will write: 
-  username: 'administrator',
-  domain: 'sp',
-  password: 'pass'
-  */
-})
-.then(response => {
-  let options: request.OptionsWithUrl = {<request.OptionsWithUrl>getDefaultHeaders()};
-  _.assign(options.headers, response.headers);
-  _.assign(options, response.options);
-  options.url = `${test.url}_api/web/lists/getbytitle('${documentTitle}')`;
-
-  return request.get(options);
-})
-.then((data: IncomingMessage) => {
-  expect((<any>data).body.d.Title).to.equal(documentTitle);
-})
-```
-A bit more examples you can find under [integration tests](/test/integration/integration.spec.ts)
 
 ## Development:
 I recommend using VS Code for development. Repository already contains some settings for VS Code editor.

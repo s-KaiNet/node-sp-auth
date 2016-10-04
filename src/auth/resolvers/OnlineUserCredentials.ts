@@ -1,59 +1,107 @@
 import * as Promise from 'bluebird';
-import * as consts from 'constants';
 import * as url from 'url';
 import * as util from 'util';
+import * as _ from 'lodash';
+import * as fs from 'fs';
+import * as request from 'request-promise';
+import * as cookie from 'cookie';
+import * as path from 'path';
 
-let sp: any = require('node-spoauth');
+let xmldoc: any = require('xmldoc');
 
 import { IAuthResolver } from './../IAuthResolver';
 import { IUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
+import { UrlHelper } from './../../utils/UrlHelper';
+import * as consts from './../../Consts';
 
 export class OnlineUserCredentials implements IAuthResolver {
 
-  private static _cookieCache: Cache = new Cache();
+  private static CookieCache: Cache = new Cache();
 
   constructor(private _siteUrl: string, private _authOptions: IUserCredentials) { }
 
   public getAuth(): Promise<IAuthResponse> {
-    return new Promise<IAuthResponse>((resolve, reject) => {
-      let host: string = url.parse(this._siteUrl).host;
-      let cacheKey: string = util.format('%s@%s', host, this._authOptions.username);
-      let cachedCookie: string = OnlineUserCredentials._cookieCache.get<string>(cacheKey);
+    let parsedUrl: url.Url = url.parse(this._siteUrl);
+    let host: string = parsedUrl.host;
+    let cacheKey: string = util.format('%s@%s', host, this._authOptions.username);
+    let cachedCookie: string = OnlineUserCredentials.CookieCache.get<string>(cacheKey);
+    let spFormsEndPoint: string = UrlHelper.removeTrailingSlash(`${parsedUrl.protocol}//${host}/${consts.FormsPath}`);
 
-      if (cachedCookie) {
-        resolve({
-          headers: {
-            'Cookie': cachedCookie
-          }
-        });
-        return;
-      }
+    if (cachedCookie) {
+      return Promise.resolve({
+        headers: {
+          'Cookie': cachedCookie
+        }
+      });
+    }
 
-      let service: any = new sp.RestService(this._siteUrl);
-
-      let signin: (username: string, password: string) => Promise<any> =
-        Promise.promisify<any, string, string>(service.signin, { context: service });
-
-      this._authOptions.username = this._authOptions.username.replace(/&amp;/g, '&').replace(/&/g, '&amp;');
-      this._authOptions.password = this._authOptions.password.replace(/&amp;/g, '&').replace(/&/g, '&amp;');
-
-      signin(this._authOptions.username, this._authOptions.password)
-        .then((auth) => {
-          let cookie: string = `FedAuth=${auth.FedAuth}; rtFa=${auth.rtFa}`;
-          OnlineUserCredentials._cookieCache.set(cacheKey, cookie, 30 * 60);
-
-          resolve({
-            headers: {
-              'Cookie': cookie,
-              'secureOptions': consts.SSL_OP_NO_TLSv1_2
-            }
-          });
-
-          return;
-        })
-        .catch(reject);
+    let samlBody: string = _.template(
+      fs.readFileSync( path.join(__dirname, '..', '..', '..', '..', 'templates', 'online_saml_wsfed.tmpl')).toString())({
+      username: this._authOptions.username,
+      password: this._authOptions.password,
+      endpoint: spFormsEndPoint
     });
+
+    return <Promise<IAuthResponse>>request
+      .post(consts.MSOnlineSts, <any>{
+        body: samlBody,
+        simple: false,
+        rejectUnauthorized: false,
+        headers: {
+          'Content-Type': 'application/soap+xml; charset=utf-8'
+        }
+      })
+      .then(xmlResponse => {
+        let xmlDoc: any = new xmldoc.XmlDocument(xmlResponse);
+
+        let securityTokenResponse: any = xmlDoc.childNamed('S:Body').firstChild;
+        if (securityTokenResponse.name.indexOf('Fault') !== -1) {
+          throw new Error(securityTokenResponse.toString());
+        }
+
+        let binaryToken: any = securityTokenResponse.childNamed('wst:RequestedSecurityToken').firstChild.val;
+        let now: any = new Date().getTime();
+        let expires: number = new Date(securityTokenResponse.childNamed('wst:Lifetime').childNamed('wsu:Expires').val).getTime();
+        let diff: number = (expires - now) / 1000;
+
+        let diffSeconds: number = parseInt(diff.toString(), 10);
+
+        return request
+          .post(spFormsEndPoint, <any>{
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)',
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: binaryToken,
+            rejectUnauthorized: false,
+            resolveWithFullResponse: true,
+            simple: false
+          })
+          .then(data => {
+            let fedAuth: string, rtFa: string;
+
+            for (let i: number = 0; i < data.headers['set-cookie'].length; i++) {
+              let headerCookie: string = data.headers['set-cookie'][i];
+              if (headerCookie.indexOf(consts.FedAuth) !== -1) {
+                fedAuth = cookie.parse(headerCookie)[consts.FedAuth];
+              }
+              if (headerCookie.indexOf(consts.RtFa) !== -1) {
+                rtFa = cookie.parse(headerCookie)[consts.RtFa];
+              }
+            }
+
+            let authCookie: string = 'FedAuth=' + fedAuth + '; rtFa=' + rtFa;
+
+            OnlineUserCredentials.CookieCache.set(cacheKey, authCookie, diffSeconds);
+
+            return {
+              headers: {
+                'Cookie': authCookie
+              }
+            };
+          });
+      });
   };
 }

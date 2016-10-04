@@ -15,6 +15,7 @@
     "chai": "registry:npm/chai#3.5.0+20160723033700"
   },
   "globalDependencies": {
+    "cookie": "registry:dt/cookie#0.1.2+20160316155526",
     "jsonwebtoken": "registry:dt/jsonwebtoken#0.0.0+20160720062725"
   }
 }
