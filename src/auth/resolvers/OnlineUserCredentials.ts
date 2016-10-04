@@ -20,7 +20,21 @@ export class OnlineUserCredentials implements IAuthResolver {
 
   private static CookieCache: Cache = new Cache();
 
-  constructor(private _siteUrl: string, private _authOptions: IUserCredentials) { }
+  constructor(private _siteUrl: string, private _authOptions: IUserCredentials) {
+    _authOptions.username = _authOptions.username
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    _authOptions.password = _authOptions.password
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
 
   public getAuth(): Promise<IAuthResponse> {
     let parsedUrl: url.Url = url.parse(this._siteUrl);
@@ -38,11 +52,11 @@ export class OnlineUserCredentials implements IAuthResolver {
     }
 
     let samlBody: string = _.template(
-      fs.readFileSync( path.join(__dirname, '..', '..', '..', '..', 'templates', 'online_saml_wsfed.tmpl')).toString())({
-      username: this._authOptions.username,
-      password: this._authOptions.password,
-      endpoint: spFormsEndPoint
-    });
+      fs.readFileSync(path.join(__dirname, '..', '..', '..', '..', 'templates', 'online_saml_wsfed.tmpl')).toString())({
+        username: this._authOptions.username,
+        password: this._authOptions.password,
+        endpoint: spFormsEndPoint
+      });
 
     return <Promise<IAuthResponse>>request
       .post(consts.MSOnlineSts, <any>{
