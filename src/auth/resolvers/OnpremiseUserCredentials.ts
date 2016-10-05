@@ -38,7 +38,6 @@ export class OnpremiseUserCredentials implements IAuthResolver {
       agent: keepaliveAgent,
       resolveWithFullResponse: true,
       simple: false,
-      rejectUnauthorized: false,
       strictSSL: false
     })
       .then((response: IncomingMessage) => {
@@ -51,9 +50,7 @@ export class OnpremiseUserCredentials implements IAuthResolver {
             'Authorization': type3msg
           },
           options: {
-            strictSSL: false,
-            agent: keepaliveAgent,
-            rejectUnauthorized: false
+            agent: keepaliveAgent
           }
         };
       });

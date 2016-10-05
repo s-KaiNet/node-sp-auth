@@ -18,7 +18,7 @@ let tests: ITestInfo[] = [
   {
     name: 'on-premise user credentials',
     creds: config.onpremCreds,
-    url: config.onpremNtlmUrl
+    url: config.onpremNtlmEnabledUrl
   },
   {
     name: 'online user credentials',
@@ -28,7 +28,7 @@ let tests: ITestInfo[] = [
   {
     name: 'on-premise addin only',
     creds: config.onpremAddinOnly,
-    url: config.onpremAdfsUrl
+    url: config.onpremAdfsEnabledUrl
   },
   {
     name: 'online addin only',
@@ -91,7 +91,6 @@ function getDefaultHeaders(): request.RequestPromiseOptions {
     },
     json: true,
     strictSSL: false,
-    'rejectunauthorized': false,
     resolveWithFullResponse: true,
     simple: true
   });
