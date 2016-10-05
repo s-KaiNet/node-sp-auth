@@ -7,3 +7,5 @@ import { AuthResolverFactory } from './auth/AuthResolverFactory';
 export function getAuth(url: string, options: IAuthOptions): Promise<IAuthResponse> {
   return AuthResolverFactory.resolve(url, options).getAuth();
 }
+
+export * from './auth/IAuthOptions';
