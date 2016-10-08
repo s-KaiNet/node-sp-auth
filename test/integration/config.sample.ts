@@ -2,7 +2,8 @@ import {
   IUserCredentials,
   IOnpremiseUserCredentials,
   IOnPremiseAddinCredentials,
-  IOnlineAddinCredentials
+  IOnlineAddinCredentials,
+  IAdfsUserCredentials
 } from './../../src/auth/IAuthOptions';
 
 export var onlineUrl: string = '[sharepoint online url]';
@@ -32,4 +33,11 @@ export var onlineAddinOnly: IOnlineAddinCredentials = {
   clientId: '[clientId]',
   clientSecret: '[clientSecret]',
   realm: '[realm]'
+};
+
+export var adfsCredentials: IAdfsUserCredentials = {
+  username: '[username]',
+  password: '[password]',
+  relyingParty: '[relying party]',
+  adfsUrl: '[adfs url]'
 };

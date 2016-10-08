@@ -26,7 +26,18 @@ export interface IOnpremiseUserCredentials extends IUserCredentials {
   workstation?: string;
 }
 
-export type IAuthOptions = IOnlineAddinCredentials | IOnPremiseAddinCredentials | IUserCredentials | IOnpremiseUserCredentials;
+export interface IAdfsUserCredentials extends IUserCredentials {
+  domain?: string;
+  adfsUrl: string;
+  relyingParty: string;
+}
+
+export type IAuthOptions =
+  IOnlineAddinCredentials
+  | IOnPremiseAddinCredentials
+  | IUserCredentials
+  | IOnpremiseUserCredentials
+  | IAdfsUserCredentials;
 
 export function isAddinOnlyOnline(T: IAuthOptions): T is IOnlineAddinCredentials {
   return (<IOnlineAddinCredentials>T).clientSecret !== undefined;
@@ -40,7 +51,7 @@ export function isUserCredentialsOnline(siteUrl: string, T: IAuthOptions): T is 
   let host: string = (url.parse(siteUrl)).host;
   let isOnPrem: boolean = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
 
-  if (!isOnPrem && (<IUserCredentials>T).username !== undefined) {
+  if (!isOnPrem && (<IUserCredentials>T).username !== undefined && !isAdfsCredentials(T)) {
     return true;
   }
 
@@ -51,9 +62,13 @@ export function isUserCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T 
   let host: string = (url.parse(siteUrl)).host;
   let isOnPrem: boolean = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
 
-  if (isOnPrem && (<IUserCredentials>T).username !== undefined) {
+  if (isOnPrem && (<IUserCredentials>T).username !== undefined && !isAdfsCredentials(T)) {
     return true;
   }
 
   return false;
+}
+
+export function isAdfsCredentials(T: IAuthOptions): T is IAdfsUserCredentials {
+  return (<IAdfsUserCredentials>T).adfsUrl !== undefined;
 }

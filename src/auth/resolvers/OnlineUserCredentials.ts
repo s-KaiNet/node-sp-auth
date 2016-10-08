@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import * as request from 'request-promise';
 import * as cookie from 'cookie';
 import * as path from 'path';
+import { IncomingMessage } from 'http';
 
 let xmldoc: any = require('xmldoc');
 
@@ -13,7 +14,6 @@ import { IAuthResolver } from './../IAuthResolver';
 import { IUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
-import { UrlHelper } from './../../utils/UrlHelper';
 import * as consts from './../../Consts';
 
 export class OnlineUserCredentials implements IAuthResolver {
@@ -41,7 +41,7 @@ export class OnlineUserCredentials implements IAuthResolver {
     let host: string = parsedUrl.host;
     let cacheKey: string = util.format('%s@%s', host, this._authOptions.username);
     let cachedCookie: string = OnlineUserCredentials.CookieCache.get<string>(cacheKey);
-    let spFormsEndPoint: string = UrlHelper.removeTrailingSlash(`${parsedUrl.protocol}//${host}/${consts.FormsPath}`);
+    let spFormsEndPoint: string = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
 
     if (cachedCookie) {
       return Promise.resolve({
@@ -68,54 +68,62 @@ export class OnlineUserCredentials implements IAuthResolver {
         }
       })
       .then(xmlResponse => {
-        let xmlDoc: any = new xmldoc.XmlDocument(xmlResponse);
+        return this.postToken(xmlResponse);
+      })
+      .then(data => {
+        let response: IncomingMessage = data[1];
+        let diffSeconds: number = data[0];
+        let fedAuth: string, rtFa: string;
 
-        let securityTokenResponse: any = xmlDoc.childNamed('S:Body').firstChild;
-        if (securityTokenResponse.name.indexOf('Fault') !== -1) {
-          throw new Error(securityTokenResponse.toString());
+        for (let i: number = 0; i < response.headers['set-cookie'].length; i++) {
+          let headerCookie: string = response.headers['set-cookie'][i];
+          if (headerCookie.indexOf(consts.FedAuth) !== -1) {
+            fedAuth = cookie.parse(headerCookie)[consts.FedAuth];
+          }
+          if (headerCookie.indexOf(consts.RtFa) !== -1) {
+            rtFa = cookie.parse(headerCookie)[consts.RtFa];
+          }
         }
 
-        let binaryToken: any = securityTokenResponse.childNamed('wst:RequestedSecurityToken').firstChild.val;
-        let now: any = new Date().getTime();
-        let expires: number = new Date(securityTokenResponse.childNamed('wst:Lifetime').childNamed('wsu:Expires').val).getTime();
-        let diff: number = (expires - now) / 1000;
+        let authCookie: string = 'FedAuth=' + fedAuth + '; rtFa=' + rtFa;
 
-        let diffSeconds: number = parseInt(diff.toString(), 10);
+        OnlineUserCredentials.CookieCache.set(cacheKey, authCookie, diffSeconds);
 
-        return request
-          .post(spFormsEndPoint, <any>{
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)',
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: binaryToken,
-            rejectUnauthorized: false,
-            resolveWithFullResponse: true,
-            simple: false
-          })
-          .then(data => {
-            let fedAuth: string, rtFa: string;
-
-            for (let i: number = 0; i < data.headers['set-cookie'].length; i++) {
-              let headerCookie: string = data.headers['set-cookie'][i];
-              if (headerCookie.indexOf(consts.FedAuth) !== -1) {
-                fedAuth = cookie.parse(headerCookie)[consts.FedAuth];
-              }
-              if (headerCookie.indexOf(consts.RtFa) !== -1) {
-                rtFa = cookie.parse(headerCookie)[consts.RtFa];
-              }
-            }
-
-            let authCookie: string = 'FedAuth=' + fedAuth + '; rtFa=' + rtFa;
-
-            OnlineUserCredentials.CookieCache.set(cacheKey, authCookie, diffSeconds);
-
-            return {
-              headers: {
-                'Cookie': authCookie
-              }
-            };
-          });
+        return {
+          headers: {
+            'Cookie': authCookie
+          }
+        };
       });
   };
+
+  private postToken(xmlResponse: any): Promise<[number, any]> {
+    let xmlDoc: any = new xmldoc.XmlDocument(xmlResponse);
+    let parsedUrl: url.Url = url.parse(this._siteUrl);
+    let spFormsEndPoint: string = `${parsedUrl.protocol}//${parsedUrl.host}/${consts.FormsPath}`;
+
+    let securityTokenResponse: any = xmlDoc.childNamed('S:Body').firstChild;
+    if (securityTokenResponse.name.indexOf('Fault') !== -1) {
+      throw new Error(securityTokenResponse.toString());
+    }
+
+    let binaryToken: any = securityTokenResponse.childNamed('wst:RequestedSecurityToken').firstChild.val;
+    let now: any = new Date().getTime();
+    let expires: number = new Date(securityTokenResponse.childNamed('wst:Lifetime').childNamed('wsu:Expires').val).getTime();
+    let diff: number = (expires - now) / 1000;
+
+    let diffSeconds: number = parseInt(diff.toString(), 10);
+
+    return Promise.all([diffSeconds, request
+      .post(spFormsEndPoint, <any>{
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: binaryToken,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true,
+        simple: false
+      })]);
+  }
 }

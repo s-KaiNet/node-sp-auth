@@ -5,6 +5,7 @@ import { OnpremiseUserCredentials } from './resolvers/OnpremiseUserCredentials';
 import { OnlineUserCredentials } from './resolvers/OnlineUserCredentials';
 import { OnlineAddinOnly } from './resolvers/OnlineAddinOnly';
 import { OnpremiseAddinOnly } from './resolvers/OnpremiseAddinOnly';
+import { AdfsCredentials } from './resolvers/AdfsCredentials';
 import * as authOptions from './IAuthOptions';
 
 export class AuthResolverFactory {
@@ -24,6 +25,10 @@ export class AuthResolverFactory {
 
     if (authOptions.isAddinOnlyOnpremise(options)) {
       return new OnpremiseAddinOnly(siteUrl, options);
+    }
+
+    if (authOptions.isAdfsCredentials(options)) {
+      return new AdfsCredentials(siteUrl, options);
     }
 
     throw new Error('Error while resolving authentication class');

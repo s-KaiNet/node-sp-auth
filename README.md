@@ -14,7 +14,8 @@ Authentication options:
    * User credentials through the http ntlm handshake
  * SharePoint Online:
    * Addin only permissions
-   * SAML based with user credentials  
+   * SAML based with user credentials
+ * ADFS user credentials (works with both SharePoint on-premise and Online)
 
 [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) contains detailed steps you need to perform in order to use any of authentication options as well as sample using. 
 
@@ -76,6 +77,8 @@ Possible values for `credentialOptions` (depending on authentication strategy):
      `clientId`, `clientSecret`
    - [SAML based with user credentials](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20user%20credentials%20authentication)  
      `username` , `password`
+ - [ADFS user credentials:](https://github.com/s-KaiNet/node-sp-auth/wiki/ADFS%20user%20credentials%20authentication)  
+   `username`, `password`, `relyingParty`, `adfsUrl`
 
 Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) to see how you can configure your environment in order to use any of this authentication options.
 

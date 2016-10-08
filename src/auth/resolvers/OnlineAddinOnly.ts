@@ -32,31 +32,34 @@ export class OnlineAddinOnly implements IAuthResolver {
 
     return this.getRealm(this._siteUrl)
       .then(realm => {
+        return Promise.all([realm, this.getAuthUrl(realm)]);
+      })
+      .then(data => {
+        let realm: string = data[0];
+        let authUrl: string = data[1];
+
         let resource: string = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${realm}`;
         let fullClientId: string = `${this._authOptions.clientId}@${realm}`;
 
-        return this.getAuthUrl(realm)
-          .then(authUrl => {
-            return request.post(authUrl, {
-              json: true,
-              form: {
-                'grant_type': 'client_credentials',
-                'client_id': fullClientId,
-                'client_secret': this._authOptions.clientSecret,
-                'resource': resource
-              }
-            });
-          })
-          .then(data => {
-            let expiration: number = parseInt(data.expires_in, 10);
-            OnlineAddinOnly.TokenCache.set(cacheKey, data.access_token, expiration - 60);
+        return request.post(authUrl, {
+          json: true,
+          form: {
+            'grant_type': 'client_credentials',
+            'client_id': fullClientId,
+            'client_secret': this._authOptions.clientSecret,
+            'resource': resource
+          }
+        });
+      })
+      .then(data => {
+        let expiration: number = parseInt(data.expires_in, 10);
+        OnlineAddinOnly.TokenCache.set(cacheKey, data.access_token, expiration - 60);
 
-            return {
-              headers: {
-                'Authorization': `Bearer ${data.access_token}`
-              }
-            };
-          });
+        return {
+          headers: {
+            'Authorization': `Bearer ${data.access_token}`
+          }
+        };
       });
   };
 
