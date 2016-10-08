@@ -7,7 +7,7 @@ import { IAuthResolver } from './../IAuthResolver';
 import { IOnlineAddinCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
-import {UrlHelper} from './../../utils/UrlHelper';
+import { UrlHelper } from './../../utils/UrlHelper';
 import * as consts from './../../Consts';
 
 export class OnlineAddinOnly implements IAuthResolver {
@@ -77,6 +77,11 @@ export class OnlineAddinOnly implements IAuthResolver {
   }
 
   private getRealm(siteUrl: string): Promise<string> {
+
+    if (this._authOptions.realm) {
+      return Promise.resolve(this._authOptions.realm);
+    }
+
     return <Promise<string>>request.post(`${UrlHelper.removeTrailingSlash(siteUrl)}/vti_bin/client.svc`, {
       method: 'POST',
       headers: {

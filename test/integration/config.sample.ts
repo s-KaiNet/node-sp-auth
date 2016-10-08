@@ -30,5 +30,6 @@ export var onpremAddinOnly: IOnPremiseAddinCredentials = {
 
 export var onlineAddinOnly: IOnlineAddinCredentials = {
   clientId: '[clientId]',
-  clientSecret: '[clientSecret]'
+  clientSecret: '[clientSecret]',
+  realm: '[realm]'
 };

@@ -6,6 +6,7 @@ export interface IBasicOAuthOption {
 
 export interface IOnlineAddinCredentials extends IBasicOAuthOption {
   clientSecret: string;
+  realm?: string;
 }
 
 export interface IOnPremiseAddinCredentials extends IBasicOAuthOption {
