@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.1.1",
   "name": "node-sp-auth",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "description": "Unattended SharePoint http authentication with nodejs",
@@ -44,7 +44,6 @@
     "yargs": "^5.0.0"
   },
   "dependencies": {
-    "agentkeepalive": "^2.2.0",
     "bluebird": "^3.4.6",
     "cookie": "^0.3.1",
     "httpntlm": "^1.5.2",

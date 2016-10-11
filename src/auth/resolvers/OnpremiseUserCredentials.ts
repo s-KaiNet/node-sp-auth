@@ -3,9 +3,10 @@ import * as _ from 'lodash';
 import * as url from 'url';
 import * as request from 'request-promise';
 import { IncomingMessage } from 'http';
+import * as http from 'http';
+import * as https from 'https';
 
 let ntlm: any = require('httpntlm').ntlm;
-let agent: any = require('agentkeepalive');
 
 import { IAuthResolver } from './../IAuthResolver';
 import { IOnpremiseUserCredentials } from './../IAuthOptions';
@@ -25,7 +26,8 @@ export class OnpremiseUserCredentials implements IAuthResolver {
 
     let isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
 
-    let keepaliveAgent: any = isHttps ? new agent.HttpsAgent() : new agent();
+    let keepaliveAgent: any = isHttps ? new https.Agent({ keepAlive: true, rejectUnauthorized: false }) :
+      new http.Agent({ keepAlive: true });
 
     return <Promise<IAuthResponse>>request(<any>{
       url: this._siteUrl,

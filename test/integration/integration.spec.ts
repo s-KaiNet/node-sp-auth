@@ -2,6 +2,9 @@ import { expect } from 'chai';
 import * as request from 'request-promise';
 import * as _ from 'lodash';
 import { IncomingMessage } from 'http';
+import * as http from 'http';
+import * as https from 'https';
+import * as url from 'url';
 
 import { IAuthOptions } from './../../src/auth/IAuthOptions';
 import * as spauth from './../../src/index';
@@ -44,6 +47,58 @@ let tests: ITestInfo[] = [
 
 tests.forEach(test => {
   describe(`node-sp-auth: integration - ${test.name}`, () => {
+
+    it('should get list title with core http(s)', function (done: MochaDone): void {
+      this.timeout(30 * 1000);
+
+      let parsedUrl: url.Url = url.parse(test.url);
+      let documentTitle: string = 'Documents';
+      let isHttps: boolean = parsedUrl.protocol === 'https:';
+
+      let send: (options: http.RequestOptions, callback?: (res: http.IncomingMessage) => void) => http.ClientRequest =
+        isHttps ? https.request : http.request;
+      let agent: http.Agent = isHttps ? new https.Agent({ rejectUnauthorized: false }) :
+        new http.Agent();
+
+      spauth.getAuth(test.url, test.creds)
+        .then(response => {
+
+          let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
+          let headers: any = _.assign(options.headers, response.headers);
+
+          if (response.options && response.options['agent']) {
+            agent = response.options['agent'];
+          }
+
+          send({
+            host: parsedUrl.host,
+            hostname: parsedUrl.hostname,
+            port: parseInt(parsedUrl.port, 10),
+            protocol: parsedUrl.protocol,
+            path: `${parsedUrl.path}_api/web/lists/getbytitle('${documentTitle}')`,
+            method: 'GET',
+            headers: headers,
+            agent: agent
+          }, clientRequest => {
+            let results: string = '';
+
+            clientRequest.on('data', chunk => {
+              results += chunk;
+            });
+
+            clientRequest.on('error', chunk => {
+              done(new Error('Unexpected error during http(s) request'));
+            });
+
+            clientRequest.on('end', () => {
+              let data: any = JSON.parse(results);
+              expect(data.d.Title).to.equal(documentTitle);
+              done();
+            });
+          }).end();
+        })
+        .catch(done);
+    });
 
     it('should get list title', function (done: MochaDone): void {
       this.timeout(30 * 1000);
