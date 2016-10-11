@@ -9,3 +9,4 @@ export function getAuth(url: string, options: IAuthOptions): Promise<IAuthRespon
 }
 
 export * from './auth/IAuthOptions';
+export * from './auth/IAuthResponse';
