@@ -1,0 +1,9 @@
+"ignore": [
+    "typings/**",
+    "templates/**",
+    "lib/**",
+    "node_modules/**"
+  ],
+  "test": [
+    "test/**"
+  ]

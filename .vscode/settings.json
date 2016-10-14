@@ -14,6 +14,5 @@
   },
   "editor.wrappingColumn": 5000,
   "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 2000,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "files.autoSaveDelay": 2000
 }

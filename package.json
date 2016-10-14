@@ -46,7 +46,7 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "cookie": "^0.3.1",
-    "httpntlm": "^1.5.2",
+    "httpntlm": "^1.6.1",
     "jsonwebtoken": "^7.1.9",
     "lodash": "^4.16.2",
     "request": "^2.75.0",
