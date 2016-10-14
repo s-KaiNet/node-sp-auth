@@ -8,8 +8,8 @@ module.exports = function (gulp, $) {
   });
 
   gulp.task('prepublish', ['clean'], function () {
-    var tsSourcesResult = gulp.src(['./src/**/*.ts', './typings/index.d.ts'])
-      .pipe($.tsc(tsconfig.compilerOptions));
+    var tsSourcesResult = gulp.src(['./src/**/*.ts'])
+      .pipe($.tsc.createProject('tsconfig.json')());
 
     return $.merge[
       tsSourcesResult.js
