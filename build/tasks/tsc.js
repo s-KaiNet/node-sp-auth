@@ -3,16 +3,14 @@ var _ = require('lodash');
 module.exports = function (gulp, $) {
   'use strict';
 
-  var tsconfig = require('./../../tsconfig.json');
-
   gulp.task('tsc', function () {
-    var tsSourcesResult = gulp.src(['src/**/*.ts', 'typings/index.d.ts'])
+    var tsSourcesResult = gulp.src(['src/**/*.ts'])
       .pipe($.sourcemaps.init())
-      .pipe($.tsc(tsconfig.compilerOptions));
+      .pipe($.tsc.createProject('tsconfig.json')());
 
-    var tsTestsResult = gulp.src(['test/**/*.ts', 'typings/index.d.ts'])
+    var tsTestsResult = gulp.src(['test/**/*.ts'])
       .pipe($.sourcemaps.init())
-      .pipe($.tsc(tsconfig.compilerOptions));
+      .pipe($.tsc.createProject('tsconfig.json')());
 
     var sources = tsSourcesResult.js
       .pipe($.sourcemaps.write('.'))
@@ -22,6 +20,9 @@ module.exports = function (gulp, $) {
       .pipe($.sourcemaps.write('.'))
       .pipe(gulp.dest('./lib/test'));
 
-      return $.merge(sources, tests);
+      var declarations = tsSourcesResult.dts
+      .pipe(gulp.dest('./lib/src'));
+
+      return $.merge(sources, declarations, tests);
   });
 };

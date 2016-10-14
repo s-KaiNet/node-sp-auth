@@ -2,16 +2,22 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "moduleResolution": "node",
     "sourceMap": true,
     "declaration": true,
+    "moduleResolution": "node",
     "noImplicitAny": false,
-    "pretty": true,
-    "rootDir": "./",
-    "outDir": "./lib",
-    "removeComments": true
-  },
-  "exclude": [
-    "node_modules"
-  ]
+    "removeComments": true,
+    "types": [
+      "bluebird",
+      "mocha",
+      "node",
+      "chai",
+      "request",
+      "request-promise",
+      "lodash",
+      "cookie",
+      "core-js",
+      "jsonwebtoken"
+    ]
+  }
 }
