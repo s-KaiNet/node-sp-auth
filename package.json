@@ -38,7 +38,6 @@
     "gulp-sourcemaps": "^2.0.0-alpha",
     "gulp-tslint": "^6.1.2",
     "gulp-typescript": "^3.0.1",
-    "httpntlm": "1.5.2",
     "merge-stream": "^1.0.0",
     "run-sequence": "^1.2.2",
     "tslint": "^3.15.1",

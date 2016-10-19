@@ -1,12 +1,15 @@
-"ignore": [
-    "typings/**",
-    "templates/**",
-    "lib/**",
-    "node_modules/**"
-  ],
-  "test": [
-    "test/**"
-  ],
-  "critics": {
-    "lint": {"engine": "tslint"}
+{
+  "ignore": [
+      "typings/**",
+      "templates/**",
+      "lib/**",
+      "node_modules/**",
+      "build/**"
+    ],
+    "test": [
+      "test/**"
+    ],
+    "critics": {
+      "lint": {"engine": "tslint"}
+    }
   }
