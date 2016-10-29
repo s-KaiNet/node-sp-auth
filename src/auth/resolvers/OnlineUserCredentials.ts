@@ -15,6 +15,7 @@ import { IUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
 import * as consts from './../../Consts';
+import { AdfsHelper } from './../../utils/AdfsHelper';
 
 export class OnlineUserCredentials implements IAuthResolver {
 
@@ -41,7 +42,6 @@ export class OnlineUserCredentials implements IAuthResolver {
     let host: string = parsedUrl.host;
     let cacheKey: string = util.format('%s@%s', host, this._authOptions.username);
     let cachedCookie: string = OnlineUserCredentials.CookieCache.get<string>(cacheKey);
-    let spFormsEndPoint: string = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
 
     if (cachedCookie) {
       return Promise.resolve({
@@ -51,22 +51,7 @@ export class OnlineUserCredentials implements IAuthResolver {
       });
     }
 
-    let samlBody: string = _.template(
-      fs.readFileSync(path.join(__dirname, '..', '..', '..', '..', 'templates', 'online_saml_wsfed.tmpl')).toString())({
-        username: this._authOptions.username,
-        password: this._authOptions.password,
-        endpoint: spFormsEndPoint
-      });
-
-    return <Promise<IAuthResponse>>request
-      .post(consts.MSOnlineSts, <any>{
-        body: samlBody,
-        simple: false,
-        rejectUnauthorized: false,
-        headers: {
-          'Content-Type': 'application/soap+xml; charset=utf-8'
-        }
-      })
+    return this.getSecurityToken()
       .then(xmlResponse => {
         return this.postToken(xmlResponse);
       })
@@ -96,6 +81,89 @@ export class OnlineUserCredentials implements IAuthResolver {
         };
       });
   };
+
+  private getSecurityToken(): Promise<any> {
+    return request.post(consts.OnlineUserRealmEndpoint, {
+      simple: false,
+      strictSSL: false,
+      json: true,
+      form: {
+        'login': this._authOptions.username
+      }
+    })
+      .then(userRealm => {
+        let authType: string = userRealm.NameSpaceType;
+
+        if (!authType) {
+          throw new Error('Unable to define namespace type for Online authentiation');
+        }
+
+        if (authType === 'Managed') {
+          return this.getSecurityTokenWithOnline();
+        }
+
+        if (authType === 'Federated') {
+          return this.getSecurityTokenWithAdfs(userRealm.AuthURL);
+        }
+
+        throw new Error(`Unable to resolve namespace authentiation type. Type received: ${authType}`);
+      });
+  }
+
+  private getSecurityTokenWithAdfs(adfsUrl: string): Promise<any> {
+    return AdfsHelper.getSamlAssertion(this._siteUrl, {
+      username: this._authOptions.username,
+      password: this._authOptions.password,
+      adfsUrl: adfsUrl,
+      relyingParty: consts.AdfsOnlineRealm
+    })
+      .then(samlAssertion => {
+
+        let siteUrlParsed: url.Url = url.parse(this._siteUrl);
+        let rootSiteUrl: string = siteUrlParsed.protocol + '//' + siteUrlParsed.host;
+        let tokenRequest: string = _.template(
+          fs.readFileSync(path.join(__dirname, '..', '..', '..', '..', 'templates', 'online_saml_wsfed_adfs.tmpl')).toString())({
+            endpoint: rootSiteUrl,
+            token: samlAssertion.value
+          });
+
+        return request.post(consts.MSOnlineSts, {
+          body: tokenRequest,
+          headers: {
+            'Content-Length': tokenRequest.length,
+            'Content-Type': 'application/soap+xml; charset=utf-8'
+          },
+          simple: false,
+          strictSSL: false
+        });
+      });
+  }
+
+  private getSecurityTokenWithOnline(): Promise<any> {
+    let parsedUrl: url.Url = url.parse(this._siteUrl);
+    let host: string = parsedUrl.host;
+    let spFormsEndPoint: string = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
+
+    let samlBody: string = _.template(
+      fs.readFileSync(path.join(__dirname, '..', '..', '..', '..', 'templates', 'online_saml_wsfed.tmpl')).toString())({
+        username: this._authOptions.username,
+        password: this._authOptions.password,
+        endpoint: spFormsEndPoint
+      });
+
+    return request
+      .post(consts.MSOnlineSts, <any>{
+        body: samlBody,
+        simple: false,
+        strictSSL: false,
+        headers: {
+          'Content-Type': 'application/soap+xml; charset=utf-8'
+        }
+      })
+      .then(xmlResponse => {
+        return xmlResponse;
+      });
+  }
 
   private postToken(xmlResponse: any): Promise<[number, any]> {
     let xmlDoc: any = new xmldoc.XmlDocument(xmlResponse);

@@ -24,6 +24,11 @@ let tests: ITestInfo[] = [
     url: config.onpremNtlmEnabledUrl
   },
   {
+    name: 'adfs online user credentials',
+    creds: config.onlineWithAdfsCreds,
+    url: config.onlineUrl
+  },
+  {
     name: 'online user credentials',
     creds: config.onlineCreds,
     url: config.onlineUrl

@@ -15,6 +15,11 @@ export var onlineCreds: IUserCredentials = {
   password: '[password]'
 };
 
+export var onlineWithAdfsCreds: IUserCredentials = {
+  username: '[username]',
+  password: '[password]'
+};
+
 export var onpremCreds: IOnpremiseUserCredentials = {
   username: '[username]',
   domain: '[domain]',

@@ -4,3 +4,5 @@ export const MSOnlineSts: string = 'https://login.microsoftonline.com/extSTS.srf
 export const FormsPath: string = '_forms/default.aspx?wa=wsignin1.0';
 export const RtFa: string = 'rtFa';
 export const FedAuth: string = 'FedAuth';
+export const AdfsOnlineRealm: string = 'urn:federation:MicrosoftOnline';
+export const OnlineUserRealmEndpoint: string = 'https://login.microsoftonline.com/GetUserRealm.srf';
