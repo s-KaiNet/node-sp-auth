@@ -26,10 +26,6 @@ Authentication options:
 ```bash
 npm install node-sp-auth --save-dev
 ```
-#### Optionally install definitions if you are developing with TypeScript:
-```bash
-typings install npm:node-sp-auth --save
-```
 #### Create authentication headers and perform http request:
 
 ```javascript
