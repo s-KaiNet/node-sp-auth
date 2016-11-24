@@ -1,4 +1,4 @@
-# node-sp-auth - nodejs to SharePoint unattended http authentication
+# node-sp-auth - nodejs to SharePoint unattended http authentication [![analytics](http://www.google-analytics.com/collect?v=1&t=pageview&tid=UA-87971440-4&cid=8ca0a7b7-186f-4010-8c15-02a66bf95cbc&dl=https%3A%2F%2Fgithub.com%2Fs-KaiNet%2Fnode-sp-auth)]()
 [![NPM](https://nodei.co/npm/node-sp-auth.png?mini=true)](https://nodei.co/npm/node-sp-auth/)
 
 [![npm version](https://badge.fury.io/js/node-sp-auth.svg)](https://badge.fury.io/js/node-sp-auth)
