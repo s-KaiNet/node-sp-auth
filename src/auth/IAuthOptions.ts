@@ -28,6 +28,7 @@ export interface IOnpremiseUserCredentials extends IUserCredentials {
 
 export interface IAdfsUserCredentials extends IUserCredentials {
   domain?: string;
+  adfsCookie?: string;
   adfsUrl: string;
   relyingParty: string;
 }
