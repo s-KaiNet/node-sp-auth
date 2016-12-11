@@ -49,7 +49,7 @@ export class AdfsCredentials implements IAuthResolver {
         return this.postTokenData(data);
       })
       .then(data => {
-        let adfsCookie: string = (this._authOptions.adfsCookie !== undefined) ? this._authOptions.adfsCookie : consts.FedAuth;
+        let adfsCookie: string = this._authOptions.adfsCookie || consts.FedAuth;
         let notAfter: number = new Date(data[0]).getTime();
         let expiresIn: number = parseInt(((notAfter - new Date().getTime()) / 1000).toString(), 10);
         let response: IncomingMessage = data[1];

@@ -74,7 +74,7 @@ Possible values for `credentialOptions` (depending on authentication strategy):
    - [SAML based with user credentials](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20user%20credentials%20authentication)  
      `username` , `password`
  - [ADFS user credentials:](https://github.com/s-KaiNet/node-sp-auth/wiki/ADFS%20user%20credentials%20authentication)  
-   `username`, `password`, `relyingParty`, `adfsUrl`
+   `username`, `password`, `relyingParty`, `adfsUrl`, `adfsCookie`
 
 Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) to see how you can configure your environment in order to use any of this authentication options.
 
