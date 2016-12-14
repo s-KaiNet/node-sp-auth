@@ -22,14 +22,16 @@ export class OnlineUserCredentials implements IAuthResolver {
   private static CookieCache: Cache = new Cache();
 
   constructor(private _siteUrl: string, private _authOptions: IUserCredentials) {
-    _authOptions.username = _authOptions.username
+    this._authOptions = _.extend<{}, IUserCredentials>({}, _authOptions);
+
+    this._authOptions.username = this._authOptions.username
       .replace(/&/g, '&amp;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&apos;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
 
-    _authOptions.password = _authOptions.password
+    this._authOptions.password = this._authOptions.password
       .replace(/&/g, '&amp;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&apos;')
