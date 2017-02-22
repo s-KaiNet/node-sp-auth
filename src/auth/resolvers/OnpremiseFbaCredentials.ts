@@ -46,7 +46,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
     });
 
     return <Promise<IAuthResponse>>request(<any>{
-      url: this._siteUrl + '/' + consts.FbaAuthEndpoint,
+      url: this._siteUrl.split('/_api')[0] + '/' + consts.FbaAuthEndpoint,
       method: 'POST',
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
@@ -72,7 +72,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
 
         let errorCode: string = xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('ErrorCode').val;
         let cookieName: string = xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('CookieName').val;
-        let diffSeconds: number = xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('TimeoutSeconds').val;
+        let diffSeconds: number = parseInt(xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('TimeoutSeconds').val);
         let cookieValue: string;
         let cookieValueFull: string;
 
