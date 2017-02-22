@@ -70,6 +70,19 @@ export function isUserCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T 
   return false;
 }
 
+export function isFbaCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T is IOnpremiseUserCredentials {
+  let host: string = (url.parse(siteUrl)).host;
+  let isOnPrem: boolean = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
+
+  if (isOnPrem && (<IUserCredentials>T).username !== undefined && !isAdfsCredentials(T)) {
+    if (((<IOnpremiseUserCredentials>T).domain || '').length === 0 && ((<IOnpremiseUserCredentials>T).workstation || '').length === 0) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export function isAdfsCredentials(T: IAuthOptions): T is IAdfsUserCredentials {
   return (<IAdfsUserCredentials>T).adfsUrl !== undefined;
 }
