@@ -96,8 +96,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
 
         return {
           headers: {
-            'Cookie': authCookie,
-            'Authorization': authCookie
+            'Cookie': authCookie
           }
         };
 
