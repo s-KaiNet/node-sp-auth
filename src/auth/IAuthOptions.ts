@@ -75,7 +75,11 @@ export function isFbaCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T i
   let isOnPrem: boolean = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
 
   if (isOnPrem && (<IUserCredentials>T).username !== undefined && !isAdfsCredentials(T)) {
-    if (((<IOnpremiseUserCredentials>T).domain || '').length === 0 && ((<IOnpremiseUserCredentials>T).workstation || '').length === 0) {
+    if (
+      ((<IOnpremiseUserCredentials>T).domain || '').length === 0 
+      && ((<IOnpremiseUserCredentials>T).workstation || '').length === 0 
+      && (<IOnpremiseUserCredentials>T).username.indexOf('@') === -1
+    ) {
       return true;
     }
   }

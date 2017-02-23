@@ -74,7 +74,6 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
         let cookieName: string = xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('CookieName').val;
         let diffSeconds: number = parseInt(xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('TimeoutSeconds').val);
         let cookieValue: string;
-        let cookieValueFull: string;
 
         if (errorCode === 'PasswordNotMatch') {
           throw new Error(`Password doesn't not match`);
@@ -86,7 +85,6 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
         (response.headers['set-cookie'] || []).forEach((headerCookie: string) => {
           if (headerCookie.indexOf(consts.FedAuth) !== -1) {
             cookieValue = cookie.parse(headerCookie)[cookieName];
-            cookieValueFull = headerCookie;
           }
         });
 
