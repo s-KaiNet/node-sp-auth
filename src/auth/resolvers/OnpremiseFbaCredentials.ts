@@ -62,6 +62,8 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
     })
       .then((response: any) => {
 
+        console.log(response.body);
+
         let xmlDoc: any = new xmldoc.XmlDocument(response.body);
 
         if (xmlDoc.name === 'm:error') {
@@ -83,7 +85,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
         };
 
         (response.headers['set-cookie'] || []).forEach((headerCookie: string) => {
-          if (headerCookie.indexOf(consts.FedAuth) !== -1) {
+          if (headerCookie.indexOf(cookieName) !== -1) {
             cookieValue = cookie.parse(headerCookie)[cookieName];
           }
         });
