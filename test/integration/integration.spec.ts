@@ -24,6 +24,11 @@ let tests: ITestInfo[] = [
     url: config.onpremNtlmEnabledUrl
   },
   {
+    name: 'fba on-premise user credentials',
+    creds: config.onpremFbaCreds,
+    url: config.onpremFbaEnabledUrl
+  },
+  {
     name: 'adfs online user credentials',
     creds: config.onlineWithAdfsCreds,
     url: config.onlineUrl
