@@ -56,7 +56,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
       json: false,
       simple: false,
       strictSSL: false,
-      transform: function(body, response, resolveWithFullResponse) {
+      transform: function(body: any, response: any, resolveWithFullResponse: any) {
         return response;
       }
     })
@@ -70,9 +70,14 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
           throw new Error(`${errorCode}, ${errorMessage}`);
         }
 
-        let errorCode: string = xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('ErrorCode').val;
-        let cookieName: string = xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('CookieName').val;
-        let diffSeconds: number = parseInt(xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('TimeoutSeconds').val);
+        let errorCode: string =
+          xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('ErrorCode').val;
+        let cookieName: string =
+          xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('CookieName').val;
+        let diffSeconds: number = parseInt(
+          xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('TimeoutSeconds').val,
+          null
+        );
         let cookieValue: string;
 
         if (errorCode === 'PasswordNotMatch') {
@@ -80,7 +85,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
         }
         if (errorCode !== 'NoError') {
           throw new Error(errorCode);
-        };
+        }
 
         (response.headers['set-cookie'] || []).forEach((headerCookie: string) => {
           if (headerCookie.indexOf(cookieName) !== -1) {

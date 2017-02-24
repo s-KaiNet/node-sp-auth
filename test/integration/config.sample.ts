@@ -1,6 +1,7 @@
 import {
   IUserCredentials,
   IOnpremiseUserCredentials,
+  IOnpremiseFbaCredentials,
   IOnPremiseAddinCredentials,
   IOnlineAddinCredentials,
   IAdfsUserCredentials
@@ -27,9 +28,10 @@ export var onpremCreds: IOnpremiseUserCredentials = {
   password: '[password]'
 };
 
-export var onpremFbaCreds: IOnpremiseUserCredentials = {
+export var onpremFbaCreds: IOnpremiseFbaCredentials = {
   username: '[username]',
-  password: '[password]'
+  password: '[password]',
+  fba: true
 };
 
 export var onpremAddinOnly: IOnPremiseAddinCredentials = {
