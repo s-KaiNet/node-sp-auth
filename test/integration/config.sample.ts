@@ -1,6 +1,7 @@
 import {
   IUserCredentials,
   IOnpremiseUserCredentials,
+  IOnpremiseFbaCredentials,
   IOnPremiseAddinCredentials,
   IOnlineAddinCredentials,
   IAdfsUserCredentials
@@ -9,6 +10,7 @@ import {
 export var onlineUrl: string = '[sharepoint online url]';
 export var onpremAdfsEnabledUrl: string = '[sharepint on premise url with adfs configured]';
 export var onpremNtlmEnabledUrl: string = '[sharepint on premise url with ntlm]';
+export var onpremFbaEnabledUrl: string = '[sharepint on premise url with fba auth]';
 
 export var onlineCreds: IUserCredentials = {
   username: '[username]',
@@ -24,6 +26,12 @@ export var onpremCreds: IOnpremiseUserCredentials = {
   username: '[username]',
   domain: '[domain]',
   password: '[password]'
+};
+
+export var onpremFbaCreds: IOnpremiseFbaCredentials = {
+  username: '[username]',
+  password: '[password]',
+  fba: true
 };
 
 export var onpremAddinOnly: IOnPremiseAddinCredentials = {
