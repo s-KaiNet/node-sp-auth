@@ -45,8 +45,10 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
       password: this._authOptions.password
     });
 
+    let fbaEndPoint: string = `${parsedUrl.protocol}//${host}/${consts.FbaAuthEndpoint}`;
+
     return <Promise<IAuthResponse>>request(<any>{
-      url: this._siteUrl.split('/_api')[0] + '/' + consts.FbaAuthEndpoint,
+      url: fbaEndPoint,
       method: 'POST',
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
@@ -56,7 +58,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
       json: false,
       simple: false,
       strictSSL: false,
-      transform: function(body: any, response: any, resolveWithFullResponse: any) {
+      transform: (body: any, response: any, resolveWithFullResponse: any) => {
         return response;
       }
     })

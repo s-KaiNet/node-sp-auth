@@ -1,5 +1,5 @@
 {
-  "editor.renderWhitespace": true,
+  "editor.renderWhitespace": "all",
   "editor.tabSize": 2,
   "files.trimTrailingWhitespace": false,
   "files.exclude": {

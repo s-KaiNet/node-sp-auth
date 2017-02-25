@@ -12,7 +12,7 @@ Authentication options:
  * SharePoint 2013, 2016:
    * Addin only permissions
    * User credentials through the http ntlm handshake
-   * FBA based authentication
+   * Form-based authentication (FBA)
  * SharePoint Online:
    * Addin only permissions
    * SAML based with user credentials
@@ -68,7 +68,7 @@ Possible values for `credentialOptions` (depending on authentication strategy):
       `clientId`, `issuerId`, `realm`, `rsaPrivateKeyPath`, `shaThumbprint`
     - [User credentials through the http ntlm handshake:](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20on-premise%20user%20credentials%20authentication)  
       `username`, `password`, `domain`, `workstation`
-    - [User credentials for for based authentication (FBA):](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20on-premise%20user%20credentials%20authentication)  
+    - [User credentials for form-based authentication (FBA):](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20on-premise%20FBA%20authentication)  
       `username`, `password`, `fba` = true
 
  - SharePoint Online: 
