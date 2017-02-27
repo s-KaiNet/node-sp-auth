@@ -1,5 +1,5 @@
 {
-  "version": "1.3.1",
+  "version": "1.3.2",
   "name": "node-sp-auth",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "description": "Unattended SharePoint http authentication with nodejs",
@@ -16,6 +16,9 @@
     "oauth",
     "adfs"
   ],
+  "bugs": {
+    "url": "https://github.com/s-KaiNet/node-sp-auth/issues"
+  },
   "homepage": "https://github.com/s-KaiNet/node-sp-auth",
   "scripts": {
     "build": "npm install && gulp tsc",
@@ -24,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git clone https://github.com/s-KaiNet/node-sp-auth.git"
+    "url": "git://github.com/s-KaiNet/node-sp-auth.git"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
