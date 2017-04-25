@@ -82,17 +82,6 @@ export function isFbaCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T i
     return true;
   }
 
-  /* Automatic detection then only username and password provided */
-  // if (isOnPrem && (<IUserCredentials>T).username !== undefined && !isAdfsCredentials(T)) {
-  //   if (
-  //     ((<IOnpremiseUserCredentials>T).domain || '').length === 0
-  //     && ((<IOnpremiseUserCredentials>T).workstation || '').length === 0
-  //     && (<IOnpremiseUserCredentials>T).username.indexOf('@') === -1
-  //   ) {
-  //     return true;
-  //   }
-  // }
-
   return false;
 }
 

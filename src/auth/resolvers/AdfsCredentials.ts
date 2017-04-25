@@ -25,6 +25,20 @@ export class AdfsCredentials implements IAuthResolver {
   constructor(private _siteUrl: string, _authOptions: IAdfsUserCredentials) {
     this._authOptions = _.extend<{}, IAdfsUserCredentials>({}, _authOptions);
 
+    this._authOptions.username = this._authOptions.username
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    this._authOptions.password = this._authOptions.password
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
     if (this._authOptions.domain !== undefined) {
       this._authOptions.username = `${this._authOptions.domain}\\${this._authOptions.username}`;
     }
