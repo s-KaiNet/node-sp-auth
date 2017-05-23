@@ -11,10 +11,10 @@ module.exports = function (gulp, $) {
     var tsSourcesResult = gulp.src(['./src/**/*.ts'])
       .pipe($.tsc.createProject('tsconfig.json')());
 
-    return $.merge[
+    return $.merge(
       tsSourcesResult.js
         .pipe(gulp.dest('./lib/src')),
       tsSourcesResult.dts
-        .pipe(gulp.dest('./lib/src'))];
+        .pipe(gulp.dest('./lib/src')));
   });
 };
