@@ -14,5 +14,7 @@
   },
   "editor.wordWrap": "on",
   "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 2000
+  "files.autoSaveDelay": 2000,
+  "editor.minimap.maxColumn": 90,
+  "editor.minimap.renderCharacters": false
 }

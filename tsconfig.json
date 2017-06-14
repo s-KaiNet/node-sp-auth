@@ -7,6 +7,9 @@
     "moduleResolution": "node",
     "noImplicitAny": false,
     "removeComments": true,
+    "lib": [
+      "es2015"
+    ],
     "types": [
       "bluebird",
       "mocha",
