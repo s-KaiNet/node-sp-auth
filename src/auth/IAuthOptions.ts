@@ -45,18 +45,18 @@ export type IAuthOptions =
   | IAdfsUserCredentials;
 
 export function isAddinOnlyOnline(T: IAuthOptions): T is IOnlineAddinCredentials {
-  return (<IOnlineAddinCredentials>T).clientSecret !== undefined;
+  return (T as IOnlineAddinCredentials).clientSecret !== undefined;
 }
 
 export function isAddinOnlyOnpremise(T: IAuthOptions): T is IOnPremiseAddinCredentials {
-  return (<IOnPremiseAddinCredentials>T).shaThumbprint !== undefined;
+  return (T as IOnPremiseAddinCredentials).shaThumbprint !== undefined;
 }
 
 export function isUserCredentialsOnline(siteUrl: string, T: IAuthOptions): T is IUserCredentials {
   let host: string = (url.parse(siteUrl)).host;
   let isOnPrem: boolean = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
 
-  if (!isOnPrem && (<IUserCredentials>T).username !== undefined && !isAdfsCredentials(T)) {
+  if (!isOnPrem && (T as IUserCredentials).username !== undefined && !isAdfsCredentials(T)) {
     return true;
   }
 
@@ -67,7 +67,7 @@ export function isUserCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T 
   let host: string = (url.parse(siteUrl)).host;
   let isOnPrem: boolean = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
 
-  if (isOnPrem && (<IUserCredentials>T).username !== undefined && !isAdfsCredentials(T)) {
+  if (isOnPrem && (T as IUserCredentials).username !== undefined && !isAdfsCredentials(T)) {
     return true;
   }
 
@@ -78,7 +78,7 @@ export function isFbaCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T i
   let host: string = (url.parse(siteUrl)).host;
   let isOnPrem: boolean = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
 
-  if (isOnPrem && (<IOnpremiseFbaCredentials>T).username !== undefined && (<IOnpremiseFbaCredentials>T).fba) {
+  if (isOnPrem && (T as IOnpremiseFbaCredentials).username !== undefined && (T as IOnpremiseFbaCredentials).fba) {
     return true;
   }
 
@@ -86,5 +86,5 @@ export function isFbaCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T i
 }
 
 export function isAdfsCredentials(T: IAuthOptions): T is IAdfsUserCredentials {
-  return (<IAdfsUserCredentials>T).adfsUrl !== undefined;
+  return (T as IAdfsUserCredentials).adfsUrl !== undefined;
 }

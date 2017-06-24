@@ -89,9 +89,10 @@ Before creating Pull Request you need to create an appropriate issue and referen
 
 1. `git clone https://github.com/s-KaiNet/node-sp-auth.git`
 2. `npm run build` - restores dependencies and runs typescript compilation
-3. `gulp live-dev` - setup watchers and automatically runs typescript compilation, tslint and tests when you save files
+3. `npm run dev` - setup watchers and automatically runs typescript compilation, tslint and tests when you save files
 
 ## Integration testing:
 1. Rename file `/test/integration/config.sample.ts` to `config.ts`.
 2. Update information in `config.ts` with appropriate values (urls, credentials).
-3. Run `gulp test-int`.
+3. Run `npm test:integration`.
+4. For test debugging put a breakpoint and press F5 (works in VSCode only).

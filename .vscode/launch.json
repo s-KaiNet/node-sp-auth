@@ -1,31 +1,19 @@
 {
 	"version": "0.2.0",
-	// List of configurations. Add new configurations or edit existing ones.
-	// ONLY "node" and "mono" are supported, change "type" to switch.
 	"configurations": [
 		{
-			// Name of configuration; appears in the launch configuration drop down menu.
 			"name": "Run mocha integration",
-			// Type of configuration. Possible values: "node", "mono".
 			"type": "node",
-			// Workspace relative or absolute path to the program.
+			"request": "launch",
 			"program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-			// Automatically stop program after launch.
 			"stopOnEntry": false,
-			// Command line arguments passed to the program.
 			"args": [
-				"${workspaceRoot}\\lib\\test\\integration\\tests.js"
+				"-r",
+				"ts-node/register",
+				"${relativeFile}"
 			],
-			// Workspace relative or absolute path to the working directory of the program being debugged. Default is the current workspace.
 			"cwd": "${workspaceRoot}",
-			// Workspace relative or absolute path to the runtime executable to be used. Default is the runtime executable on the PATH.
-			"runtimeExecutable": null,
-			"sourceMaps": true,
-			"outDir": "${workspaceRoot}/lib",
-			// Environment variables passed to the program.
-			"env": {
-				"NODE_ENV": "development"
-			}
+			"protocol": "inspector"
 		}
 	]
 }

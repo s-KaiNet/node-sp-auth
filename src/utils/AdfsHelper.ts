@@ -12,8 +12,8 @@ import { SamlAssertion } from './SamlAssertion';
 export class AdfsHelper {
   public static getSamlAssertion(siteUrl: string, credentials: IAdfsUserCredentials): Promise<SamlAssertion> {
     let adfsHost: string = url.parse(credentials.adfsUrl).host;
-    let usernameMixedUrl: string = `https://${adfsHost}/adfs/services/trust/13/usernamemixed`;
-    let samlTemplate: Buffer = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'templates', 'adfs_saml_wsfed.tmpl'));
+    let usernameMixedUrl = `https://${adfsHost}/adfs/services/trust/13/usernamemixed`;
+    let samlTemplate: Buffer = fs.readFileSync(path.join(__dirname, '..', '..', 'templates', 'adfs_saml_wsfed.tmpl'));
 
     let samlBody: string = _.template(samlTemplate.toString())({
       to: usernameMixedUrl,
@@ -45,11 +45,11 @@ export class AdfsHelper {
         let notBefore: string = samlAssertion.firstChild.attr['NotBefore'];
         let notAfter: string = samlAssertion.firstChild.attr['NotOnOrAfter'];
 
-        return <SamlAssertion>{
+        return {
           value: samlAssertion.toString({ compressed: true }),
           notAfter: notAfter,
           notBefore: notBefore
-        };
+        } as SamlAssertion;
       });
   }
 }

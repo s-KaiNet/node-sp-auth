@@ -5,22 +5,23 @@
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "node",
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "removeComments": true,
+    "outDir": "./lib",
     "lib": [
       "es2015"
     ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "types": [
-      "bluebird",
       "mocha",
       "node",
-      "chai",
-      "request",
-      "request-promise",
-      "lodash",
-      "cookie",
-      "core-js",
-      "jsonwebtoken"
+      "chai"
     ]
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ]
 }

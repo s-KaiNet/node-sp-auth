@@ -62,7 +62,7 @@ tests.forEach(test => {
       this.timeout(30 * 1000);
 
       let parsedUrl: url.Url = url.parse(test.url);
-      let documentTitle: string = 'Documents';
+      let documentTitle = 'Documents';
       let isHttps: boolean = parsedUrl.protocol === 'https:';
 
       let send: (options: http.RequestOptions, callback?: (res: http.IncomingMessage) => void) => http.ClientRequest =
@@ -73,7 +73,7 @@ tests.forEach(test => {
       spauth.getAuth(test.url, test.creds)
         .then(response => {
 
-          let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
+          let options: request.OptionsWithUrl = getDefaultHeaders() as request.OptionsWithUrl;
           let headers: any = _.assign(options.headers, response.headers);
 
           if (response.options && response.options['agent']) {
@@ -90,7 +90,7 @@ tests.forEach(test => {
             headers: headers,
             agent: agent
           }, clientRequest => {
-            let results: string = '';
+            let results = '';
 
             clientRequest.on('data', chunk => {
               results += chunk;
@@ -112,11 +112,11 @@ tests.forEach(test => {
 
     it('should get list title', function (done: MochaDone): void {
       this.timeout(30 * 1000);
-      let documentTitle: string = 'Documents';
+      let documentTitle = 'Documents';
 
       spauth.getAuth(test.url, test.creds)
         .then(response => {
-          let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
+          let options: request.OptionsWithUrl = getDefaultHeaders() as request.OptionsWithUrl;
           _.assign(options.headers, response.headers);
           _.assign(options, response.options);
           options.url = `${test.url}_api/web/lists/getbytitle('${documentTitle}')`;
@@ -124,7 +124,7 @@ tests.forEach(test => {
           return request.get(options);
         })
         .then((data: IncomingMessage) => {
-          expect((<any>data).body.d.Title).to.equal(documentTitle);
+          expect((data as any).body.d.Title).to.equal(documentTitle);
           done();
         })
         .catch(done);
@@ -132,11 +132,11 @@ tests.forEach(test => {
 
     it('should get Title field', function (done: MochaDone): void {
       this.timeout(30 * 1000);
-      let fieldTitle: string = 'Title';
+      let fieldTitle = 'Title';
 
       spauth.getAuth(test.url, test.creds)
         .then(response => {
-          let options: request.OptionsWithUrl = <request.OptionsWithUrl>getDefaultHeaders();
+          let options: request.OptionsWithUrl = getDefaultHeaders() as request.OptionsWithUrl;
           _.assign(options.headers, response.headers);
           _.assign(options, response.options);
           options.url = `${test.url}_api/web/fields/getbytitle('${fieldTitle}')`;
@@ -144,7 +144,7 @@ tests.forEach(test => {
           return request.get(options);
         })
         .then(data => {
-          expect((<any>data).body.d.Title).to.equal(fieldTitle);
+          expect((data as any).body.d.Title).to.equal(fieldTitle);
           done();
         })
         .catch(done);
@@ -154,7 +154,7 @@ tests.forEach(test => {
 });
 
 function getDefaultHeaders(): request.RequestPromiseOptions {
-  let options: request.RequestPromiseOptions = <request.RequestPromiseOptions>_.assign({}, <request.RequestPromiseOptions>{
+  let options: request.RequestPromiseOptions = _.assign({}, {
     headers: {
       'Accept': 'application/json;odata=verbose',
       'Content-Type': 'application/json;odata=verbose'
@@ -163,7 +163,7 @@ function getDefaultHeaders(): request.RequestPromiseOptions {
     strictSSL: false,
     resolveWithFullResponse: true,
     simple: true
-  });
+  } as request.RequestPromiseOptions) as request.RequestPromiseOptions;
 
   return options;
 }

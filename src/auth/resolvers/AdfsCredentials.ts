@@ -80,7 +80,7 @@ export class AdfsCredentials implements IAuthResolver {
   }
 
   private postTokenData(samlAssertion: SamlAssertion): Promise<[string, any]> {
-    let tokenPostTemplate: Buffer = fs.readFileSync(path.join(__dirname, '..', '..', '..', '..', 'templates', 'adfs_saml_token.tmpl'));
+    let tokenPostTemplate: Buffer = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'templates', 'adfs_saml_token.tmpl'));
 
     let result: string = _.template(tokenPostTemplate.toString())({
       created: samlAssertion.notBefore,
@@ -91,7 +91,7 @@ export class AdfsCredentials implements IAuthResolver {
 
     let tokenXmlDoc: any = new xmldoc.XmlDocument(result);
     let siteUrlParsed: url.Url = url.parse(this._siteUrl);
-    let rootSiteUrl: string = `${siteUrlParsed.protocol}//${siteUrlParsed.host}`;
+    let rootSiteUrl = `${siteUrlParsed.protocol}//${siteUrlParsed.host}`;
 
     return Promise.all([samlAssertion.notAfter, request.post(`${rootSiteUrl}/_trust/`, {
       form: {

@@ -17,8 +17,8 @@ export class OnpremiseAddinOnly implements IAuthResolver {
   public getAuth(): Promise<IAuthResponse> {
 
       let sharepointhostname: string = url.parse(this._siteUrl).host;
-      let audience: string = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${this._authOptions.realm}`;
-      let fullIssuerIdentifier: string = `${this._authOptions.issuerId}@${this._authOptions.realm}`;
+      let audience = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${this._authOptions.realm}`;
+      let fullIssuerIdentifier = `${this._authOptions.issuerId}@${this._authOptions.realm}`;
 
       let options: any = {
         key: fs.readFileSync(this._authOptions.rsaPrivateKeyPath)

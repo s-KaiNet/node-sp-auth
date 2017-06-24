@@ -3,7 +3,8 @@
   "editor.tabSize": 2,
   "files.trimTrailingWhitespace": false,
   "files.exclude": {
-    "node_modules/": false,
+    "node_modules/": true,
+    ".nyc_output/": true,
     "**/*.js": {
       "when": "$(basename).ts"
     },
@@ -13,8 +14,8 @@
     "**/*.js.map": true
   },
   "editor.wordWrap": "on",
-  "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 2000,
+  "files.autoSave": "onFocusChange",
   "editor.minimap.maxColumn": 90,
-  "editor.minimap.renderCharacters": false
+  "editor.minimap.renderCharacters": false,
+  "typescript.disableAutomaticTypeAcquisition": true
 }
