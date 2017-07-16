@@ -1,9 +1,9 @@
 import * as Promise from 'bluebird';
 import * as childProcess from 'child_process';
 import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs';
-let jsonfile = require('jsonfile');
+import * as _ from 'lodash';
+import { Cpass } from 'cpass';
 
 import { IAuthResolver } from '../../IAuthResolver';
 import { IAuthResponse } from '../../IAuthResponse';
@@ -20,8 +20,13 @@ export interface ICookie {
 export class OnDemand implements IAuthResolver {
   private static CookieCache: Cache = new Cache();
   private static Expiration = 24 * 60 * 60;
+  private _cpass = new Cpass();
 
   constructor(private _siteUrl: string, private _authOptions: IOnDemandCredentials) {
+    _.defaults(this._authOptions, {
+      force: false,
+      persist: true
+    });
   }
 
   public getAuth(): Promise<IAuthResponse> {
@@ -39,11 +44,11 @@ export class OnDemand implements IAuthResolver {
       });
     }
 
-    if (!fs.existsSync(dataFilePath)) {
+    if (!fs.existsSync(dataFilePath) || this._authOptions.force) {
       cookies = this.saveAuthData(dataFilePath);
     } else {
       console.log(`[node-sp-auth]: reading auth data from ${dataFilePath}`);
-      cookies = jsonfile.readFileSync(dataFilePath);
+      cookies = JSON.parse(this._cpass.decode(fs.readFileSync(dataFilePath).toString()));
     }
 
     let authCookie = '';
@@ -70,7 +75,7 @@ export class OnDemand implements IAuthResolver {
     let args = `${electronExecutable} ${path.join(__dirname, 'main.js')} ${this._siteUrl}`;
     const output = childProcess.execFileSync(command, [isWindows ? '/c' : '-c', args]).toString();
 
-    let cookieRegex = /#\{([\s\S]+)\}#/gm;
+    let cookieRegex = /#\{([\s\S]+?)\}#/gm;
     let cookieData = cookieRegex.exec(output);
 
     let cookiesJson = cookieData[1].split(';#;');
@@ -90,7 +95,9 @@ export class OnDemand implements IAuthResolver {
       throw new Error('Cookie array is empy');
     }
 
-    jsonfile.writeFileSync(dataPath, cookies);
+    if (this._authOptions.persist) {
+      fs.writeFileSync(dataPath, this._cpass.encode(JSON.stringify(cookies)));
+    }
 
     return cookies;
   }
@@ -100,7 +107,7 @@ export class OnDemand implements IAuthResolver {
     if (!fs.existsSync(userDataFolder)) {
       fs.mkdirSync(userDataFolder);
     }
-    return path.join(userDataFolder, `${this.resolveFileName()}_ondemand.json`);
+    return path.join(userDataFolder, `${this.resolveFileName()}_ondemand.data`);
   }
 
   private getUserDataFolder(): string {

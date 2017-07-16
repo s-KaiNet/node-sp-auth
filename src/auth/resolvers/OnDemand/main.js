@@ -85,21 +85,16 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
     parent: mainWindow,
     modal: true,
     show: true,
-    height: 250,
-    width: 250,
-    frame: false,
-    backgroundColor: '#F2F2F2'
+    height: 100,
+    width: 500
   });
 
   child.setMenu(null);
-  electron.ipcMain.on('spauth-on-login', function (data, args) {
-    console.log('**************** Receiving data *******************')
-    console.log(args);
-    child.close();
-    callback(args[0], args[1]);
-  });
+  child.loadURL(`file://${__dirname}/no-ntlm.html`);
 
-  child.loadURL(`file://${__dirname}/credentials.html`);
+  child.on('closed', function(){
+    mainWindow.close();
+  });
 });
 
 // This method will be called when Electron has finished

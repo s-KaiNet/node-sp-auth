@@ -58,7 +58,7 @@ let tests: ITestInfo[] = [
   {
     name: 'ondemand - on-premise',
     creds: config.ondemand,
-    url: config.onpremNtlmEnabledUrl
+    url: config.onpremFbaEnabledUrl
   }
 ];
 

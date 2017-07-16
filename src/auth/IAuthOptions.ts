@@ -40,6 +40,8 @@ export interface IAdfsUserCredentials extends IUserCredentials {
 export interface IOnDemandCredentials {
   ondemand: boolean;
   electron?: string;
+  force?: boolean;
+  persist?: boolean;
 }
 
 export type IAuthOptions =

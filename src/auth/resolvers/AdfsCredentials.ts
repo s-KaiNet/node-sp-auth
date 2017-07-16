@@ -14,8 +14,8 @@ import { IAdfsUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
 import * as consts from './../../Consts';
-import {AdfsHelper} from './../../utils/AdfsHelper';
-import {SamlAssertion} from './../../utils/SamlAssertion';
+import { AdfsHelper } from './../../utils/AdfsHelper';
+import { SamlAssertion } from './../../utils/SamlAssertion';
 
 export class AdfsCredentials implements IAuthResolver {
 
