@@ -80,11 +80,10 @@ Possible values for `credentialOptions` (depending on authentication strategy):
 
  - [ADFS user credentials:](https://github.com/s-KaiNet/node-sp-auth/wiki/ADFS%20user%20credentials%20authentication)  
    `username`, `password`, `relyingParty`, `adfsUrl`, `adfsCookie`
- - [On demand authentication](https://github.com/s-KaiNet/node-sp-auth/wiki/)  
-
+ - [On demand authentication](https://github.com/s-KaiNet/node-sp-auth/wiki/On%20demand%20authentication)  
      `ondemand` = true, `electron`, `force`, `persist`
 
-Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki/On%20demand authentication) to see how you can configure your environment in order to use any of this authentication options.
+Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki/) to see how you can configure your environment in order to use any of this authentication options.
 
 ## Development:
 I recommend using VS Code for development. Repository already contains some settings for VS Code editor.
