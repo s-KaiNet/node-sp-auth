@@ -17,6 +17,7 @@ Authentication options:
    * Addin only permissions
    * SAML based with user credentials
  * ADFS user credentials (works with both SharePoint on-premise and Online)
+ * On demand authentication. Uses interactive browser session for asking credentials. Supports third-party authentication providers for SharePoint Online and SharePoint on-premise. Doesn't support integrated windows authentication (NTLM). 
 
 [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) contains detailed steps you need to perform in order to use any of authentication options as well as sample using. 
 
@@ -79,8 +80,11 @@ Possible values for `credentialOptions` (depending on authentication strategy):
 
  - [ADFS user credentials:](https://github.com/s-KaiNet/node-sp-auth/wiki/ADFS%20user%20credentials%20authentication)  
    `username`, `password`, `relyingParty`, `adfsUrl`, `adfsCookie`
+ - [On demand authentication](https://github.com/s-KaiNet/node-sp-auth/wiki/)  
 
-Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki) to see how you can configure your environment in order to use any of this authentication options.
+     `ondemand` = true, `electron`, `force`, `persist`
+
+Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki/On%20demand authentication) to see how you can configure your environment in order to use any of this authentication options.
 
 ## Development:
 I recommend using VS Code for development. Repository already contains some settings for VS Code editor.
@@ -88,11 +92,11 @@ I recommend using VS Code for development. Repository already contains some sett
 Before creating Pull Request you need to create an appropriate issue and reference it from PR.
 
 1. `git clone https://github.com/s-KaiNet/node-sp-auth.git`
-2. `npm run build` - restores dependencies and runs typescript compilation
+2. `npm run build` - runs linting and typescript compilation
 3. `npm run dev` - setup watchers and automatically runs typescript compilation, tslint and tests when you save files
 
 ## Integration testing:
 1. Rename file `/test/integration/config.sample.ts` to `config.ts`.
 2. Update information in `config.ts` with appropriate values (urls, credentials).
 3. Run `npm test:integration`.
-4. For test debugging put a breakpoint and press F5 (works in VSCode only).
+4. For tests debugging put a breakpoint and press F5 (works in VSCode only).

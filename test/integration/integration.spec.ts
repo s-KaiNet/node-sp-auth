@@ -17,7 +17,7 @@ interface ITestInfo {
 
 let config: any = require('./config');
 
-/*let tests: ITestInfo[] = [
+let tests: ITestInfo[] = [
   {
     name: 'on-premise user credentials',
     creds: config.onpremCreds,
@@ -52,13 +52,20 @@ let config: any = require('./config');
     name: 'adfs user credentials',
     creds: config.adfsCredentials,
     url: config.onpremAdfsEnabledUrl
-  }
-];*/
-let tests: ITestInfo[] = [
+  },
   {
-    name: 'ondemand - on-premise',
-    creds: config.ondemand,
-    url: config.onpremFbaEnabledUrl
+    name: 'ondemand - online',
+    creds: {
+      ondemand: true
+    },
+    url: config.onlineUrl
+  },
+  {
+    name: 'ondemand - on-premise with ADFS',
+    creds: {
+      ondemand: true
+    },
+    url: config.onpremAdfsEnabledUrl
   }
 ];
 

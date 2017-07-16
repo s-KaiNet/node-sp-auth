@@ -16,7 +16,7 @@ let mainWindow;
 
 function createWindow() {
   let siteUrl = process.argv[2];
-  if(siteUrl.endsWith('/')){
+  if (siteUrl.endsWith('/')) {
     siteUrl = siteUrl.slice(0, -1);
   }
   // Create the browser window.
@@ -32,7 +32,9 @@ function createWindow() {
 
   mainWindow.setMenu(null);
   // and load the index.html of the app.
-  mainWindow.loadURL(siteUrl);
+  mainWindow.webContents.session.clearStorageData([], function () {
+    mainWindow.loadURL(siteUrl);
+  });
 
   mainWindow.webContents.on('did-finish-load', function (data) {
     let loadedUrl = mainWindow.webContents.getURL();
@@ -65,7 +67,7 @@ function createWindow() {
           console.log(';#;');
         });
         console.log('}#');
-        // mainWindow.close();
+        mainWindow.close();
       })
     }
   });
@@ -92,7 +94,7 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
   child.setMenu(null);
   child.loadURL(`file://${__dirname}/no-ntlm.html`);
 
-  child.on('closed', function(){
+  child.on('closed', function () {
     mainWindow.close();
   });
 });
