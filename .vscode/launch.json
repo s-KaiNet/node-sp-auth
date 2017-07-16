@@ -10,7 +10,7 @@
 			"args": [
 				"-r",
 				"ts-node/register",
-				"${relativeFile}"
+				"test/integration/tests.ts"
 			],
 			"cwd": "${workspaceRoot}",
 			"protocol": "inspector"

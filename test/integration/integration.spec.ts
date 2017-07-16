@@ -17,7 +17,7 @@ interface ITestInfo {
 
 let config: any = require('./config');
 
-let tests: ITestInfo[] = [
+/*let tests: ITestInfo[] = [
   {
     name: 'on-premise user credentials',
     creds: config.onpremCreds,
@@ -53,13 +53,20 @@ let tests: ITestInfo[] = [
     creds: config.adfsCredentials,
     url: config.onpremAdfsEnabledUrl
   }
+];*/
+let tests: ITestInfo[] = [
+  {
+    name: 'ondemand - on-premise',
+    creds: config.ondemand,
+    url: config.onpremNtlmEnabledUrl
+  }
 ];
 
 tests.forEach(test => {
   describe(`node-sp-auth: integration - ${test.name}`, () => {
 
     it('should get list title with core http(s)', function (done: MochaDone): void {
-      this.timeout(30 * 1000);
+      this.timeout(90 * 1000);
 
       let parsedUrl: url.Url = url.parse(test.url);
       let documentTitle = 'Documents';
@@ -111,7 +118,7 @@ tests.forEach(test => {
     });
 
     it('should get list title', function (done: MochaDone): void {
-      this.timeout(30 * 1000);
+      this.timeout(90 * 1000);
       let documentTitle = 'Documents';
 
       spauth.getAuth(test.url, test.creds)
@@ -131,7 +138,7 @@ tests.forEach(test => {
     });
 
     it('should get Title field', function (done: MochaDone): void {
-      this.timeout(30 * 1000);
+      this.timeout(90 * 1000);
       let fieldTitle = 'Title';
 
       spauth.getAuth(test.url, test.creds)

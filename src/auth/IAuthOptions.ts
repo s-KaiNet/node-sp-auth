@@ -37,12 +37,18 @@ export interface IAdfsUserCredentials extends IUserCredentials {
   relyingParty: string;
 }
 
+export interface IOnDemandCredentials {
+  ondemand: boolean;
+  electron?: string;
+}
+
 export type IAuthOptions =
   IOnlineAddinCredentials
   | IOnPremiseAddinCredentials
   | IUserCredentials
   | IOnpremiseUserCredentials
-  | IAdfsUserCredentials;
+  | IAdfsUserCredentials
+  | IOnDemandCredentials;
 
 export function isAddinOnlyOnline(T: IAuthOptions): T is IOnlineAddinCredentials {
   return (T as IOnlineAddinCredentials).clientSecret !== undefined;
@@ -87,4 +93,8 @@ export function isFbaCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T i
 
 export function isAdfsCredentials(T: IAuthOptions): T is IAdfsUserCredentials {
   return (T as IAdfsUserCredentials).adfsUrl !== undefined;
+}
+
+export function isOndemandCredentials(T: IAuthOptions): T is IOnDemandCredentials {
+  return (T as IOnDemandCredentials).ondemand !== undefined;
 }

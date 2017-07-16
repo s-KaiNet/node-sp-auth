@@ -9,7 +9,8 @@
     "removeComments": true,
     "outDir": "./lib",
     "lib": [
-      "es2015"
+      "es2015",
+      "dom"
     ],
     "typeRoots": [
       "node_modules/@types"

@@ -17,5 +17,6 @@
   "files.autoSave": "onFocusChange",
   "editor.minimap.maxColumn": 90,
   "editor.minimap.renderCharacters": false,
-  "typescript.disableAutomaticTypeAcquisition": true
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "tslint.autoFixOnSave": true
 }
