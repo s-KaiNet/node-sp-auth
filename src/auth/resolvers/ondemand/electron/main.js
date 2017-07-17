@@ -16,6 +16,7 @@ let mainWindow;
 
 function createWindow() {
   let siteUrl = process.argv[2];
+  let force = process.argv[3] === 'true';
   if (siteUrl.endsWith('/')) {
     siteUrl = siteUrl.slice(0, -1);
   }
@@ -32,9 +33,13 @@ function createWindow() {
 
   mainWindow.setMenu(null);
   // and load the index.html of the app.
-  mainWindow.webContents.session.clearStorageData([], function () {
+  if (force) {
+    mainWindow.webContents.session.clearStorageData([], function () {
+      mainWindow.loadURL(siteUrl);
+    });
+  } else {
     mainWindow.loadURL(siteUrl);
-  });
+  }
 
   mainWindow.webContents.on('did-finish-load', function (data) {
     let loadedUrl = mainWindow.webContents.getURL();

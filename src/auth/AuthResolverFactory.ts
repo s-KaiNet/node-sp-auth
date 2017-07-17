@@ -7,7 +7,7 @@ import { OnlineUserCredentials } from './resolvers/OnlineUserCredentials';
 import { OnlineAddinOnly } from './resolvers/OnlineAddinOnly';
 import { OnpremiseAddinOnly } from './resolvers/OnpremiseAddinOnly';
 import { AdfsCredentials } from './resolvers/AdfsCredentials';
-import { OnDemand } from './resolvers/OnDemand/OnDemand';
+import { OnDemand } from './resolvers/ondemand/OnDemand';
 import * as authOptions from './IAuthOptions';
 
 export class AuthResolverFactory {

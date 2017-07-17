@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as _ from 'lodash';
 import { Cpass } from 'cpass';
+import * as url from 'url';
 
 import { IAuthResolver } from '../../IAuthResolver';
 import { IAuthResponse } from '../../IAuthResponse';
@@ -15,6 +16,7 @@ export interface ICookie {
   httpOnly: boolean;
   name: string;
   value: string;
+  expirationDate?: number;
 }
 
 export class OnDemand implements IAuthResolver {
@@ -48,7 +50,19 @@ export class OnDemand implements IAuthResolver {
       cookies = this.saveAuthData(dataFilePath);
     } else {
       console.log(`[node-sp-auth]: reading auth data from ${dataFilePath}`);
+
       cookies = JSON.parse(this._cpass.decode(fs.readFileSync(dataFilePath).toString()));
+      let expired = false;
+      cookies.forEach((cookie) => {
+        let now = new Date();
+        if (cookie.expirationDate && new Date(cookie.expirationDate * 1000) < now) {
+          expired = true;
+        }
+      });
+
+      if (expired) {
+        cookies = this.saveAuthData(dataFilePath);
+      }
     }
 
     let authCookie = '';
@@ -69,10 +83,11 @@ export class OnDemand implements IAuthResolver {
 
   private saveAuthData(dataPath: string): ICookie[] {
     let isWindows = (process.platform.lastIndexOf('win') === 0);
-
+    let host = url.parse(this._siteUrl).hostname;
+    let isOnPrem = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
     let command = isWindows ? 'cmd.exe' : 'sh';
     let electronExecutable = this._authOptions.electron || 'electron';
-    let args = `${electronExecutable} ${path.join(__dirname, 'main.js')} ${this._siteUrl}`;
+    let args = `${electronExecutable} ${path.join(__dirname, 'electron/main.js')} ${this._siteUrl} ${this._authOptions.force}`;
     const output = childProcess.execFileSync(command, [isWindows ? '/c' : '-c', args]).toString();
 
     let cookieRegex = /#\{([\s\S]+?)\}#/gm;
@@ -87,6 +102,17 @@ export class OnDemand implements IAuthResolver {
         let cookieData = JSON.parse(data) as ICookie;
         if (cookieData.httpOnly) {
           cookies.push(cookieData);
+
+          // explicitly set 1 hour expiration for on-premise
+          if (isOnPrem) {
+            let expiration = new Date();
+            expiration.setMinutes(expiration.getMinutes() + 55);
+            cookieData.expirationDate = expiration.getTime();
+          } else if (!cookieData.expirationDate) { // 24 hours for online if no expiration date on cookie
+            let expiration = new Date();
+            expiration.setMinutes(expiration.getMinutes() + 1435);
+            cookieData.expirationDate = expiration.getTime();
+          }
         }
       }
     });
@@ -119,12 +145,12 @@ export class OnDemand implements IAuthResolver {
     }
 
     if (platform === 'darwin') {
-      homepath = process.env.homepath;
-      homepath = path.join(homepath, 'Library', 'Application Support');
+      homepath = process.env.HOME;
+      homepath = path.join(homepath, 'Library', 'Preferences');
     }
 
     if (platform === 'linux') {
-      homepath = process.env.homepath;
+      homepath = process.env.HOME;
     }
 
     if (!homepath) {
