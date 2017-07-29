@@ -66,20 +66,21 @@
     "typescript": "^2.4.0"
   },
   "dependencies": {
-    "@types/bluebird": "^3.0.35",
+    "@types/bluebird-global": "^3.5.3",
     "@types/cookie": "^0.1.29",
     "@types/core-js": "^0.9.34",
     "@types/jsonwebtoken": "^7.1.33",
     "@types/lodash": "^4.14.69",
     "@types/node": "^6.0.45",
     "@types/request": "0.0.31",
-    "@types/request-promise": "^3.0.32",
+    "@types/request-promise": "^4.1.36",
     "bluebird": "^3.4.6",
     "cookie": "^0.3.1",
     "cpass": "^2.0.0",
     "httpntlm": "^1.6.1",
     "jsonwebtoken": "^7.1.9",
     "lodash": "^4.17.4",
+    "node-sp-auth-config": "^2.0.2",
     "request": "^2.75.0",
     "request-promise": "^4.1.1",
     "xmldoc": "^0.5.1"

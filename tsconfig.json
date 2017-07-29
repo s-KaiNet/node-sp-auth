@@ -18,7 +18,8 @@
     "types": [
       "mocha",
       "node",
-      "chai"
+      "chai",
+      "bluebird-global"
     ]
   },
   "include": [

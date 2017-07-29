@@ -11,6 +11,7 @@ import { IAuthResponse } from '../../IAuthResponse';
 import { IOnDemandCredentials } from '../../IAuthOptions';
 import { UrlHelper } from '../../../utils/UrlHelper';
 import { Cache } from './../../../utils/Cache';
+import { FilesHelper } from '../../../utils/FilesHelper';
 
 export interface ICookie {
   httpOnly: boolean;
@@ -21,7 +22,6 @@ export interface ICookie {
 
 export class OnDemand implements IAuthResolver {
   private static CookieCache: Cache = new Cache();
-  private static Expiration = 24 * 60 * 60;
   private _cpass = new Cpass();
 
   constructor(private _siteUrl: string, private _authOptions: IOnDemandCredentials) {
@@ -34,7 +34,7 @@ export class OnDemand implements IAuthResolver {
   public getAuth(): Promise<IAuthResponse> {
     let dataFilePath = this.getDataFilePath();
     let cookies: ICookie[];
-    let cacheKey: string = this.resolveFileName();
+    let cacheKey: string = FilesHelper.resolveFileName(this._siteUrl);
 
     let cachedCookie: string = OnDemand.CookieCache.get<string>(cacheKey);
 
@@ -72,13 +72,24 @@ export class OnDemand implements IAuthResolver {
     });
 
     authCookie = authCookie.slice(0, -1);
-    OnDemand.CookieCache.set(cacheKey, authCookie, OnDemand.Expiration);
+    OnDemand.CookieCache.set(cacheKey, authCookie, this.getMaxExpiration(cookies));
 
     return Promise.resolve({
       headers: {
         'Cookie': authCookie
       }
     });
+  }
+
+  private getMaxExpiration(cookies: ICookie[]): Date {
+    let expiration = 0;
+    cookies.forEach(cookie => {
+      if (cookie.expirationDate > expiration) {
+        expiration = cookie.expirationDate * 1000;
+      }
+    });
+
+    return new Date(expiration)
   }
 
   private saveAuthData(dataPath: string): ICookie[] {
@@ -107,18 +118,18 @@ export class OnDemand implements IAuthResolver {
           if (isOnPrem) {
             let expiration = new Date();
             expiration.setMinutes(expiration.getMinutes() + 55);
-            cookieData.expirationDate = expiration.getTime();
+            cookieData.expirationDate = expiration.getTime() / 1000;
           } else if (!cookieData.expirationDate) { // 24 hours for online if no expiration date on cookie
             let expiration = new Date();
             expiration.setMinutes(expiration.getMinutes() + 1435);
-            cookieData.expirationDate = expiration.getTime();
+            cookieData.expirationDate = expiration.getTime() / 1000;
           }
         }
       }
     });
 
     if (cookies.length === 0) {
-      throw new Error('Cookie array is empy');
+      throw new Error('Cookie array is empty');
     }
 
     if (this._authOptions.persist) {
@@ -129,39 +140,10 @@ export class OnDemand implements IAuthResolver {
   }
 
   private getDataFilePath(): string {
-    let userDataFolder = this.getUserDataFolder();
+    let userDataFolder = FilesHelper.getUserDataFolder();
     if (!fs.existsSync(userDataFolder)) {
       fs.mkdirSync(userDataFolder);
     }
-    return path.join(userDataFolder, `${this.resolveFileName()}_ondemand.data`);
-  }
-
-  private getUserDataFolder(): string {
-    let platform = process.platform;
-    let homepath: string;
-
-    if (platform.lastIndexOf('win') === 0) {
-      homepath = process.env.APPDATA || process.env.LOCALAPPDATA;
-    }
-
-    if (platform === 'darwin') {
-      homepath = process.env.HOME;
-      homepath = path.join(homepath, 'Library', 'Preferences');
-    }
-
-    if (platform === 'linux') {
-      homepath = process.env.HOME;
-    }
-
-    if (!homepath) {
-      throw new Error('Couldn\'t find the base application data folder');
-    }
-
-    return path.join(homepath, 'spauth');
-  }
-
-  private resolveFileName(): string {
-    let url = UrlHelper.removeTrailingSlash(this._siteUrl);
-    return url.replace(/[\:/\s]/g, '_');
+    return path.join(userDataFolder, `${FilesHelper.resolveFileName(this._siteUrl)}_ondemand.data`);
   }
 }
