@@ -141,9 +141,11 @@ export class OnDemand implements IAuthResolver {
 
   private getDataFilePath(): string {
     let userDataFolder = FilesHelper.getUserDataFolder();
-    if (!fs.existsSync(userDataFolder)) {
-      fs.mkdirSync(userDataFolder);
+    let ondemandFolder = path.join(userDataFolder, 'ondemand');
+
+    if (!fs.existsSync(ondemandFolder)) {
+      fs.mkdirSync(ondemandFolder);
     }
-    return path.join(userDataFolder, `${FilesHelper.resolveFileName(this._siteUrl)}_ondemand.data`);
+    return path.join(ondemandFolder, `${FilesHelper.resolveFileName(this._siteUrl)}.data`);
   }
 }

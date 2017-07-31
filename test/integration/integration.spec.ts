@@ -18,7 +18,7 @@ interface ITestInfo {
 let config: any = require('./config');
 
 let tests: ITestInfo[] = [
-  /*{
+  {
     name: 'on-premise user credentials',
     creds: config.onpremCreds,
     url: config.onpremNtlmEnabledUrl
@@ -52,7 +52,7 @@ let tests: ITestInfo[] = [
     name: 'adfs user credentials',
     creds: config.adfsCredentials,
     url: config.onpremAdfsEnabledUrl
-  },*/
+  },
   {
     name: 'ondemand - online',
     creds: {
@@ -65,6 +65,21 @@ let tests: ITestInfo[] = [
     creds: {
       ondemand: true
     },
+    url: config.onpremAdfsEnabledUrl
+  },
+  {
+    name: 'file creds - online',
+    creds: null,
+    url: config.onlineUrl
+  },
+  {
+    name: 'file creds - on-premise - NTLM',
+    creds: null,
+    url: config.onpremNtlmEnabledUrl
+  },
+  {
+    name: 'file creds - on-premise - ADFS',
+    creds: null,
     url: config.onpremAdfsEnabledUrl
   }
 ];
@@ -177,7 +192,7 @@ function getDefaultHeaders(): request.RequestPromiseOptions {
     strictSSL: false,
     resolveWithFullResponse: true,
     simple: true
-  } as request.RequestPromiseOptions) as request.RequestPromiseOptions;
+  });
 
   return options;
 }

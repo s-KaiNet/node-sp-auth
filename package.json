@@ -1,5 +1,5 @@
 {
-  "version": "2.0.2",
+  "version": "2.0.3",
   "name": "node-sp-auth",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "description": "Unattended SharePoint http authentication with nodejs",
@@ -66,7 +66,7 @@
     "typescript": "^2.4.0"
   },
   "dependencies": {
-    "@types/bluebird-global": "^3.5.3",
+    "@types/bluebird": "^3.5.8",
     "@types/cookie": "^0.1.29",
     "@types/core-js": "^0.9.34",
     "@types/jsonwebtoken": "^7.1.33",

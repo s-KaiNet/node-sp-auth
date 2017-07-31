@@ -97,6 +97,6 @@ export class OnlineAddinOnly implements IAuthResolver {
         let header: string = data.headers['www-authenticate'];
         let index: number = header.indexOf('Bearer realm="');
         return header.substring(index + 14, index + 50);
-      }) as Promise<string>;
+      });
   }
 }
