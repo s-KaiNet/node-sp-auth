@@ -9,7 +9,6 @@ import * as url from 'url';
 import { IAuthResolver } from '../../IAuthResolver';
 import { IAuthResponse } from '../../IAuthResponse';
 import { IOnDemandCredentials } from '../../IAuthOptions';
-import { UrlHelper } from '../../../utils/UrlHelper';
 import { Cache } from './../../../utils/Cache';
 import { FilesHelper } from '../../../utils/FilesHelper';
 

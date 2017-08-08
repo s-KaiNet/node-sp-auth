@@ -7,7 +7,6 @@ import { IAuthResolver } from '../IAuthResolver';
 import { IAuthResponse } from '../IAuthResponse';
 import { FilesHelper } from '../../utils/FilesHelper';
 import { AuthResolverFactory } from './../AuthResolverFactory';
-import { UrlHelper } from '../../utils/UrlHelper';
 import { Cache } from './../../utils/Cache';
 import { IAuthOptions } from '../IAuthOptions';
 
@@ -54,9 +53,13 @@ export class FileConfig implements IAuthResolver {
     return Promise.resolve(config.getContext())
       .then(context => {
         let fileNameTemplate = FilesHelper.resolveFileName(context.siteUrl);
-        let fileName = path.basename(configPath);
-        let newPath = configPath.replace(fileName, `${fileNameTemplate}.json`);
-        fs.renameSync(configPath, newPath);
+        let fileNameWithoutExt = path.basename(configPath, path.extname(configPath));
+
+        if (fileNameWithoutExt !== fileNameTemplate) {
+          let fileName = path.basename(configPath);
+          let newPath = configPath.replace(fileName, `${fileNameTemplate}.json`);
+          fs.renameSync(configPath, newPath);
+        }
 
         return context.authOptions;
       })

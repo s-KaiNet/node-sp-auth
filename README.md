@@ -1,7 +1,9 @@
-# node-sp-auth - nodejs to SharePoint unattended http authentication [![analytics](http://www.google-analytics.com/collect?v=1&t=pageview&tid=UA-87971440-4&cid=8ca0a7b7-186f-4010-8c15-02a66bf95cbc&dl=https%3A%2F%2Fgithub.com%2Fs-KaiNet%2Fnode-sp-auth)]()
+# node-sp-auth - nodejs to SharePoint unattended http authentication 
 [![NPM](https://nodei.co/npm/node-sp-auth.png?mini=true)](https://nodei.co/npm/node-sp-auth/)
 
 [![npm version](https://badge.fury.io/js/node-sp-auth.svg)](https://badge.fury.io/js/node-sp-auth)
+
+### Need help on SharePoint with Node.JS? Join our gitter chat and ask question! [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/sharepoint-node/Lobby)
 
 `node-sp-auth` allows you to perform SharePoint unattended (without user interaction) http authentication with nodejs using different authentication techniques. `node-sp-auth` also takes care about caching authentication data for performance (no need for you to think about how long authentication will be available, that's a task for `node-sp-auth`, as soon as authentication will be expired, `node-sp-auth` will renew it internally).  
 Versions supported:
@@ -59,8 +61,8 @@ Promise resolving into object with following properties:
  - `options` - any additional options you may need to include for succesful request. For example, in case of on premise user credentials authentication, you need to set `agent` property on corresponding http client
 
 #### params:
- - `url` - string, url to SharePoint site, `https://sp2013/sites/dev/` or `https:/[your tenant].sharepoint.com/sites/dev/`
- - `credentialOptions` - object in a form of key-value. Each authentication option requires predefined credential object, depending on authentication type. Based on credentials provided, `node-sp-auth` automatically determines which authentication strategy to use (strategies listed in the top of the readme file).  
+ - `url` - required, string, url to SharePoint site, `https://sp2013/sites/dev/` or `https:/[your tenant].sharepoint.com/sites/dev/`
+ - `credentialOptions` - optional, object in a form of key-value. Each authentication option requires predefined credential object, depending on authentication type. Based on credentials provided, `node-sp-auth` automatically determines which authentication strategy to use (strategies listed in the top of the readme file).  
  
 Possible values for `credentialOptions` (depending on authentication strategy):
 
@@ -81,7 +83,8 @@ Possible values for `credentialOptions` (depending on authentication strategy):
  - [ADFS user credentials:](https://github.com/s-KaiNet/node-sp-auth/wiki/ADFS%20user%20credentials%20authentication)  
    `username`, `password`, `relyingParty`, `adfsUrl`, `adfsCookie`
  - [On demand authentication](https://github.com/s-KaiNet/node-sp-auth/wiki/On%20demand%20authentication)  
-     `ondemand` = true, `electron`, `force`, `persist`
+     `ondemand` = true, `electron`, `force`, `persist`  
+  - no authentication - do not provide any authentication data at all, like `spauth.getAuth(url).then(...)`. In that case `node-sp-auth` will ask you for the site url and credentials. You will have to select any of the credential options listed above. Credentials will be stored in a user folder in an encrypted manner. Credits: Andrew Koltyakov [@koltyakov](https://github.com/koltyakov) and his awesome [node-sp-auth-config](https://github.com/koltyakov/node-sp-auth-config)
 
 Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki/) to see how you can configure your environment in order to use any of this authentication options.
 
@@ -97,5 +100,5 @@ Before creating Pull Request you need to create an appropriate issue and referen
 ## Integration testing:
 1. Rename file `/test/integration/config.sample.ts` to `config.ts`.
 2. Update information in `config.ts` with appropriate values (urls, credentials).
-3. Run `npm test:integration`.
+3. Run `npm run test:integration`.
 4. For tests debugging put a breakpoint and press F5 (works in VSCode only).
