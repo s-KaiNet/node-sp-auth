@@ -1,5 +1,8 @@
 /src
 /reports
+/coverage
+/.nyc_output
+/.github
 test
 /build
 /typings
