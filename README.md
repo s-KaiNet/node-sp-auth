@@ -1,11 +1,11 @@
 # node-sp-auth - nodejs to SharePoint unattended http authentication 
 [![NPM](https://nodei.co/npm/node-sp-auth.png?mini=true)](https://nodei.co/npm/node-sp-auth/)
-
 [![npm version](https://badge.fury.io/js/node-sp-auth.svg)](https://badge.fury.io/js/node-sp-auth)
 
 ### Need help on SharePoint with Node.JS? Join our gitter chat and ask question! [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/sharepoint-node/Lobby)
 
-`node-sp-auth` allows you to perform SharePoint unattended (without user interaction) http authentication with nodejs using different authentication techniques. `node-sp-auth` also takes care about caching authentication data for performance (no need for you to think about how long authentication will be available, that's a task for `node-sp-auth`, as soon as authentication will be expired, `node-sp-auth` will renew it internally).  
+`node-sp-auth` allows you to perform SharePoint unattended (without user interaction) http authentication with nodejs using different authentication techniques. `node-sp-auth` also takes care about caching authentication data for performance (no need for you to think about how long authentication will be available, that's a task for `node-sp-auth`, as soon as authentication will be expired, `node-sp-auth` will renew it internally).    
+
 Versions supported:
  * SharePoint 2013, 2016
  * SharePoint Online
@@ -33,21 +33,21 @@ npm install node-sp-auth --save-dev
 #### Create authentication headers and perform http request:
 
 ```javascript
-var spauth = require('node-sp-auth');
-var request = require('request-promise');
+import * as spauth from 'node-sp-auth';
+import * as request from 'request-promise';
 
 //get auth options
 spauth.getAuth(url, credentialOptions)
-  .then(function(options){
+  .then(options => {
 
     //perform request with any http-enabled library (request-promise in a sample below):
-    var headers = options.headers;
+    let headers = options.headers;
     headers['Accept'] = 'application/json;odata=verbose';
 
     request.get({
       url: 'https://[your tenant].sharepoint.com/sites/dev/_api/web',
       headers: headers
-    }).then(function(response){
+    }).then(response => {
       //process data
     });
   });
@@ -84,7 +84,8 @@ Possible values for `credentialOptions` (depending on authentication strategy):
    `username`, `password`, `relyingParty`, `adfsUrl`, `adfsCookie`
  - [On demand authentication](https://github.com/s-KaiNet/node-sp-auth/wiki/On%20demand%20authentication)  
      `ondemand` = true, `electron`, `force`, `persist`  
-  - no authentication - do not provide any authentication data at all, like `spauth.getAuth(url).then(...)`. In that case `node-sp-auth` will ask you for the site url and credentials. You will have to select any of the credential options listed above. Credentials will be stored in a user folder in an encrypted manner. Credits: Andrew Koltyakov [@koltyakov](https://github.com/koltyakov) and his awesome [node-sp-auth-config](https://github.com/koltyakov/node-sp-auth-config)
+  - no authentication - do not provide any authentication data at all, like `spauth.getAuth(url).then(...)`. In that case `node-sp-auth` will ask you for the site url and credentials. You will have to select any of the credential options listed above. Credentials will be stored in a user folder in an encrypted manner.  
+  Credits: Andrew Koltyakov [@koltyakov](https://github.com/koltyakov) and his awesome [node-sp-auth-config](https://github.com/koltyakov/node-sp-auth-config)
 
 Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki/) to see how you can configure your environment in order to use any of this authentication options.
 
