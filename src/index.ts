@@ -10,3 +10,5 @@ export function getAuth(url: string, options?: IAuthOptions): Promise<IAuthRespo
 
 export * from './auth/IAuthOptions';
 export * from './auth/IAuthResponse';
+export * from './utils/TokenHelper';
+export * from './auth/base';
