@@ -105,8 +105,12 @@ export class OnDemand implements IAuthResolver {
     let isOnPrem = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
     let command = isWindows ? 'cmd.exe' : 'sh';
     let electronExecutable = this._authOptions.electron || 'electron';
-    let args = `${electronExecutable} ${path.join(__dirname, 'electron/main.js')} ${this._siteUrl} ${this._authOptions.force}`;
-    const output = childProcess.execFileSync(command, [isWindows ? '/c' : '-c', args]).toString();
+    let args = `"${electronExecutable}" "${path.join(__dirname, 'electron/main.js')}" "${this._siteUrl}" "${this._authOptions.force}"`;
+    if (isWindows) {
+      args = `"${args}"`;
+    }
+    let options: any = isWindows ? { shell: true } : undefined;
+    const output = childProcess.execFileSync(command, [isWindows ? '/c' : '-c', args], options).toString();
 
     let cookieRegex = /#\{([\s\S]+?)\}#/gm;
     let cookieData = cookieRegex.exec(output);
