@@ -24,6 +24,14 @@ export class OnDemand implements IAuthResolver {
   private _cpass = new Cpass();
 
   constructor(private _siteUrl: string, private _authOptions: IOnDemandCredentials) {
+    // probably we are trying to get auth data using url http://site/_api/web/etc
+    // which will never work for on-demand option, so strip the url to just http://site
+    // that a case for spsave or sp-request
+    if (this._siteUrl.indexOf('/_') !== -1) {
+      let indx = this._siteUrl.indexOf('/_');
+      this._siteUrl = this._siteUrl.substr(0, indx);
+    }
+
     _.defaults(this._authOptions, {
       force: false,
       persist: true
