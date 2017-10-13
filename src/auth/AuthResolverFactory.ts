@@ -1,6 +1,7 @@
 import { IAuthOptions } from './IAuthOptions';
 import { IAuthResolver } from './IAuthResolver';
 import { OnpremiseFbaCredentials } from './resolvers/OnpremiseFbaCredentials';
+import { OnpremiseTmgCredentials } from './resolvers/OnpremiseTmgCredentials';
 import { OnpremiseUserCredentials } from './resolvers/OnpremiseUserCredentials';
 import { OnlineUserCredentials } from './resolvers/OnlineUserCredentials';
 import { OnlineAddinOnly } from './resolvers/OnlineAddinOnly';
@@ -15,6 +16,10 @@ export class AuthResolverFactory {
 
     if (!options) {
       return new FileConfig(siteUrl);
+    }
+
+    if (authOptions.isTmgCredentialsOnpremise(siteUrl, options)) {
+      return new OnpremiseTmgCredentials(siteUrl, options);
     }
 
     if (authOptions.isFbaCredentialsOnpremise(siteUrl, options)) {

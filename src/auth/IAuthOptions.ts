@@ -21,6 +21,10 @@ export interface IUserCredentials {
   password: string;
 }
 
+export interface IOnpremiseTmgCredentials extends IUserCredentials {
+  tmg: boolean;
+}
+
 export interface IOnpremiseFbaCredentials extends IUserCredentials {
   fba: boolean;
 }
@@ -76,6 +80,17 @@ export function isUserCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T 
   let isOnPrem: boolean = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
 
   if (isOnPrem && (T as IUserCredentials).username !== undefined && !isAdfsCredentials(T)) {
+    return true;
+  }
+
+  return false;
+}
+
+export function isTmgCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T is IOnpremiseTmgCredentials {
+  let host: string = (url.parse(siteUrl)).host;
+  let isOnPrem: boolean = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
+
+  if (isOnPrem && (T as IOnpremiseFbaCredentials).username !== undefined && (T as IOnpremiseTmgCredentials).tmg) {
     return true;
   }
 
