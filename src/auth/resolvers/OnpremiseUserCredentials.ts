@@ -29,7 +29,7 @@ export class OnpremiseUserCredentials implements IAuthResolver {
     let keepaliveAgent: any = isHttps ? new https.Agent({ keepAlive: true, rejectUnauthorized: false }) :
       new http.Agent({ keepAlive: true });
 
-    return <Promise<IAuthResponse>>request(<any>{
+    return request({
       url: this._siteUrl,
       method: 'GET',
       headers: {
@@ -41,7 +41,7 @@ export class OnpremiseUserCredentials implements IAuthResolver {
       resolveWithFullResponse: true,
       simple: false,
       strictSSL: false
-    })
+    } as any)
       .then((response: IncomingMessage) => {
         let type2msg: any = ntlm.parseType2Message(response.headers['www-authenticate']);
         let type3msg: any = ntlm.createType3Message(type2msg, ntlmOptions);
@@ -55,6 +55,6 @@ export class OnpremiseUserCredentials implements IAuthResolver {
             agent: keepaliveAgent
           }
         };
-      });
+      }) as Promise<IAuthResponse>;
   };
 }

@@ -14,8 +14,8 @@ import { IAdfsUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
 import * as consts from './../../Consts';
-import {AdfsHelper} from './../../utils/AdfsHelper';
-import {SamlAssertion} from './../../utils/SamlAssertion';
+import { AdfsHelper } from './../../utils/AdfsHelper';
+import { SamlAssertion } from './../../utils/SamlAssertion';
 
 export class AdfsCredentials implements IAuthResolver {
 
@@ -24,6 +24,20 @@ export class AdfsCredentials implements IAuthResolver {
 
   constructor(private _siteUrl: string, _authOptions: IAdfsUserCredentials) {
     this._authOptions = _.extend<{}, IAdfsUserCredentials>({}, _authOptions);
+
+    this._authOptions.username = this._authOptions.username
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    this._authOptions.password = this._authOptions.password
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
 
     if (this._authOptions.domain !== undefined) {
       this._authOptions.username = `${this._authOptions.domain}\\${this._authOptions.username}`;
@@ -66,7 +80,7 @@ export class AdfsCredentials implements IAuthResolver {
   }
 
   private postTokenData(samlAssertion: SamlAssertion): Promise<[string, any]> {
-    let tokenPostTemplate: Buffer = fs.readFileSync(path.join(__dirname, '..', '..', '..', '..', 'templates', 'adfs_saml_token.tmpl'));
+    let tokenPostTemplate: Buffer = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'templates', 'adfs_saml_token.tmpl'));
 
     let result: string = _.template(tokenPostTemplate.toString())({
       created: samlAssertion.notBefore,
@@ -77,7 +91,7 @@ export class AdfsCredentials implements IAuthResolver {
 
     let tokenXmlDoc: any = new xmldoc.XmlDocument(result);
     let siteUrlParsed: url.Url = url.parse(this._siteUrl);
-    let rootSiteUrl: string = `${siteUrlParsed.protocol}//${siteUrlParsed.host}`;
+    let rootSiteUrl = `${siteUrlParsed.protocol}//${siteUrlParsed.host}`;
 
     return Promise.all([samlAssertion.notAfter, request.post(`${rootSiteUrl}/_trust/`, {
       form: {

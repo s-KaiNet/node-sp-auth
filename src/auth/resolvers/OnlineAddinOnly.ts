@@ -38,8 +38,8 @@ export class OnlineAddinOnly implements IAuthResolver {
         let realm: string = data[0];
         let authUrl: string = data[1];
 
-        let resource: string = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${realm}`;
-        let fullClientId: string = `${this._authOptions.clientId}@${realm}`;
+        let resource = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${realm}`;
+        let fullClientId = `${this._authOptions.clientId}@${realm}`;
 
         return request.post(authUrl, {
           json: true,
@@ -65,14 +65,14 @@ export class OnlineAddinOnly implements IAuthResolver {
 
   private getAuthUrl(realm: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      let url: string = `https://accounts.accesscontrol.windows.net/metadata/json/1?realm=${realm}`;
+      let url = `https://accounts.accesscontrol.windows.net/metadata/json/1?realm=${realm}`;
 
       request.get(url, { json: true })
         .then((data: { endpoints: { protocol: string, location: string }[] }) => {
-          for (let i: number = 0; i < data.endpoints.length; i++) {
+          for (let i = 0; i < data.endpoints.length; i++) {
             if (data.endpoints[i].protocol === 'OAuth2') {
               resolve(data.endpoints[i].location);
-              return;
+              return undefined;
             }
           }
         });
@@ -85,7 +85,7 @@ export class OnlineAddinOnly implements IAuthResolver {
       return Promise.resolve(this._authOptions.realm);
     }
 
-    return <Promise<string>>request.post(`${UrlHelper.removeTrailingSlash(siteUrl)}/vti_bin/client.svc`, {
+    return request.post(`${UrlHelper.removeTrailingSlash(siteUrl)}/vti_bin/client.svc`, {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer '

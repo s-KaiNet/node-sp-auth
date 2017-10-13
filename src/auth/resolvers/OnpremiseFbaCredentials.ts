@@ -38,16 +38,16 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
 
     let soapBody: string = _.template(
       fs.readFileSync(
-        path.join(__dirname, '..', '..', '..', '..', 'templates', 'fba_login_wsfed.tmpl')
+        path.join(__dirname, '..', '..', '..', 'templates', 'fba_login_wsfed.tmpl')
       ).toString()
     )({
       username: this._authOptions.username,
       password: this._authOptions.password
     });
 
-    let fbaEndPoint: string = `${parsedUrl.protocol}//${host}/${consts.FbaAuthEndpoint}`;
+    let fbaEndPoint = `${parsedUrl.protocol}//${host}/${consts.FbaAuthEndpoint}`;
 
-    return <Promise<IAuthResponse>>request(<any>{
+    return request({
       url: fbaEndPoint,
       method: 'POST',
       headers: {
@@ -61,7 +61,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
       transform: (body: any, response: any, resolveWithFullResponse: any) => {
         return response;
       }
-    })
+    } as any)
       .then((response: any) => {
 
         let xmlDoc: any = new xmldoc.XmlDocument(response.body);
@@ -95,7 +95,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
           }
         });
 
-        let authCookie: string = `${cookieName}=${cookieValue}`;
+        let authCookie = `${cookieName}=${cookieValue}`;
 
         OnpremiseFbaCredentials.CookieCache.set(cacheKey, authCookie, diffSeconds);
 
@@ -105,7 +105,6 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
           }
         };
 
-      });
+      }) as Promise<IAuthResponse>;
   };
-
 }

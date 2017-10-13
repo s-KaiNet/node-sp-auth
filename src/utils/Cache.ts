@@ -1,4 +1,4 @@
-import {CacheItem} from './CacheItem';
+import { CacheItem } from './CacheItem';
 import * as crypto from 'crypto';
 
 export class Cache {

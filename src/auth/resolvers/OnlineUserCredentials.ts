@@ -60,9 +60,10 @@ export class OnlineUserCredentials implements IAuthResolver {
       .then(data => {
         let response: IncomingMessage = data[1];
         let diffSeconds: number = data[0];
-        let fedAuth: string, rtFa: string;
+        let fedAuth: string;
+        let rtFa: string;
 
-        for (let i: number = 0; i < response.headers['set-cookie'].length; i++) {
+        for (let i = 0; i < response.headers['set-cookie'].length; i++) {
           let headerCookie: string = response.headers['set-cookie'][i];
           if (headerCookie.indexOf(consts.FedAuth) !== -1) {
             fedAuth = cookie.parse(headerCookie)[consts.FedAuth];
@@ -124,7 +125,7 @@ export class OnlineUserCredentials implements IAuthResolver {
         let siteUrlParsed: url.Url = url.parse(this._siteUrl);
         let rootSiteUrl: string = siteUrlParsed.protocol + '//' + siteUrlParsed.host;
         let tokenRequest: string = _.template(
-          fs.readFileSync(path.join(__dirname, '..', '..', '..', '..', 'templates', 'online_saml_wsfed_adfs.tmpl')).toString())({
+          fs.readFileSync(path.join(__dirname, '..', '..', '..', 'templates', 'online_saml_wsfed_adfs.tmpl')).toString())({
             endpoint: rootSiteUrl,
             token: samlAssertion.value
           });
@@ -144,24 +145,24 @@ export class OnlineUserCredentials implements IAuthResolver {
   private getSecurityTokenWithOnline(): Promise<any> {
     let parsedUrl: url.Url = url.parse(this._siteUrl);
     let host: string = parsedUrl.host;
-    let spFormsEndPoint: string = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
+    let spFormsEndPoint = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
 
     let samlBody: string = _.template(
-      fs.readFileSync(path.join(__dirname, '..', '..', '..', '..', 'templates', 'online_saml_wsfed.tmpl')).toString())({
+      fs.readFileSync(path.join(__dirname, '..', '..', '..', 'templates', 'online_saml_wsfed.tmpl')).toString())({
         username: this._authOptions.username,
         password: this._authOptions.password,
         endpoint: spFormsEndPoint
       });
 
     return request
-      .post(consts.MSOnlineSts, <any>{
+      .post(consts.MSOnlineSts, {
         body: samlBody,
         simple: false,
         strictSSL: false,
         headers: {
           'Content-Type': 'application/soap+xml; charset=utf-8'
         }
-      })
+      } as any)
       .then(xmlResponse => {
         return xmlResponse;
       });
@@ -170,7 +171,7 @@ export class OnlineUserCredentials implements IAuthResolver {
   private postToken(xmlResponse: any): Promise<[number, any]> {
     let xmlDoc: any = new xmldoc.XmlDocument(xmlResponse);
     let parsedUrl: url.Url = url.parse(this._siteUrl);
-    let spFormsEndPoint: string = `${parsedUrl.protocol}//${parsedUrl.host}/${consts.FormsPath}`;
+    let spFormsEndPoint = `${parsedUrl.protocol}//${parsedUrl.host}/${consts.FormsPath}`;
 
     let securityTokenResponse: any = xmlDoc.childNamed('S:Body').firstChild;
     if (securityTokenResponse.name.indexOf('Fault') !== -1) {
@@ -185,7 +186,7 @@ export class OnlineUserCredentials implements IAuthResolver {
     let diffSeconds: number = parseInt(diff.toString(), 10);
 
     return Promise.all([diffSeconds, request
-      .post(spFormsEndPoint, <any>{
+      .post(spFormsEndPoint, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)',
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -194,6 +195,6 @@ export class OnlineUserCredentials implements IAuthResolver {
         rejectUnauthorized: false,
         resolveWithFullResponse: true,
         simple: false
-      })]);
+      } as any)]);
   }
 }

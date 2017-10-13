@@ -1,23 +1,28 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "node",
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "removeComments": true,
+    "outDir": "./lib",
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "types": [
-      "bluebird",
       "mocha",
       "node",
-      "chai",
-      "request",
-      "request-promise",
-      "lodash",
-      "cookie",
-      "core-js",
-      "jsonwebtoken"
+      "chai"
     ]
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ]
 }
