@@ -15,6 +15,7 @@ Authentication options:
    * Addin only permissions
    * User credentials through the http ntlm handshake
    * Form-based authentication (FBA)
+   * Forefront TMG authentication
  * SharePoint Online:
    * Addin only permissions
    * SAML based with user credentials
@@ -73,6 +74,8 @@ Possible values for `credentialOptions` (depending on authentication strategy):
       `username`, `password`, `domain`, `workstation`
     - [User credentials for form-based authentication (FBA):](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20on-premise%20FBA%20authentication)  
       `username`, `password`, `fba` = true
+    - User credentials for Forefront TMG (reverse proxy):  
+      `username`, `password`, `tmg` = true
 
  - SharePoint Online: 
    - [Addin only permissions:](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20addin%20only%20authentication)  
