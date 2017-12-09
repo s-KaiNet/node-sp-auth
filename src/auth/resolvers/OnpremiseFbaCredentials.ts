@@ -1,8 +1,6 @@
 import * as Promise from 'bluebird';
 import * as _ from 'lodash';
 import * as util from 'util';
-import * as fs from 'fs';
-import * as path from 'path';
 import * as url from 'url';
 import * as request from 'request-promise';
 import * as cookie from 'cookie';
@@ -14,6 +12,8 @@ import { IOnpremiseUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
 import * as consts from './../../Consts';
+
+import { template as fbaLoginWsfedTemplate } from './../../templates/FbaLoginWsfed';
 
 export class OnpremiseFbaCredentials implements IAuthResolver {
 
@@ -36,11 +36,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
       });
     }
 
-    let soapBody: string = _.template(
-      fs.readFileSync(
-        path.join(__dirname, '..', '..', '..', 'templates', 'fba_login_wsfed.tmpl')
-      ).toString()
-    )({
+    let soapBody: string = _.template(fbaLoginWsfedTemplate)({
       username: this._authOptions.username,
       password: this._authOptions.password
     });

@@ -2,8 +2,6 @@ import * as Promise from 'bluebird';
 import * as request from 'request-promise';
 import * as url from 'url';
 import * as _ from 'lodash';
-import * as fs from 'fs';
-import * as path from 'path';
 import * as cookie from 'cookie';
 import { IncomingMessage } from 'http';
 import * as util from 'util';
@@ -16,6 +14,8 @@ import { Cache } from './../../utils/Cache';
 import * as consts from './../../Consts';
 import { AdfsHelper } from './../../utils/AdfsHelper';
 import { SamlAssertion } from './../../utils/SamlAssertion';
+
+import { template as adfsSamlTokenTemplate } from './../../templates/AdfsSamlToken';
 
 export class AdfsCredentials implements IAuthResolver {
 
@@ -80,9 +80,7 @@ export class AdfsCredentials implements IAuthResolver {
   }
 
   private postTokenData(samlAssertion: SamlAssertion): Promise<[string, any]> {
-    let tokenPostTemplate: Buffer = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'templates', 'adfs_saml_token.tmpl'));
-
-    let result: string = _.template(tokenPostTemplate.toString())({
+    let result: string = _.template(adfsSamlTokenTemplate)({
       created: samlAssertion.notBefore,
       expires: samlAssertion.notAfter,
       relyingParty: this._authOptions.relyingParty,

@@ -22,7 +22,7 @@
   "homepage": "https://github.com/s-KaiNet/node-sp-auth",
   "scripts": {
     "build": "npm run tslint && tsc -p . && npm run copy",
-    "copy": "cpy templates/**/* lib/templates && cpy src/auth/resolvers/ondemand/electron/*.* lib/src/auth/resolvers/ondemand/electron",
+    "copy": "cpy src/auth/resolvers/ondemand/electron/*.* lib/src/auth/resolvers/ondemand/electron",
     "dev": "npm run copy && tsc -p . --watch",
     "tslint": "tslint --project tsconfig.json --type-check",
     "prepublish": "rimraf -- lib && npm run build",

@@ -2,10 +2,8 @@ import * as Promise from 'bluebird';
 import * as url from 'url';
 import * as util from 'util';
 import * as _ from 'lodash';
-import * as fs from 'fs';
 import * as request from 'request-promise';
 import * as cookie from 'cookie';
-import * as path from 'path';
 import { IncomingMessage } from 'http';
 
 let xmldoc: any = require('xmldoc');
@@ -16,6 +14,9 @@ import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
 import * as consts from './../../Consts';
 import { AdfsHelper } from './../../utils/AdfsHelper';
+
+import { template as onlineSamlWsfedAdfsTemplate } from './../../templates/OnlineSamlWsfedAdfs';
+import { template as onlineSamlWsfedTemplate } from './../../templates/OnlineSamlWsfed';
 
 export class OnlineUserCredentials implements IAuthResolver {
 
@@ -124,11 +125,10 @@ export class OnlineUserCredentials implements IAuthResolver {
 
         let siteUrlParsed: url.Url = url.parse(this._siteUrl);
         let rootSiteUrl: string = siteUrlParsed.protocol + '//' + siteUrlParsed.host;
-        let tokenRequest: string = _.template(
-          fs.readFileSync(path.join(__dirname, '..', '..', '..', 'templates', 'online_saml_wsfed_adfs.tmpl')).toString())({
-            endpoint: rootSiteUrl,
-            token: samlAssertion.value
-          });
+        let tokenRequest: string = _.template(onlineSamlWsfedAdfsTemplate)({
+          endpoint: rootSiteUrl,
+          token: samlAssertion.value
+        });
 
         return request.post(consts.MSOnlineSts, {
           body: tokenRequest,
@@ -147,12 +147,11 @@ export class OnlineUserCredentials implements IAuthResolver {
     let host: string = parsedUrl.host;
     let spFormsEndPoint = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
 
-    let samlBody: string = _.template(
-      fs.readFileSync(path.join(__dirname, '..', '..', '..', 'templates', 'online_saml_wsfed.tmpl')).toString())({
-        username: this._authOptions.username,
-        password: this._authOptions.password,
-        endpoint: spFormsEndPoint
-      });
+    let samlBody: string = _.template(onlineSamlWsfedTemplate)({
+      username: this._authOptions.username,
+      password: this._authOptions.password,
+      endpoint: spFormsEndPoint
+    });
 
     return request
       .post(consts.MSOnlineSts, {

@@ -2,20 +2,19 @@ import * as Promise from 'bluebird';
 import * as request from 'request-promise';
 import * as url from 'url';
 import * as _ from 'lodash';
-import * as fs from 'fs';
-import * as path from 'path';
 let xmldoc: any = require('xmldoc');
 
 import { IAdfsUserCredentials } from './../auth/IAuthOptions';
 import { SamlAssertion } from './SamlAssertion';
 
+import { template as adfsSamlWsfedTemplate } from './../templates/AdfsSamlWsfed';
+
 export class AdfsHelper {
   public static getSamlAssertion(siteUrl: string, credentials: IAdfsUserCredentials): Promise<SamlAssertion> {
     let adfsHost: string = url.parse(credentials.adfsUrl).host;
     let usernameMixedUrl = `https://${adfsHost}/adfs/services/trust/13/usernamemixed`;
-    let samlTemplate: Buffer = fs.readFileSync(path.join(__dirname, '..', '..', 'templates', 'adfs_saml_wsfed.tmpl'));
 
-    let samlBody: string = _.template(samlTemplate.toString())({
+    let samlBody: string = _.template(adfsSamlWsfedTemplate)({
       to: usernameMixedUrl,
       username: credentials.username,
       password: credentials.password,
