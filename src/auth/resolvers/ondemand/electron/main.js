@@ -41,7 +41,7 @@ function createWindow() {
     mainWindow.loadURL(siteUrl);
   }
 
-  mainWindow.webContents.on('did-finish-load', function (data) {
+  mainWindow.webContents.on('dom-ready', function (data) {
     let loadedUrl = mainWindow.webContents.getURL();
 
     if (loadedUrl.indexOf(siteUrl) !== -1 && (loadedUrl.indexOf(siteUrl + '/_layouts/15/start.aspx') !== -1 || loadedUrl.indexOf(siteUrl + '/_') === -1)) {

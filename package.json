@@ -1,5 +1,5 @@
 {
-  "version": "2.3.1",
+  "version": "2.3.2",
   "name": "node-sp-auth",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "description": "Unattended SharePoint http authentication with nodejs",
