@@ -61,7 +61,7 @@ export class OnlineAddinOnly implements IAuthResolver {
           }
         };
       });
-  };
+  }
 
   private getAuthUrl(realm: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {

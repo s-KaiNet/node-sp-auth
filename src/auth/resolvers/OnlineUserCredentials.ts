@@ -84,7 +84,7 @@ export class OnlineUserCredentials implements IAuthResolver {
           }
         };
       });
-  };
+  }
 
   private getSecurityToken(): Promise<any> {
     return request.post(consts.OnlineUserRealmEndpoint, {

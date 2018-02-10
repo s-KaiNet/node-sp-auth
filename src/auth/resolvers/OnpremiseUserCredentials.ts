@@ -56,5 +56,5 @@ export class OnpremiseUserCredentials implements IAuthResolver {
           }
         };
       }) as Promise<IAuthResponse>;
-  };
+  }
 }

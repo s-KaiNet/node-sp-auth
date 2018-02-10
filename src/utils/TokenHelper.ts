@@ -49,7 +49,7 @@ export class TokenHelper {
                 return {
                     value: data.access_token,
                     expireOn: new Date(parseInt(data.expires_on, 10))
-                } as IAccessToken
+                } as IAccessToken;
             });
     }
 
@@ -74,7 +74,7 @@ export class TokenHelper {
                 return {
                     value: data.access_token,
                     expireOn: new Date(parseInt(data.expires_on, 10))
-                } as IAccessToken
+                } as IAccessToken;
             });
     }
 }

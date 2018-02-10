@@ -57,5 +57,5 @@ export class OnpremiseAddinOnly implements IAuthResolver {
           'Authorization': `Bearer ${accessToken}`
         }
       });
-  };
+  }
 }

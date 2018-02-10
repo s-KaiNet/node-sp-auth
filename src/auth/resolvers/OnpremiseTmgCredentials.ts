@@ -66,5 +66,5 @@ export class OnpremiseTmgCredentials implements IAuthResolver {
         };
 
       }) as Promise<IAuthResponse>;
-  };
+  }
 }

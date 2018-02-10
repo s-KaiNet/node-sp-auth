@@ -4,6 +4,7 @@
   ],
   "rules": {
     "semicolon": [
+      true,
       "always"
     ],
     "space-before-function-paren": [
@@ -13,9 +14,10 @@
       false
     ],
     "no-inferrable-types":true,
+    "strict-type-predicates": false,
     "indent": [
       true,
-      "space",
+      "spaces",
       2
     ]
   }

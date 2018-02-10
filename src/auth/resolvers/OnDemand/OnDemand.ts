@@ -96,7 +96,7 @@ export class OnDemand implements IAuthResolver {
       }
     });
 
-    return new Date(expiration)
+    return new Date(expiration);
   }
 
   private saveAuthData(dataPath: string): ICookie[] {

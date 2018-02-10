@@ -102,5 +102,5 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
         };
 
       }) as Promise<IAuthResponse>;
-  };
+  }
 }
