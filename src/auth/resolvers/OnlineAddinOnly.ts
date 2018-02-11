@@ -18,7 +18,7 @@ export class OnlineAddinOnly implements IAuthResolver {
 
   public getAuth(): Promise<IAuthResponse> {
     let sharepointhostname: string = url.parse(this._siteUrl).hostname;
-    let cacheKey: string = this._authOptions.clientSecret;
+    let cacheKey = `${this._authOptions.clientSecret}@${this._authOptions.clientId}`;
 
     let cachedToken: string = OnlineAddinOnly.TokenCache.get<string>(cacheKey);
 

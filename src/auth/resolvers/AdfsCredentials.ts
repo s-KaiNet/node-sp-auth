@@ -4,7 +4,6 @@ import * as url from 'url';
 import * as _ from 'lodash';
 import * as cookie from 'cookie';
 import { IncomingMessage } from 'http';
-import * as util from 'util';
 let xmldoc: any = require('xmldoc');
 
 import { IAuthResolver } from './../IAuthResolver';
@@ -47,7 +46,7 @@ export class AdfsCredentials implements IAuthResolver {
   public getAuth(): Promise<IAuthResponse> {
     let siteUrlParsed: url.Url = url.parse(this._siteUrl);
 
-    let cacheKey: string = util.format('%s@%s', siteUrlParsed.host, this._authOptions.username);
+    let cacheKey = `${siteUrlParsed.host}@${this._authOptions.username}@${this._authOptions.password}`;
     let cachedCookie: string = AdfsCredentials.CookieCache.get<string>(cacheKey);
 
     if (cachedCookie) {

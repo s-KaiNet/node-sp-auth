@@ -1,6 +1,5 @@
 import * as Promise from 'bluebird';
 import * as url from 'url';
-import * as util from 'util';
 import * as _ from 'lodash';
 import * as request from 'request-promise';
 import * as cookie from 'cookie';
@@ -43,7 +42,7 @@ export class OnlineUserCredentials implements IAuthResolver {
   public getAuth(): Promise<IAuthResponse> {
     let parsedUrl: url.Url = url.parse(this._siteUrl);
     let host: string = parsedUrl.host;
-    let cacheKey: string = util.format('%s@%s', host, this._authOptions.username);
+    let cacheKey = `${host}@${this._authOptions.username}@${this._authOptions.password}`;
     let cachedCookie: string = OnlineUserCredentials.CookieCache.get<string>(cacheKey);
 
     if (cachedCookie) {
