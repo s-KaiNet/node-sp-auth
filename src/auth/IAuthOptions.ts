@@ -46,6 +46,7 @@ export interface IOnDemandCredentials {
   electron?: string;
   force?: boolean;
   persist?: boolean;
+  ttl?: number; // session TTL in minutes
 }
 
 export type IAuthOptions =

@@ -4,13 +4,13 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as _ from 'lodash';
 import { Cpass } from 'cpass';
-import * as url from 'url';
 
 import { IAuthResolver } from '../../IAuthResolver';
 import { IAuthResponse } from '../../IAuthResponse';
 import { IOnDemandCredentials } from '../../IAuthOptions';
 import { Cache } from './../../../utils/Cache';
 import { FilesHelper } from '../../../utils/FilesHelper';
+import { isOnPremUrl } from '../../IAuthOptions';
 
 export interface ICookie {
   httpOnly: boolean;
@@ -100,8 +100,7 @@ export class OnDemand implements IAuthResolver {
   }
 
   private saveAuthData(dataPath: string): ICookie[] {
-    let host = url.parse(this._siteUrl).hostname;
-    let isOnPrem = host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1;
+
     let electronExecutable = this._authOptions.electron || 'electron';
     let isWindows = (process.platform.lastIndexOf('win') === 0);
     let options: any = isWindows ? { shell: true } : undefined;
@@ -121,13 +120,13 @@ export class OnDemand implements IAuthResolver {
           cookies.push(cookieData);
 
           // explicitly set 1 hour expiration for on-premise
-          if (isOnPrem) {
+          if (isOnPremUrl(this._siteUrl)) {
             let expiration = new Date();
-            expiration.setMinutes(expiration.getMinutes() + 55);
+            expiration.setMinutes(expiration.getMinutes() + (this._authOptions.ttl || 55));
             cookieData.expirationDate = expiration.getTime() / 1000;
           } else if (!cookieData.expirationDate) { // 24 hours for online if no expiration date on cookie
             let expiration = new Date();
-            expiration.setMinutes(expiration.getMinutes() + 1435);
+            expiration.setMinutes(expiration.getMinutes() + (this._authOptions.ttl || 1435));
             cookieData.expirationDate = expiration.getTime() / 1000;
           }
         }
