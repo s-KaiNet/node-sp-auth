@@ -7,7 +7,6 @@ import { IncomingMessage } from 'http';
 
 let xmldoc: any = require('xmldoc');
 
-import { IAuthResolver } from './../IAuthResolver';
 import { IUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
@@ -16,12 +15,16 @@ import { AdfsHelper } from './../../utils/AdfsHelper';
 
 import { template as onlineSamlWsfedAdfsTemplate } from './../../templates/OnlineSamlWsfedAdfs';
 import { template as onlineSamlWsfedTemplate } from './../../templates/OnlineSamlWsfed';
+import { HostingEnvironment } from '../HostingEnvironment';
+import { OnlineResolver } from './base/OnlineResolver';
 
-export class OnlineUserCredentials implements IAuthResolver {
+export class OnlineUserCredentials extends OnlineResolver {
 
   private static CookieCache: Cache = new Cache();
 
-  constructor(private _siteUrl: string, private _authOptions: IUserCredentials) {
+  constructor(_siteUrl: string, private _authOptions: IUserCredentials) {
+    super(_siteUrl);
+
     this._authOptions = _.extend<{}, IUserCredentials>({}, _authOptions);
 
     this._authOptions.username = this._authOptions.username
@@ -85,8 +88,16 @@ export class OnlineUserCredentials implements IAuthResolver {
       });
   }
 
+  protected InitEndpointsMappings(): void {
+    this.endpointsMappings.set(HostingEnvironment.Production, 'login.microsoftonline.com');
+    this.endpointsMappings.set(HostingEnvironment.China, 'login.chinacloudapi.cn');
+    this.endpointsMappings.set(HostingEnvironment.German, 'login.microsoftonline.de');
+    this.endpointsMappings.set(HostingEnvironment.USDefence, 'login-us.microsoftonline.com');
+    this.endpointsMappings.set(HostingEnvironment.USGovernment, 'login-us.microsoftonline.com');
+  }
+
   private getSecurityToken(): Promise<any> {
-    return request.post(consts.OnlineUserRealmEndpoint, {
+    return request.post(this.OnlineUserRealmEndpoint, {
       simple: false,
       strictSSL: false,
       json: true,
@@ -129,7 +140,7 @@ export class OnlineUserCredentials implements IAuthResolver {
           token: samlAssertion.value
         });
 
-        return request.post(consts.MSOnlineSts, {
+        return request.post(this.MSOnlineSts, {
           body: tokenRequest,
           headers: {
             'Content-Length': tokenRequest.length,
@@ -153,7 +164,7 @@ export class OnlineUserCredentials implements IAuthResolver {
     });
 
     return request
-      .post(consts.MSOnlineSts, {
+      .post(this.MSOnlineSts, {
         body: samlBody,
         simple: false,
         strictSSL: false,
@@ -194,5 +205,13 @@ export class OnlineUserCredentials implements IAuthResolver {
         resolveWithFullResponse: true,
         simple: false
       } as any)]);
+  }
+
+  private get MSOnlineSts(): string {
+    return `https://${this.endpointsMappings.get(this.hostingEnvironment)}/extSTS.srf`;
+  }
+
+  private get OnlineUserRealmEndpoint(): string {
+    return `https://${this.endpointsMappings.get(this.hostingEnvironment)}/GetUserRealm.srf`;
   }
 }

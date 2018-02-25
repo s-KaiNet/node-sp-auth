@@ -3,18 +3,21 @@ import * as request from 'request-promise';
 import { IncomingMessage } from 'http';
 import * as url from 'url';
 
-import { IAuthResolver } from './../IAuthResolver';
 import { IOnlineAddinCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
 import { Cache } from './../../utils/Cache';
 import { UrlHelper } from './../../utils/UrlHelper';
 import * as consts from './../../Consts';
+import { OnlineResolver } from './base/OnlineResolver';
+import { HostingEnvironment } from '../HostingEnvironment';
 
-export class OnlineAddinOnly implements IAuthResolver {
+export class OnlineAddinOnly extends OnlineResolver {
 
   private static TokenCache: Cache = new Cache();
 
-  constructor(private _siteUrl: string, private _authOptions: IOnlineAddinCredentials) { }
+  constructor(_siteUrl: string, private _authOptions: IOnlineAddinCredentials) {
+    super(_siteUrl);
+  }
 
   public getAuth(): Promise<IAuthResponse> {
     let sharepointhostname: string = url.parse(this._siteUrl).hostname;
@@ -63,9 +66,17 @@ export class OnlineAddinOnly implements IAuthResolver {
       });
   }
 
+  protected InitEndpointsMappings(): void {
+    this.endpointsMappings.set(HostingEnvironment.Production, 'accounts.accesscontrol.windows.net');
+    this.endpointsMappings.set(HostingEnvironment.China, 'accounts.accesscontrol.chinacloudapi.cn');
+    this.endpointsMappings.set(HostingEnvironment.German, 'login.microsoftonline.de');
+    this.endpointsMappings.set(HostingEnvironment.USDefence, 'accounts.accesscontrol.windows.net');
+    this.endpointsMappings.set(HostingEnvironment.USGovernment, 'accounts.accesscontrol.windows.net');
+  }
+
   private getAuthUrl(realm: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      let url = `https://accounts.accesscontrol.windows.net/metadata/json/1?realm=${realm}`;
+      let url = this.AcsRealmUrl + realm;
 
       request.get(url, { json: true })
         .then((data: { endpoints: { protocol: string, location: string }[] }) => {
@@ -77,6 +88,10 @@ export class OnlineAddinOnly implements IAuthResolver {
           }
         });
     });
+  }
+
+  private get AcsRealmUrl(): string {
+    return `https://${this.endpointsMappings.get(this.hostingEnvironment)}/metadata/json/1?realm=`;
   }
 
   private getRealm(siteUrl: string): Promise<string> {
