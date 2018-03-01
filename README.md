@@ -86,7 +86,7 @@ Possible values for `credentialOptions` (depending on authentication strategy):
  - [ADFS user credentials:](https://github.com/s-KaiNet/node-sp-auth/wiki/ADFS%20user%20credentials%20authentication)  
    `username`, `password`, `relyingParty`, `adfsUrl`, `adfsCookie`
  - [On demand authentication](https://github.com/s-KaiNet/node-sp-auth/wiki/On%20demand%20authentication)  
-     `ondemand` = true, `electron`, `force`, `persist`  
+     `ondemand` = true, `electron`, `force`, `persist`, `ttl`  
   - no authentication - do not provide any authentication data at all, like `spauth.getAuth(url).then(...)`. In that case `node-sp-auth` will ask you for the site url and credentials. You will have to select any of the credential options listed above. Credentials will be stored in a user folder in an encrypted manner.  
   Credits: Andrew Koltyakov [@koltyakov](https://github.com/koltyakov) and his awesome [node-sp-auth-config](https://github.com/koltyakov/node-sp-auth-config)
 
