@@ -29,6 +29,7 @@ export class UrlHelper {
       return HostingEnvironment.USGovernment;
     }
 
-    throw new Error('Unable to resolve hosting environment. Site url: ' + siteUrl);
+    return HostingEnvironment.Production; // As default, for O365 Dedicated, #ToInvestigate
+    // throw new Error('Unable to resolve hosting environment. Site url: ' + siteUrl);
   }
 }
