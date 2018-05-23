@@ -1,7 +1,7 @@
 import * as Promise from 'bluebird';
 import * as _ from 'lodash';
 import * as url from 'url';
-import * as request from 'request-promise';
+import { request } from './../../config';
 import { IncomingMessage } from 'http';
 import * as http from 'http';
 import * as https from 'https';

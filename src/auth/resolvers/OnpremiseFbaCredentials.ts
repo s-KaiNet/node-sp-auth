@@ -1,7 +1,7 @@
 import * as Promise from 'bluebird';
 import * as _ from 'lodash';
 import * as url from 'url';
-import * as request from 'request-promise';
+import { request } from './../../config';
 import * as cookie from 'cookie';
 
 let xmldoc: any = require('xmldoc');

@@ -1,5 +1,5 @@
 import * as Promise from 'bluebird';
-import * as request from 'request-promise';
+import { request } from './../../config';
 import { IncomingMessage } from 'http';
 import * as url from 'url';
 

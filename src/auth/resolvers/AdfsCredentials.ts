@@ -1,5 +1,5 @@
 import * as Promise from 'bluebird';
-import * as request from 'request-promise';
+import { request } from './../../config';
 import * as url from 'url';
 import * as _ from 'lodash';
 import * as cookie from 'cookie';

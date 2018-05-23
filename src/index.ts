@@ -12,3 +12,4 @@ export * from './auth/IAuthOptions';
 export * from './auth/IAuthResponse';
 export * from './utils/TokenHelper';
 export * from './auth/base';
+export { setup, IConfiguration } from './config';

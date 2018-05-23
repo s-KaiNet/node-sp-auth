@@ -92,6 +92,16 @@ Possible values for `credentialOptions` (depending on authentication strategy):
 
 Please, use [Wiki](https://github.com/s-KaiNet/node-sp-auth/wiki/) to see how you can configure your environment in order to use any of this authentication options.
 
+### setup(configuration)
+
+#### params:
+ - `configuration` - object accepting some configuration values for node-sp-auth. Currently it supports only configuration of underline `request` module via providing below code (for options available consider [request repository](https://github.com/request/request#requestoptions-callback)):  
+ ```typescript
+ spauth.setup({
+    requestOptions: {... request options object}
+  });
+ ```
+
 ## Development:
 I recommend using VS Code for development. Repository already contains some settings for VS Code editor.
 

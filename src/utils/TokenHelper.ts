@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { parse as urlparse } from 'url';
-import * as request from 'request-promise';
+import { request } from './../config';
 import * as Promise from 'bluebird';
 
 import { IAppToken } from '../auth/base/IAppToken';

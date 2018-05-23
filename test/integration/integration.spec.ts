@@ -8,6 +8,7 @@ import * as url from 'url';
 
 import { IAuthOptions } from './../../src/auth/IAuthOptions';
 import * as spauth from './../../src/index';
+import { request as configuredRequest } from './../../src/config';
 
 interface ITestInfo {
   name: string;
@@ -177,6 +178,38 @@ tests.forEach(test => {
           done();
         })
         .catch(done);
+    });
+
+    it('should not setup custom options for request', function (done: MochaDone): void {
+      configuredRequest.get('http://google.com', {
+        simple: false,
+        resolveWithFullResponse: true
+      })
+      .then((result: any) => {
+        expect(result.request.headers['my-test-header']).equals(undefined);
+        done();
+      })
+      .catch(done);
+    });
+
+    it('should setup custom options for request', function (done: MochaDone): void {
+      spauth.setup({
+        requestOptions: {
+          headers: {
+            'my-test-header': 'my value'
+          }
+        }
+      });
+
+      configuredRequest.get('http://google.com', {
+        simple: false,
+        resolveWithFullResponse: true
+      })
+      .then((result: any) => {
+        expect(result.request.headers['my-test-header']).equals('my value');
+        done();
+      })
+      .catch(done);
     });
 
   });

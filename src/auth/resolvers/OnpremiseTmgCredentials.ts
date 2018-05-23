@@ -1,6 +1,6 @@
 import * as Promise from 'bluebird';
 import * as url from 'url';
-import * as request from 'request-promise';
+import { request } from './../../config';
 import * as http from 'http';
 import * as https from 'https';
 
@@ -46,8 +46,8 @@ export class OnpremiseTmgCredentials implements IAuthResolver {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: `curl=Z2F&flags=0&forcedownlevel=0&formdir=1&trusted=0&` +
-               `username=${encodeURIComponent(this._authOptions.username)}&` +
-               `password=${encodeURIComponent(this._authOptions.password)}`,
+        `username=${encodeURIComponent(this._authOptions.username)}&` +
+        `password=${encodeURIComponent(this._authOptions.password)}`,
       agent: keepaliveAgent,
       json: false,
       simple: false,
