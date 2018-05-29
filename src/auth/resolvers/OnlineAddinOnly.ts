@@ -100,7 +100,7 @@ export class OnlineAddinOnly extends OnlineResolver {
       return Promise.resolve(this._authOptions.realm);
     }
 
-    return request.post(`${UrlHelper.removeTrailingSlash(siteUrl)}/vti_bin/client.svc`, {
+    return request.post(`${UrlHelper.removeTrailingSlash(siteUrl)}/_vti_bin/client.svc`, {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer '
