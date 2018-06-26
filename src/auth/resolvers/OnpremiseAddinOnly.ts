@@ -36,8 +36,8 @@ export class OnpremiseAddinOnly implements IAuthResolver {
         aud: audience,
         iss: fullIssuerIdentifier,
         nameid: this._authOptions.clientId + '@' + this._authOptions.realm,
-        nbf: (dateref - consts.HighTrustTokenLifeTime).toString(),
-        exp: (dateref + consts.HighTrustTokenLifeTime).toString(),
+        nbf: dateref - consts.HighTrustTokenLifeTime,
+        exp: dateref + consts.HighTrustTokenLifeTime,
         trustedfordelegation: true
       };
 
