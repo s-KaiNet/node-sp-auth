@@ -25,6 +25,16 @@ let tests: ITestInfo[] = [
     url: config.onpremNtlmEnabledUrl
   },
   {
+    name: 'on-premise user UPN credentials',
+    creds: config.onpremUpnCreds,
+    url: config.onpremNtlmEnabledUrl
+  },
+  {
+    name: 'on-premise user+domain credentials',
+    creds: config.onpremUserWithDomainCreds,
+    url: config.onpremNtlmEnabledUrl
+  },
+  {
     name: 'fba on-premise user credentials',
     creds: config.onpremFbaCreds,
     url: config.onpremFbaEnabledUrl
@@ -181,6 +191,12 @@ tests.forEach(test => {
     });
 
     it('should not setup custom options for request', function (done: MochaDone): void {
+      spauth.setup({
+        requestOptions: {
+          headers: {
+          }
+        }
+      });
       configuredRequest.get('http://google.com', {
         simple: false,
         resolveWithFullResponse: true

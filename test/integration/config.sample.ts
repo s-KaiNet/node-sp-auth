@@ -28,6 +28,16 @@ export let onpremCreds: IOnpremiseUserCredentials = {
   password: '[password]'
 };
 
+export let onpremUpnCreds: IOnpremiseUserCredentials = {
+  username: '[user@domain.com]',
+  password: '[password]'
+};
+
+export let onpremUserWithDomainCreds: IOnpremiseUserCredentials = {
+  username: '[domain\\user]',
+  password: '[password]'
+};
+
 export let onpremFbaCreds: IOnpremiseFbaCredentials = {
   username: '[username]',
   password: '[password]',
