@@ -66,7 +66,11 @@ export class AdfsCredentials implements IAuthResolver {
         let notAfter: number = new Date(data[0]).getTime();
         let expiresIn: number = parseInt(((notAfter - new Date().getTime()) / 1000).toString(), 10);
         let response: IncomingMessage = data[1];
-        let authCookie: string = adfsCookie + '=' + cookie.parse(response.headers['set-cookie'][0])[adfsCookie];
+
+        let authCookie: string = adfsCookie + '=' +
+          response.headers['set-cookie']
+            .map((cookieString: string) => cookie.parse(cookieString)[adfsCookie])
+            .filter((cookieString: string) => typeof cookieString !== 'undefined')[0];
 
         AdfsCredentials.CookieCache.set(cacheKey, authCookie, expiresIn);
 
