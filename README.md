@@ -81,7 +81,7 @@ Possible values for `credentialOptions` (depending on authentication strategy):
    - [Addin only permissions:](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20addin%20only%20authentication)  
      `clientId`, `clientSecret`
    - [SAML based with user credentials](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20user%20credentials%20authentication)  
-     `username` , `password`
+     `username` , `password`, `online`
 
  - [ADFS user credentials:](https://github.com/s-KaiNet/node-sp-auth/wiki/ADFS%20user%20credentials%20authentication)  
    `username`, `password`, `relyingParty`, `adfsUrl`, `adfsCookie`
