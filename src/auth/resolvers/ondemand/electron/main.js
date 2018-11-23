@@ -15,8 +15,8 @@ const url = require('url');
 let mainWindow = null;
 
 const createWindow = () => {
-  let siteUrl = process.argv[2];
-  let force = process.argv[3] === 'true';
+  let siteUrl = process.argv[3];
+  let force = process.argv[4] === 'true';
   if (siteUrl.endsWith('/')) {
     siteUrl = siteUrl.slice(0, -1);
   }

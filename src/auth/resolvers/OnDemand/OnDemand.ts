@@ -104,7 +104,7 @@ export class OnDemand implements IAuthResolver {
     let electronExecutable = this._authOptions.electron || 'electron';
     let isWindows = (process.platform.lastIndexOf('win') === 0);
     let options: any = isWindows ? { shell: true } : undefined;
-    const output = childProcess.execFileSync(electronExecutable, [path.join(__dirname, 'electron/main.js'), this._siteUrl, this._authOptions.force.toString()], options).toString();
+    const output = childProcess.execFileSync(electronExecutable, [path.join(__dirname, 'electron/main.js'), '--', this._siteUrl, this._authOptions.force.toString()], options).toString();
 
     let cookieRegex = /#\{([\s\S]+?)\}#/gm;
     let cookieData = cookieRegex.exec(output);
