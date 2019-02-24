@@ -7,11 +7,11 @@
 `node-sp-auth` allows you to perform SharePoint unattended (without user interaction) http authentication with nodejs using different authentication techniques. `node-sp-auth` also takes care about caching authentication data for performance (no need for you to think about how long authentication will be available, that's a task for `node-sp-auth`, as soon as authentication will be expired, `node-sp-auth` will renew it internally).    
 
 Versions supported:
- * SharePoint 2013, 2016
+ * SharePoint 2013 and onwards
  * SharePoint Online
 
 Authentication options:
- * SharePoint 2013, 2016:
+ * SharePoint 2013 and onwards:
    * Addin only permissions
    * User credentials through the http ntlm handshake
    * Form-based authentication (FBA)
