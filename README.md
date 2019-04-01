@@ -3,7 +3,9 @@
 [![npm version](https://badge.fury.io/js/node-sp-auth.svg)](https://badge.fury.io/js/node-sp-auth)
 
 ### Need help on SharePoint with Node.JS? Join our gitter chat and ask question! [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/sharepoint-node/Lobby)
-
+---
+> **IMPORTANT:** This module doesn't work in browser. The only supported environment is nodejs. If you have a need to use it in browser, probably you're looking for [sp-rest-proxy](https://github.com/koltyakov/sp-rest-proxy) - a nodejs proxy, which redirects calls to real SharePoint. 
+---
 `node-sp-auth` allows you to perform SharePoint unattended (without user interaction) http authentication with nodejs using different authentication techniques. `node-sp-auth` also takes care about caching authentication data for performance (no need for you to think about how long authentication will be available, that's a task for `node-sp-auth`, as soon as authentication will be expired, `node-sp-auth` will renew it internally).    
 
 Versions supported:
