@@ -27,7 +27,9 @@
     "tslint": "tslint --project tsconfig.json",
     "prepublishOnly": "rimraf -- lib && npm run build",
     "test:dev": "mocha ./test/integration/tests.ts --watch --watch-extensions ts",
-    "test:integration": "nyc --report-dir coverage/integration mocha ./test/integration/tests.ts"
+    "test:integration": "nyc --report-dir coverage/integration mocha ./test/integration/tests.ts",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "nyc": {
     "include": [
@@ -82,6 +84,8 @@
     "node-sp-auth-config": "^2.4.5",
     "request": "^2.75.0",
     "request-promise": "^4.1.1",
-    "xmldoc": "^0.5.1"
-  }
+    "xmldoc": "^0.5.1",
+    "snyk": "^1.189.0"
+  },
+  "snyk": true
 }
