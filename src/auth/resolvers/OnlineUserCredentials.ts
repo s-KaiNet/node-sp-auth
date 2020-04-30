@@ -117,19 +117,19 @@ export class OnlineUserCredentials extends OnlineResolver {
         }
 
         if (authType === 'Federated') {
-          return this.getSecurityTokenWithAdfs(userRealm.AuthURL);
+          return this.getSecurityTokenWithAdfs(userRealm.AuthURL, userRealm.CloudInstanceIssuerUri);
         }
 
         throw new Error(`Unable to resolve namespace authentiation type. Type received: ${authType}`);
       });
   }
 
-  private getSecurityTokenWithAdfs(adfsUrl: string): Promise<any> {
-    return AdfsHelper.getSamlAssertion(this._siteUrl, {
+  private getSecurityTokenWithAdfs(adfsUrl: string, relyingParty: string): Promise<any> {
+    return AdfsHelper.getSamlAssertion({
       username: this._authOptions.username,
       password: this._authOptions.password,
       adfsUrl: adfsUrl,
-      relyingParty: consts.AdfsOnlineRealm
+      relyingParty: relyingParty || consts.AdfsOnlineRealm
     })
       .then(samlAssertion => {
 

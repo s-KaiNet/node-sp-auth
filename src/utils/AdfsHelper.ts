@@ -10,7 +10,7 @@ import { SamlAssertion } from './SamlAssertion';
 import { template as adfsSamlWsfedTemplate } from './../templates/AdfsSamlWsfed';
 
 export class AdfsHelper {
-  public static getSamlAssertion(siteUrl: string, credentials: IAdfsUserCredentials): Promise<SamlAssertion> {
+  public static getSamlAssertion(credentials: IAdfsUserCredentials): Promise<SamlAssertion> {
     let adfsHost: string = url.parse(credentials.adfsUrl).host;
     let usernameMixedUrl = `https://${adfsHost}/adfs/services/trust/13/usernamemixed`;
 

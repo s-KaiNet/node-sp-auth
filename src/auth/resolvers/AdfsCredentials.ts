@@ -57,7 +57,7 @@ export class AdfsCredentials implements IAuthResolver {
       });
     }
 
-    return AdfsHelper.getSamlAssertion(this._siteUrl, this._authOptions)
+    return AdfsHelper.getSamlAssertion(this._authOptions)
       .then(data => {
         return this.postTokenData(data);
       })
