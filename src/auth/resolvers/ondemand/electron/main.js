@@ -68,19 +68,20 @@ const createWindow = () => {
       } else {
         throw new Error('Unable to resolve domain');
       }
-      session.cookies.get({ domain: domain }, (error, cookies) => {
-        if (error) {
+      session.cookies.get({ domain: domain })
+        .then((cookies) => {
+          console.log('#{');
+          cookies.forEach(cookie => {
+            console.log(JSON.stringify(cookie));
+            console.log(';#;');
+          });
+          console.log('}#');
+          mainWindow.close();
+        })
+        .catch((error) => {
           console.log(error);
           throw error;
-        }
-        console.log('#{');
-        cookies.forEach(cookie => {
-          console.log(JSON.stringify(cookie));
-          console.log(';#;');
         });
-        console.log('}#');
-        mainWindow.close();
-      });
     }
   });
 
@@ -116,7 +117,7 @@ app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-    app.quit();
+  app.quit();
 });
 
 app.on('activate', () => {
