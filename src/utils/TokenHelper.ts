@@ -42,8 +42,8 @@ export class TokenHelper {
                 refresh_token: authData.refreshToken,
                 resource: resource
             }
-        }).json()
-            .then((data: any) => {
+        }).json<{access_token: string, expires_on: string}>()
+            .then(data => {
                 return {
                     value: data.access_token,
                     expireOn: new Date(parseInt(data.expires_on, 10))
@@ -66,8 +66,8 @@ export class TokenHelper {
                 scope: resource,
                 resource: resource
             }
-        }).json()
-            .then((data: any) => {
+        }).json<{access_token: string, expires_on: string}>()
+            .then(data => {
                 return {
                     value: data.access_token,
                     expireOn: new Date(parseInt(data.expires_on, 10))

@@ -121,7 +121,7 @@ export class OnlineUserCredentials extends OnlineResolver {
       });
   }
 
-  private getSecurityTokenWithAdfs(adfsUrl: string, relyingParty: string): Promise<any> {
+  private getSecurityTokenWithAdfs(adfsUrl: string, relyingParty: string): Promise<string> {
     return AdfsHelper.getSamlAssertion({
       username: this._authOptions.username,
       password: this._authOptions.password,
@@ -143,12 +143,13 @@ export class OnlineUserCredentials extends OnlineResolver {
             'Content-Length': tokenRequest.length.toString(),
             'Content-Type': 'application/soap+xml; charset=utf-8'
           },
-          rejectUnauthorized: false
+          rejectUnauthorized: false,
+          resolveBodyOnly: true
         });
       });
   }
 
-  private getSecurityTokenWithOnline(): Promise<any> {
+  private getSecurityTokenWithOnline(): Promise<string> {
     let parsedUrl: url.Url = url.parse(this._siteUrl);
     let host: string = parsedUrl.host;
     let spFormsEndPoint = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
@@ -163,12 +164,10 @@ export class OnlineUserCredentials extends OnlineResolver {
       .post(this.MSOnlineSts, {
         body: samlBody,
         rejectUnauthorized: false,
+        resolveBodyOnly: true,
         headers: {
           'Content-Type': 'application/soap+xml; charset=utf-8'
         }
-      })
-      .then(xmlResponse => {
-        return xmlResponse;
       });
   }
 

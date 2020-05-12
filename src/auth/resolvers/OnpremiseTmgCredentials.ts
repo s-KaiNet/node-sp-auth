@@ -50,7 +50,7 @@ export class OnpremiseTmgCredentials implements IAuthResolver {
       agent: keepaliveAgent,
       rejectUnauthorized: false
     })
-      .then((response: any) => {
+      .then(response => {
 
         let authCookie = response.headers['set-cookie'][0];
 

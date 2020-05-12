@@ -3,6 +3,7 @@ import * as url from 'url';
 import * as cookie from 'cookie';
 import { IncomingMessage } from 'http';
 import template = require('lodash.template');
+import { Response } from 'got';
 let xmldoc: any = require('xmldoc');
 
 import { IAuthResolver } from './../IAuthResolver';
@@ -60,11 +61,11 @@ export class AdfsCredentials implements IAuthResolver {
       .then((data: any) => {
         return this.postTokenData(data);
       })
-      .then((data: any) => {
+      .then(data => {
         let adfsCookie: string = this._authOptions.adfsCookie || consts.FedAuth;
         let notAfter: number = new Date(data[0]).getTime();
         let expiresIn: number = parseInt(((notAfter - new Date().getTime()) / 1000).toString(), 10);
-        let response: IncomingMessage = data[1];
+        let response = data[1];
 
         let authCookie: string = adfsCookie + '=' +
           response.headers['set-cookie']
@@ -81,7 +82,7 @@ export class AdfsCredentials implements IAuthResolver {
       });
   }
 
-  private postTokenData(samlAssertion: SamlAssertion): Promise<[string, any]> {
+  private postTokenData(samlAssertion: SamlAssertion): Promise<[string, Response<string>]> {
     let result: string = template(adfsSamlTokenTemplate)({
       created: samlAssertion.notBefore,
       expires: samlAssertion.notAfter,

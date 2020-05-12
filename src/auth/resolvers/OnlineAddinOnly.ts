@@ -50,9 +50,9 @@ export class OnlineAddinOnly extends OnlineResolver {
             'client_secret': this._authOptions.clientSecret,
             'resource': resource
           }
-        }).json();
+        }).json<{ expires_in: string, access_token: string }>();
       })
-      .then((data: any) => {
+      .then(data => {
         let expiration: number = parseInt(data.expires_in, 10);
         OnlineAddinOnly.TokenCache.set(cacheKey, data.access_token, expiration - 60);
 
@@ -104,8 +104,7 @@ export class OnlineAddinOnly extends OnlineResolver {
       headers: {
         'Authorization': 'Bearer '
       },
-      rejectUnauthorized: false,
-      resolveBodyOnly: false
+      rejectUnauthorized: false
     })
       .then(data => {
         let header: string = data.headers['www-authenticate'];

@@ -51,7 +51,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
       body: soapBody,
       rejectUnauthorized: false
     })
-      .then((response: any) => {
+      .then(response => {
 
         let xmlDoc: any = new xmldoc.XmlDocument(response.body);
 

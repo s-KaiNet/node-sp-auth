@@ -23,6 +23,7 @@ export class AdfsHelper {
     return request.post(usernameMixedUrl, {
       body: samlBody,
       rejectUnauthorized: false,
+      resolveBodyOnly: true,
       headers: {
         'Content-Length': samlBody.length.toString(),
         'Content-Type': 'application/soap+xml; charset=utf-8'
