@@ -16,6 +16,7 @@ import { template as onlineSamlWsfedAdfsTemplate } from './../../templates/Onlin
 import { template as onlineSamlWsfedTemplate } from './../../templates/OnlineSamlWsfed';
 import { HostingEnvironment } from '../HostingEnvironment';
 import { OnlineResolver } from './base/OnlineResolver';
+import { Response } from 'got';
 
 export class OnlineUserCredentials extends OnlineResolver {
 
@@ -60,7 +61,7 @@ export class OnlineUserCredentials extends OnlineResolver {
         return this.postToken(xmlResponse);
       })
       .then(data => {
-        let response: IncomingMessage = data[1];
+        let response = data[1];
         let diffSeconds: number = data[0];
         let fedAuth: string;
         let rtFa: string;
@@ -171,7 +172,7 @@ export class OnlineUserCredentials extends OnlineResolver {
       });
   }
 
-  private postToken(xmlResponse: any): Promise<[number, any]> {
+  private postToken(xmlResponse: any): Promise<[number, Response<string>]> {
     let xmlDoc: any = new xmldoc.XmlDocument(xmlResponse);
     let parsedUrl: url.Url = url.parse(this._siteUrl);
     let spFormsEndPoint = `${parsedUrl.protocol}//${parsedUrl.host}/${consts.FormsPath}`;
@@ -188,7 +189,7 @@ export class OnlineUserCredentials extends OnlineResolver {
 
     let diffSeconds: number = parseInt(diff.toString(), 10);
 
-    return Promise.all([diffSeconds, request
+    return Promise.all([Promise.resolve(diffSeconds), request
       .post(spFormsEndPoint, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)',
