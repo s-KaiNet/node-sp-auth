@@ -3,6 +3,7 @@ import got, { Options } from 'got';
 import * as http from 'http';
 import * as https from 'https';
 import * as url from 'url';
+import 'mocha';
 
 import { IAuthOptions } from './../../src/auth/IAuthOptions';
 import * as spauth from './../../src/index';
@@ -44,7 +45,7 @@ let tests: ITestInfo[] = [
 tests.forEach(test => {
   describe(`node-sp-auth: integration - ${test.name}`, () => {
 
-    it('should get list title with core http(s)', function (done: MochaDone): void {
+    it('should get list title with core http(s)', function (done: Mocha.Done): void {
       this.timeout(90 * 1000);
 
       let parsedUrl: url.Url = url.parse(test.url);
@@ -96,7 +97,7 @@ tests.forEach(test => {
         .catch(done);
     });
 
-    it('should get list title', function (done: MochaDone): void {
+    it('should get list title', function (done: Mocha.Done): void {
       this.timeout(90 * 1000);
       let documentTitle = 'Documents';
 
@@ -116,7 +117,7 @@ tests.forEach(test => {
         .catch(done);
     });
 
-    it('should get Title field', function (done: MochaDone): void {
+    it('should get Title field', function (done: Mocha.Done): void {
       this.timeout(90 * 1000);
       let fieldTitle = 'Title';
 
@@ -136,7 +137,7 @@ tests.forEach(test => {
         .catch(done);
     });
 
-    it('should not setup custom options for request', function (done: MochaDone): void {
+    it('should not setup custom options for request', function (done: Mocha.Done): void {
       spauth.setup({
         requestOptions: {
           headers: {
@@ -151,7 +152,7 @@ tests.forEach(test => {
         .catch(done);
     });
 
-    it('should setup custom options for request', function (done: MochaDone): void {
+    it('should setup custom options for request', function (done: Mocha.Done): void {
       spauth.setup({
         requestOptions: {
           headers: {
