@@ -1,7 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { parse as urlparse } from 'url';
 import { request } from './../config';
-import * as Promise from 'bluebird';
 
 import { IAppToken } from '../auth/base/IAppToken';
 import { IOnlineAddinCredentials } from '../index';
@@ -42,10 +41,9 @@ export class TokenHelper {
                 client_secret: oauth.clientSecret,
                 refresh_token: authData.refreshToken,
                 resource: resource
-            },
-            json: true
-        })
-            .then(data => {
+            }
+        }).json()
+            .then((data: any) => {
                 return {
                     value: data.access_token,
                     expireOn: new Date(parseInt(data.expires_on, 10))
@@ -67,10 +65,9 @@ export class TokenHelper {
                 client_secret: oauth.clientSecret,
                 scope: resource,
                 resource: resource
-            },
-            json: true
-        })
-            .then(data => {
+            }
+        }).json()
+            .then((data: any) => {
                 return {
                     value: data.access_token,
                     expireOn: new Date(parseInt(data.expires_on, 10))

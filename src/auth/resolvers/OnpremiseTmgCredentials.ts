@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import * as url from 'url';
 import { request } from './../../config';
 import * as http from 'http';
@@ -49,11 +48,8 @@ export class OnpremiseTmgCredentials implements IAuthResolver {
         `username=${encodeURIComponent(this._authOptions.username)}&` +
         `password=${encodeURIComponent(this._authOptions.password)}`,
       agent: keepaliveAgent,
-      json: false,
-      simple: false,
-      resolveWithFullResponse: true,
-      strictSSL: false
-    } as any)
+      rejectUnauthorized: false
+    })
       .then((response: any) => {
 
         let authCookie = response.headers['set-cookie'][0];

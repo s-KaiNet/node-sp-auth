@@ -1,6 +1,4 @@
-import * as Promise from 'bluebird';
 import { request } from './../../config';
-import { IncomingMessage } from 'http';
 import * as url from 'url';
 
 import { IOnlineAddinCredentials } from './../IAuthOptions';
@@ -45,16 +43,16 @@ export class OnlineAddinOnly extends OnlineResolver {
         let fullClientId = `${this._authOptions.clientId}@${realm}`;
 
         return request.post(authUrl, {
-          json: true,
+          rejectUnauthorized: false,
           form: {
             'grant_type': 'client_credentials',
             'client_id': fullClientId,
             'client_secret': this._authOptions.clientSecret,
             'resource': resource
           }
-        });
+        }).json();
       })
-      .then(data => {
+      .then((data: any) => {
         let expiration: number = parseInt(data.expires_in, 10);
         OnlineAddinOnly.TokenCache.set(cacheKey, data.access_token, expiration - 60);
 
@@ -78,7 +76,7 @@ export class OnlineAddinOnly extends OnlineResolver {
     return new Promise<string>((resolve, reject) => {
       let url = this.AcsRealmUrl + realm;
 
-      request.get(url, { json: true })
+      request.get(url).json()
         .then((data: { endpoints: { protocol: string, location: string }[] }) => {
           for (let i = 0; i < data.endpoints.length; i++) {
             if (data.endpoints[i].protocol === 'OAuth2') {
@@ -86,7 +84,8 @@ export class OnlineAddinOnly extends OnlineResolver {
               return undefined;
             }
           }
-        });
+        })
+        .catch(reject);
     });
   }
 
@@ -105,10 +104,10 @@ export class OnlineAddinOnly extends OnlineResolver {
       headers: {
         'Authorization': 'Bearer '
       },
-      resolveWithFullResponse: true,
-      simple: false
+      rejectUnauthorized: false,
+      resolveBodyOnly: false
     })
-      .then((data: IncomingMessage) => {
+      .then(data => {
         let header: string = data.headers['www-authenticate'];
         let index: number = header.indexOf('Bearer realm="');
         return header.substring(index + 14, index + 50);

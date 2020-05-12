@@ -1,5 +1,3 @@
-import * as Promise from 'bluebird';
-
 import { IAuthResponse } from './auth/IAuthResponse';
 import { IAuthOptions } from './auth/IAuthOptions';
 import { AuthResolverFactory } from './auth/AuthResolverFactory';

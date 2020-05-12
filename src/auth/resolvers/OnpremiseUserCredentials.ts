@@ -1,7 +1,5 @@
-import * as Promise from 'bluebird';
 import * as url from 'url';
 import { request } from './../../config';
-import { IncomingMessage } from 'http';
 import * as http from 'http';
 import * as https from 'https';
 
@@ -47,11 +45,9 @@ export class OnpremiseUserCredentials implements IAuthResolver {
         'Accept': 'application/json;odata=verbose'
       },
       agent: keepaliveAgent,
-      resolveWithFullResponse: true,
-      simple: false,
-      strictSSL: false
-    } as any)
-      .then((response: IncomingMessage) => {
+      rejectUnauthorized: false
+    })
+      .then(response => {
         let type2msg: any = ntlm.decodeType2Message(response.headers['www-authenticate']);
         let type3msg: any = ntlm.createType3Message(type2msg, ntlmOptions.username, ntlmOptions.password, ntlmOptions.workstation, ntlmOptions.domain);
 

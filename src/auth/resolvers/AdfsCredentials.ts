@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import { request } from './../../config';
 import * as url from 'url';
 import * as cookie from 'cookie';
@@ -100,9 +99,7 @@ export class AdfsCredentials implements IAuthResolver {
         'wctx': `${rootSiteUrl}/_layouts/Authenticate.aspx?Source=%2F`,
         'wresult': tokenXmlDoc.toString({ compressed: true })
       },
-      resolveWithFullResponse: true,
-      simple: false,
-      strictSSL: false
+      rejectUnauthorized: false
     })]);
   }
 }

@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import * as url from 'url';
 import { request } from './../../config';
 import * as cookie from 'cookie';
@@ -98,14 +97,12 @@ export class OnlineUserCredentials extends OnlineResolver {
 
   private getSecurityToken(): Promise<any> {
     return request.post(this.OnlineUserRealmEndpoint, {
-      simple: false,
-      strictSSL: false,
-      json: true,
+      rejectUnauthorized: false,
       form: {
         'login': this._authOptions.username
       }
-    })
-      .then(userRealm => {
+    }).json()
+      .then((userRealm: any) => {
         let authType: string = userRealm.NameSpaceType;
 
         if (!authType) {
@@ -143,11 +140,10 @@ export class OnlineUserCredentials extends OnlineResolver {
         return request.post(this.MSOnlineSts, {
           body: tokenRequest,
           headers: {
-            'Content-Length': tokenRequest.length,
+            'Content-Length': tokenRequest.length.toString(),
             'Content-Type': 'application/soap+xml; charset=utf-8'
           },
-          simple: false,
-          strictSSL: false
+          rejectUnauthorized: false
         });
       });
   }
@@ -166,12 +162,11 @@ export class OnlineUserCredentials extends OnlineResolver {
     return request
       .post(this.MSOnlineSts, {
         body: samlBody,
-        simple: false,
-        strictSSL: false,
+        rejectUnauthorized: false,
         headers: {
           'Content-Type': 'application/soap+xml; charset=utf-8'
         }
-      } as any)
+      })
       .then(xmlResponse => {
         return xmlResponse;
       });
@@ -201,10 +196,8 @@ export class OnlineUserCredentials extends OnlineResolver {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: binaryToken,
-        rejectUnauthorized: false,
-        resolveWithFullResponse: true,
-        simple: false
-      } as any)]);
+        rejectUnauthorized: false
+      })]);
   }
 
   private get MSOnlineSts(): string {

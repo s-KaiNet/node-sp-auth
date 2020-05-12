@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import * as jwt from 'jsonwebtoken';
 import * as fs from 'fs';
 import * as url from 'url';

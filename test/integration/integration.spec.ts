@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import * as request from 'request-promise';
-import { IncomingMessage } from 'http';
+import got, { Options } from 'got';
 import * as http from 'http';
 import * as https from 'https';
 import * as url from 'url';
@@ -60,7 +59,7 @@ tests.forEach(test => {
       spauth.getAuth(test.url, test.creds)
         .then(response => {
 
-          let options: request.OptionsWithUrl = getDefaultHeaders() as request.OptionsWithUrl;
+          let options = getDefaultHeaders();
           let headers: any = Object.assign(options.headers, response.headers);
 
           if (response.options && response.options['agent']) {
@@ -103,14 +102,14 @@ tests.forEach(test => {
 
       spauth.getAuth(test.url, test.creds)
         .then(response => {
-          let options: request.OptionsWithUrl = getDefaultHeaders() as request.OptionsWithUrl;
+          let options = getDefaultHeaders();
           Object.assign(options.headers, response.headers);
           Object.assign(options, response.options);
           options.url = `${test.url}_api/web/lists/getbytitle('${documentTitle}')`;
 
-          return request.get(options);
+          return got(options);
         })
-        .then((data: IncomingMessage) => {
+        .then(data => {
           expect((data as any).body.d.Title).to.equal(documentTitle);
           done();
         })
@@ -123,12 +122,12 @@ tests.forEach(test => {
 
       spauth.getAuth(test.url, test.creds)
         .then(response => {
-          let options: request.OptionsWithUrl = getDefaultHeaders() as request.OptionsWithUrl;
+          let options = getDefaultHeaders();
           Object.assign(options.headers, response.headers);
           Object.assign(options, response.options);
           options.url = `${test.url}_api/web/fields/getbytitle('${fieldTitle}')`;
 
-          return request.get(options);
+          return got(options).json();
         })
         .then(data => {
           expect((data as any).body.d.Title).to.equal(fieldTitle);
@@ -144,15 +143,12 @@ tests.forEach(test => {
           }
         }
       });
-      configuredRequest.get('http://google.com', {
-        simple: false,
-        resolveWithFullResponse: true
-      })
-      .then((result: any) => {
-        expect(result.request.headers['my-test-header']).equals(undefined);
-        done();
-      })
-      .catch(done);
+      configuredRequest.get('http://google.com')
+        .then(result => {
+          expect(result.headers['my-test-header']).equals(undefined);
+          done();
+        })
+        .catch(done);
     });
 
     it('should setup custom options for request', function (done: MochaDone): void {
@@ -164,31 +160,25 @@ tests.forEach(test => {
         }
       });
 
-      configuredRequest.get('http://google.com', {
-        simple: false,
-        resolveWithFullResponse: true
-      })
-      .then((result: any) => {
-        expect(result.request.headers['my-test-header']).equals('my value');
-        done();
-      })
-      .catch(done);
+      configuredRequest.get('http://google.com')
+        .then(result => {
+          expect(result.headers['my-test-header']).equals('my value');
+          done();
+        })
+        .catch(done);
     });
 
   });
 });
 
-function getDefaultHeaders(): request.RequestPromiseOptions {
-  let options: request.RequestPromiseOptions = Object.assign({}, {
+function getDefaultHeaders(): any {
+  let options: Options = {
     headers: {
       'Accept': 'application/json;odata=verbose',
       'Content-Type': 'application/json;odata=verbose'
     },
-    json: true,
-    strictSSL: false,
-    resolveWithFullResponse: true,
-    simple: true
-  });
+    rejectUnauthorized: false
+  };
 
   return options;
 }

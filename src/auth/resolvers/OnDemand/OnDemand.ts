@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -6,10 +5,9 @@ import { Cpass } from 'cpass';
 
 import { IAuthResolver } from '../../IAuthResolver';
 import { IAuthResponse } from '../../IAuthResponse';
-import { IOnDemandCredentials } from '../../IAuthOptions';
+import { IOnDemandCredentials, isOnPremUrl } from '../../IAuthOptions';
 import { Cache } from './../../../utils/Cache';
 import { FilesHelper } from '../../../utils/FilesHelper';
-import { isOnPremUrl } from '../../IAuthOptions';
 
 export interface ICookie {
   httpOnly: boolean;

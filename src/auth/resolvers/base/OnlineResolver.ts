@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import { IAuthResolver } from '../../IAuthResolver';
 import { IAuthResponse } from '../../IAuthResponse';
 import { HostingEnvironment } from '../../HostingEnvironment';

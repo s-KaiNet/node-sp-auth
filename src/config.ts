@@ -1,14 +1,13 @@
-import * as requestPromise from 'request-promise';
-import { CoreOptions } from 'request';
+import got, { Options } from 'got';
 
 export interface IConfiguration {
-  requestOptions?: CoreOptions;
+  requestOptions?: Options;
 }
 
-export let request: typeof requestPromise = requestPromise;
+export let request: typeof got = got;
 
 export function setup(config: IConfiguration): void {
   if (config.requestOptions) {
-    request = requestPromise.defaults(config.requestOptions);
+    request = got.extend(config.requestOptions);
   }
 }

@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import * as url from 'url';
 import { request } from './../../config';
 import * as cookie from 'cookie';
@@ -47,16 +46,11 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
       method: 'POST',
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'Content-Length': soapBody.length
+        'Content-Length': soapBody.length.toString()
       },
       body: soapBody,
-      json: false,
-      simple: false,
-      strictSSL: false,
-      transform: (body: any, response: any, resolveWithFullResponse: any) => {
-        return response;
-      }
-    } as any)
+      rejectUnauthorized: false
+    })
       .then((response: any) => {
 
         let xmlDoc: any = new xmldoc.XmlDocument(response.body);

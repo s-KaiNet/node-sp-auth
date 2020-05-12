@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import { request } from './../config';
 import * as url from 'url';
 import template = require('lodash.template');
@@ -23,10 +22,9 @@ export class AdfsHelper {
 
     return request.post(usernameMixedUrl, {
       body: samlBody,
-      strictSSL: false,
-      simple: false,
+      rejectUnauthorized: false,
       headers: {
-        'Content-Length': samlBody.length,
+        'Content-Length': samlBody.length.toString(),
         'Content-Type': 'application/soap+xml; charset=utf-8'
       }
     })
