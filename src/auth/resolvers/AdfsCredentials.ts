@@ -1,9 +1,9 @@
 import * as Promise from 'bluebird';
 import { request } from './../../config';
 import * as url from 'url';
-import * as _ from 'lodash';
 import * as cookie from 'cookie';
 import { IncomingMessage } from 'http';
+import template = require('lodash.template');
 let xmldoc: any = require('xmldoc');
 
 import { IAuthResolver } from './../IAuthResolver';
@@ -22,7 +22,7 @@ export class AdfsCredentials implements IAuthResolver {
   private _authOptions: IAdfsUserCredentials;
 
   constructor(private _siteUrl: string, _authOptions: IAdfsUserCredentials) {
-    this._authOptions = _.extend<{}, IAdfsUserCredentials>({}, _authOptions);
+    this._authOptions = Object.assign({}, _authOptions);
 
     this._authOptions.username = this._authOptions.username
       .replace(/&/g, '&amp;')
@@ -58,10 +58,10 @@ export class AdfsCredentials implements IAuthResolver {
     }
 
     return AdfsHelper.getSamlAssertion(this._authOptions)
-      .then(data => {
+      .then((data: any) => {
         return this.postTokenData(data);
       })
-      .then(data => {
+      .then((data: any) => {
         let adfsCookie: string = this._authOptions.adfsCookie || consts.FedAuth;
         let notAfter: number = new Date(data[0]).getTime();
         let expiresIn: number = parseInt(((notAfter - new Date().getTime()) / 1000).toString(), 10);
@@ -83,7 +83,7 @@ export class AdfsCredentials implements IAuthResolver {
   }
 
   private postTokenData(samlAssertion: SamlAssertion): Promise<[string, any]> {
-    let result: string = _.template(adfsSamlTokenTemplate)({
+    let result: string = template(adfsSamlTokenTemplate)({
       created: samlAssertion.notBefore,
       expires: samlAssertion.notAfter,
       relyingParty: this._authOptions.relyingParty,

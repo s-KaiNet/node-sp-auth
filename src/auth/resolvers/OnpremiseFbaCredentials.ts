@@ -1,8 +1,8 @@
 import * as Promise from 'bluebird';
-import * as _ from 'lodash';
 import * as url from 'url';
 import { request } from './../../config';
 import * as cookie from 'cookie';
+import template = require('lodash.template');
 
 let xmldoc: any = require('xmldoc');
 
@@ -35,7 +35,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
       });
     }
 
-    let soapBody: string = _.template(fbaLoginWsfedTemplate)({
+    let soapBody: string = template(fbaLoginWsfedTemplate)({
       username: this._authOptions.username,
       password: this._authOptions.password
     });

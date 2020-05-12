@@ -2,7 +2,6 @@ import * as Promise from 'bluebird';
 import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as _ from 'lodash';
 import { Cpass } from 'cpass';
 
 import { IAuthResolver } from '../../IAuthResolver';
@@ -32,10 +31,10 @@ export class OnDemand implements IAuthResolver {
       this._siteUrl = this._siteUrl.substr(0, indx);
     }
 
-    _.defaults(this._authOptions, {
+    this._authOptions = Object.assign({
       force: false,
       persist: true
-    });
+    }, this._authOptions);
   }
 
   public getAuth(): Promise<IAuthResponse> {

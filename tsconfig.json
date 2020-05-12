@@ -5,6 +5,7 @@
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "removeComments": true,
     "outDir": "./lib",

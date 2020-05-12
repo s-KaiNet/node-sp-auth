@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import * as request from 'request-promise';
-import * as _ from 'lodash';
 import { IncomingMessage } from 'http';
 import * as http from 'http';
 import * as https from 'https';
@@ -20,49 +19,14 @@ let config: any = require('./config');
 
 let tests: ITestInfo[] = [
   {
-    name: 'on-premise user credentials',
-    creds: config.onpremCreds,
-    url: config.onpremNtlmEnabledUrl
-  },
-  {
-    name: 'on-premise user UPN credentials',
-    creds: config.onpremUpnCreds,
-    url: config.onpremNtlmEnabledUrl
-  },
-  {
-    name: 'on-premise user+domain credentials',
-    creds: config.onpremUserWithDomainCreds,
-    url: config.onpremNtlmEnabledUrl
-  },
-  {
-    name: 'fba on-premise user credentials',
-    creds: config.onpremFbaCreds,
-    url: config.onpremFbaEnabledUrl
-  },
-  {
-    name: 'adfs online user credentials',
-    creds: config.onlineWithAdfsCreds,
-    url: config.onlineUrl
-  },
-  {
     name: 'online user credentials',
     creds: config.onlineCreds,
     url: config.onlineUrl
   },
   {
-    name: 'on-premise addin only',
-    creds: config.onpremAddinOnly,
-    url: config.onpremAdfsEnabledUrl
-  },
-  {
     name: 'online addin only',
     creds: config.onlineAddinOnly,
     url: config.onlineUrl
-  },
-  {
-    name: 'adfs user credentials',
-    creds: config.adfsCredentials,
-    url: config.onpremAdfsEnabledUrl
   },
   {
     name: 'ondemand - online',
@@ -72,26 +36,9 @@ let tests: ITestInfo[] = [
     url: config.onlineUrl
   },
   {
-    name: 'ondemand - on-premise with ADFS',
-    creds: {
-      ondemand: true
-    },
-    url: config.onpremAdfsEnabledUrl
-  },
-  {
     name: 'file creds - online',
     creds: null,
     url: config.onlineUrl
-  },
-  {
-    name: 'file creds - on-premise - NTLM',
-    creds: null,
-    url: config.onpremNtlmEnabledUrl
-  },
-  {
-    name: 'file creds - on-premise - ADFS',
-    creds: null,
-    url: config.onpremAdfsEnabledUrl
   }
 ];
 
@@ -114,7 +61,7 @@ tests.forEach(test => {
         .then(response => {
 
           let options: request.OptionsWithUrl = getDefaultHeaders() as request.OptionsWithUrl;
-          let headers: any = _.assign(options.headers, response.headers);
+          let headers: any = Object.assign(options.headers, response.headers);
 
           if (response.options && response.options['agent']) {
             agent = response.options['agent'];
@@ -157,8 +104,8 @@ tests.forEach(test => {
       spauth.getAuth(test.url, test.creds)
         .then(response => {
           let options: request.OptionsWithUrl = getDefaultHeaders() as request.OptionsWithUrl;
-          _.assign(options.headers, response.headers);
-          _.assign(options, response.options);
+          Object.assign(options.headers, response.headers);
+          Object.assign(options, response.options);
           options.url = `${test.url}_api/web/lists/getbytitle('${documentTitle}')`;
 
           return request.get(options);
@@ -177,8 +124,8 @@ tests.forEach(test => {
       spauth.getAuth(test.url, test.creds)
         .then(response => {
           let options: request.OptionsWithUrl = getDefaultHeaders() as request.OptionsWithUrl;
-          _.assign(options.headers, response.headers);
-          _.assign(options, response.options);
+          Object.assign(options.headers, response.headers);
+          Object.assign(options, response.options);
           options.url = `${test.url}_api/web/fields/getbytitle('${fieldTitle}')`;
 
           return request.get(options);
@@ -232,7 +179,7 @@ tests.forEach(test => {
 });
 
 function getDefaultHeaders(): request.RequestPromiseOptions {
-  let options: request.RequestPromiseOptions = _.assign({}, {
+  let options: request.RequestPromiseOptions = Object.assign({}, {
     headers: {
       'Accept': 'application/json;odata=verbose',
       'Content-Type': 'application/json;odata=verbose'

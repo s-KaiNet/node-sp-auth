@@ -1,7 +1,7 @@
 import * as Promise from 'bluebird';
 import { request } from './../config';
 import * as url from 'url';
-import * as _ from 'lodash';
+import template = require('lodash.template');
 let xmldoc: any = require('xmldoc');
 
 import { IAdfsUserCredentials } from './../auth/IAuthOptions';
@@ -14,7 +14,7 @@ export class AdfsHelper {
     let adfsHost: string = url.parse(credentials.adfsUrl).host;
     let usernameMixedUrl = `https://${adfsHost}/adfs/services/trust/13/usernamemixed`;
 
-    let samlBody: string = _.template(adfsSamlWsfedTemplate)({
+    let samlBody: string = template(adfsSamlWsfedTemplate)({
       to: usernameMixedUrl,
       username: credentials.username,
       password: credentials.password,

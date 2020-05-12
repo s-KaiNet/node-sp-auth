@@ -1,5 +1,4 @@
 import * as Promise from 'bluebird';
-import * as _ from 'lodash';
 import * as url from 'url';
 import { request } from './../../config';
 import { IncomingMessage } from 'http';
@@ -18,7 +17,7 @@ export class OnpremiseUserCredentials implements IAuthResolver {
 
   public getAuth(): Promise<IAuthResponse> {
 
-    let ntlmOptions: any = _.assign({}, this._authOptions);
+    let ntlmOptions: any = Object.assign({}, this._authOptions);
     ntlmOptions.url = this._siteUrl;
 
     if (ntlmOptions.username.indexOf('\\') > 0) {

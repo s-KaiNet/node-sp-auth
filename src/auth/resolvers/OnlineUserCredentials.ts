@@ -1,9 +1,9 @@
 import * as Promise from 'bluebird';
 import * as url from 'url';
-import * as _ from 'lodash';
 import { request } from './../../config';
 import * as cookie from 'cookie';
 import { IncomingMessage } from 'http';
+import template = require('lodash.template');
 
 let xmldoc: any = require('xmldoc');
 
@@ -25,7 +25,7 @@ export class OnlineUserCredentials extends OnlineResolver {
   constructor(_siteUrl: string, private _authOptions: IUserCredentials) {
     super(_siteUrl);
 
-    this._authOptions = _.extend<{}, IUserCredentials>({}, _authOptions);
+    this._authOptions = Object.assign({}, _authOptions);
 
     this._authOptions.username = this._authOptions.username
       .replace(/&/g, '&amp;')
@@ -135,7 +135,7 @@ export class OnlineUserCredentials extends OnlineResolver {
 
         let siteUrlParsed: url.Url = url.parse(this._siteUrl);
         let rootSiteUrl: string = siteUrlParsed.protocol + '//' + siteUrlParsed.host;
-        let tokenRequest: string = _.template(onlineSamlWsfedAdfsTemplate)({
+        let tokenRequest: string = template(onlineSamlWsfedAdfsTemplate)({
           endpoint: rootSiteUrl,
           token: samlAssertion.value
         });
@@ -157,7 +157,7 @@ export class OnlineUserCredentials extends OnlineResolver {
     let host: string = parsedUrl.host;
     let spFormsEndPoint = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
 
-    let samlBody: string = _.template(onlineSamlWsfedTemplate)({
+    let samlBody: string = template(onlineSamlWsfedTemplate)({
       username: this._authOptions.username,
       password: this._authOptions.password,
       endpoint: spFormsEndPoint
