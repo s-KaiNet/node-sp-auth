@@ -1,19 +1,22 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"name": "Run mocha integration",
-			"type": "node",
-			"request": "launch",
-			"program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-			"stopOnEntry": false,
-			"args": [
-				"-r",
-				"ts-node/register",
-				"test/integration/tests.ts"
-			],
-			"cwd": "${workspaceRoot}",
-			"protocol": "inspector"
-		}
-	]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run mocha integration",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "stopOnEntry": false,
+      "args": [
+        "-r",
+        "ts-node/register",
+        "test/integration/tests.ts"
+      ],/*
+      "env": {
+        "http_proxy": "http://127.0.0.1:8888"
+      },*/
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    }
+  ]
 }

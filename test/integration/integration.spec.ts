@@ -108,10 +108,10 @@ tests.forEach(test => {
           Object.assign(options, response.options);
           options.url = `${test.url}_api/web/lists/getbytitle('${documentTitle}')`;
 
-          return got(options);
+          return got.get(options).json();
         })
         .then(data => {
-          expect((data as any).body.d.Title).to.equal(documentTitle);
+          expect((data as any).d.Title).to.equal(documentTitle);
           done();
         })
         .catch(done);
@@ -131,7 +131,7 @@ tests.forEach(test => {
           return got(options).json();
         })
         .then(data => {
-          expect((data as any).body.d.Title).to.equal(fieldTitle);
+          expect((data as any).d.Title).to.equal(fieldTitle);
           done();
         })
         .catch(done);
@@ -163,7 +163,7 @@ tests.forEach(test => {
 
       configuredRequest.get('http://google.com')
         .then(result => {
-          expect(result.headers['my-test-header']).equals('my value');
+          expect(result.request.options.headers['my-test-header']).equals('my value');
           done();
         })
         .catch(done);

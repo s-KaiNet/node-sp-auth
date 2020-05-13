@@ -48,8 +48,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
         'Content-Type': 'text/xml; charset=utf-8',
         'Content-Length': soapBody.length.toString()
       },
-      body: soapBody,
-      rejectUnauthorized: false
+      body: soapBody
     })
       .then(response => {
 

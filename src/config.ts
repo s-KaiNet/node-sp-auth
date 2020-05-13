@@ -18,10 +18,10 @@ if (process.env['http_proxy'] || process.env['https_proxy']) {
   bootstrap();
 }
 
-export let request: typeof got = got;
+export let request: typeof got = got.extend({ followRedirect: false, rejectUnauthorized: false, throwHttpErrors: false });
 
 export function setup(config: IConfiguration): void {
   if (config.requestOptions) {
-    request = got.extend(config.requestOptions);
+    request = request.extend(config.requestOptions);
   }
 }

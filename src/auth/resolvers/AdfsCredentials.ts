@@ -99,8 +99,7 @@ export class AdfsCredentials implements IAuthResolver {
         'wa': 'wsignin1.0',
         'wctx': `${rootSiteUrl}/_layouts/Authenticate.aspx?Source=%2F`,
         'wresult': tokenXmlDoc.toString({ compressed: true })
-      },
-      rejectUnauthorized: false
+      }
     })]);
   }
 }

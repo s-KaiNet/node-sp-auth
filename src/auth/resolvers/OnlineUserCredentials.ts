@@ -98,7 +98,6 @@ export class OnlineUserCredentials extends OnlineResolver {
 
   private getSecurityToken(): Promise<any> {
     return request.post(this.OnlineUserRealmEndpoint, {
-      rejectUnauthorized: false,
       form: {
         'login': this._authOptions.username
       }
@@ -144,7 +143,6 @@ export class OnlineUserCredentials extends OnlineResolver {
             'Content-Length': tokenRequest.length.toString(),
             'Content-Type': 'application/soap+xml; charset=utf-8'
           },
-          rejectUnauthorized: false,
           resolveBodyOnly: true
         });
       });
@@ -164,7 +162,6 @@ export class OnlineUserCredentials extends OnlineResolver {
     return request
       .post(this.MSOnlineSts, {
         body: samlBody,
-        rejectUnauthorized: false,
         resolveBodyOnly: true,
         headers: {
           'Content-Type': 'application/soap+xml; charset=utf-8'
@@ -195,8 +192,7 @@ export class OnlineUserCredentials extends OnlineResolver {
           'User-Agent': 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)',
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: binaryToken,
-        rejectUnauthorized: false
+        body: binaryToken
       })]);
   }
 

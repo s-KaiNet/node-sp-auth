@@ -44,8 +44,7 @@ export class OnpremiseUserCredentials implements IAuthResolver {
         'Authorization': type1msg,
         'Accept': 'application/json;odata=verbose'
       },
-      agent: keepaliveAgent,
-      rejectUnauthorized: false
+      agent: keepaliveAgent
     })
       .then(response => {
         let type2msg: any = ntlm.decodeType2Message(response.headers['www-authenticate']);

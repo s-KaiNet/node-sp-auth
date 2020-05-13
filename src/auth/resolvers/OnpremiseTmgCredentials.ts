@@ -47,8 +47,7 @@ export class OnpremiseTmgCredentials implements IAuthResolver {
       body: `curl=Z2F&flags=0&forcedownlevel=0&formdir=1&trusted=0&` +
         `username=${encodeURIComponent(this._authOptions.username)}&` +
         `password=${encodeURIComponent(this._authOptions.password)}`,
-      agent: keepaliveAgent,
-      rejectUnauthorized: false
+      agent: keepaliveAgent
     })
       .then(response => {
 

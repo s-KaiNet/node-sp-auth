@@ -43,7 +43,6 @@ export class OnlineAddinOnly extends OnlineResolver {
         let fullClientId = `${this._authOptions.clientId}@${realm}`;
 
         return request.post(authUrl, {
-          rejectUnauthorized: false,
           form: {
             'grant_type': 'client_credentials',
             'client_id': fullClientId,
@@ -103,10 +102,9 @@ export class OnlineAddinOnly extends OnlineResolver {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer '
-      },
-      rejectUnauthorized: false
+      }
     })
-      .then(data => {
+      .then((data: any) => {
         let header: string = data.headers['www-authenticate'];
         let index: number = header.indexOf('Bearer realm="');
         return header.substring(index + 14, index + 50);

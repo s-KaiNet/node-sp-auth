@@ -22,7 +22,6 @@ export class AdfsHelper {
 
     return request.post(usernameMixedUrl, {
       body: samlBody,
-      rejectUnauthorized: false,
       resolveBodyOnly: true,
       headers: {
         'Content-Length': samlBody.length.toString(),
