@@ -104,7 +104,7 @@ export class OnlineAddinOnly extends OnlineResolver {
         'Authorization': 'Bearer '
       }
     })
-      .then((data: any) => {
+      .then(data => {
         let header: string = data.headers['www-authenticate'];
         let index: number = header.indexOf('Bearer realm="');
         return header.substring(index + 14, index + 50);
