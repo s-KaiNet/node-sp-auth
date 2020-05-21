@@ -7,44 +7,44 @@ import {
   IAdfsUserCredentials
 } from './../../src/auth/IAuthOptions';
 
-export let onlineUrl = '[sharepoint online url]';
-export let onpremAdfsEnabledUrl = '[sharepint on premise url with adfs configured]';
-export let onpremNtlmEnabledUrl = '[sharepint on premise url with ntlm]';
-export let onpremFbaEnabledUrl = '[sharepint on premise url with fba auth]';
+export const onlineUrl = '[sharepoint online url]';
+export const onpremAdfsEnabledUrl = '[sharepint on premise url with adfs configured]';
+export const onpremNtlmEnabledUrl = '[sharepint on premise url with ntlm]';
+export const onpremFbaEnabledUrl = '[sharepint on premise url with fba auth]';
 
-export let onlineCreds: IUserCredentials = {
+export const onlineCreds: IUserCredentials = {
   username: '[username]',
   password: '[password]'
 };
 
-export let onlineWithAdfsCreds: IUserCredentials = {
+export const onlineWithAdfsCreds: IUserCredentials = {
   username: '[username]',
   password: '[password]'
 };
 
-export let onpremCreds: IOnpremiseUserCredentials = {
+export const onpremCreds: IOnpremiseUserCredentials = {
   username: '[username]',
   domain: '[domain]',
   password: '[password]'
 };
 
-export let onpremUpnCreds: IOnpremiseUserCredentials = {
+export const onpremUpnCreds: IOnpremiseUserCredentials = {
   username: '[user@domain.com]',
   password: '[password]'
 };
 
-export let onpremUserWithDomainCreds: IOnpremiseUserCredentials = {
+export const onpremUserWithDomainCreds: IOnpremiseUserCredentials = {
   username: '[domain\\user]',
   password: '[password]'
 };
 
-export let onpremFbaCreds: IOnpremiseFbaCredentials = {
+export const onpremFbaCreds: IOnpremiseFbaCredentials = {
   username: '[username]',
   password: '[password]',
   fba: true
 };
 
-export let onpremAddinOnly: IOnPremiseAddinCredentials = {
+export const onpremAddinOnly: IOnPremiseAddinCredentials = {
   clientId: '[clientId]',
   issuerId: '[issuerId]',
   realm: '[realm]',
@@ -52,13 +52,13 @@ export let onpremAddinOnly: IOnPremiseAddinCredentials = {
   shaThumbprint: '[shaThumbprint]'
 };
 
-export let onlineAddinOnly: IOnlineAddinCredentials = {
+export const onlineAddinOnly: IOnlineAddinCredentials = {
   clientId: '[clientId]',
   clientSecret: '[clientSecret]',
   realm: '[realm]'
 };
 
-export let adfsCredentials: IAdfsUserCredentials = {
+export const adfsCredentials: IAdfsUserCredentials = {
   username: '[username]',
   password: '[password]',
   relyingParty: '[relying party]',

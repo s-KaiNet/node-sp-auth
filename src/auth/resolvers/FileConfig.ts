@@ -15,22 +15,22 @@ export class FileConfig implements IAuthResolver {
   constructor(private _siteUrl: string) { }
 
   public getAuth(): Promise<IAuthResponse> {
-    let fileNameTemplate = FilesHelper.resolveFileName(this._siteUrl);
+    const fileNameTemplate = FilesHelper.resolveFileName(this._siteUrl);
 
-    let cachedCreds = FileConfig.CredsCache.get<IAuthOptions>(fileNameTemplate);
+    const cachedCreds = FileConfig.CredsCache.get<IAuthOptions>(fileNameTemplate);
 
     if (cachedCreds) {
       return AuthResolverFactory.resolve(this._siteUrl, cachedCreds).getAuth();
     }
 
-    let userDataFolder = FilesHelper.getUserDataFolder();
-    let credsFolder = path.join(userDataFolder, 'creds');
+    const userDataFolder = FilesHelper.getUserDataFolder();
+    const credsFolder = path.join(userDataFolder, 'creds');
 
     if (!fs.existsSync(credsFolder)) {
       fs.mkdirSync(credsFolder);
     }
 
-    let fileNames = fs.readdirSync(credsFolder).map(name => {
+    const fileNames = fs.readdirSync(credsFolder).map(name => {
       return path.basename(name, path.extname(name));
     });
 
@@ -43,7 +43,7 @@ export class FileConfig implements IAuthResolver {
       console.log(`[node-sp-auth]: reading auth data from ${configPath}`);
     }
 
-    let config = new AuthConfig({
+    const config = new AuthConfig({
       configPath: configPath,
       encryptPassword: true,
       saveConfigOnDisk: true
@@ -51,12 +51,12 @@ export class FileConfig implements IAuthResolver {
 
     return Promise.resolve(config.getContext())
       .then(context => {
-        let fileNameTemplate = FilesHelper.resolveFileName(context.siteUrl);
-        let fileNameWithoutExt = path.basename(configPath, path.extname(configPath));
+        const fileNameTemplate = FilesHelper.resolveFileName(context.siteUrl);
+        const fileNameWithoutExt = path.basename(configPath, path.extname(configPath));
 
         if (fileNameWithoutExt !== fileNameTemplate) {
-          let fileName = path.basename(configPath);
-          let newPath = configPath.replace(fileName, `${fileNameTemplate}.json`);
+          const fileName = path.basename(configPath);
+          const newPath = configPath.replace(fileName, `${fileNameTemplate}.json`);
           fs.renameSync(configPath, newPath);
         }
 
@@ -74,7 +74,7 @@ export class FileConfig implements IAuthResolver {
 
     fileNames.forEach(fileName => {
       if (fileNameTemplate.indexOf(fileName) !== -1) {
-        let subUrlLength = fileNameTemplate.replace(fileName, '').length;
+        const subUrlLength = fileNameTemplate.replace(fileName, '').length;
         if (subUrlLength < matchLength) {
           matchLength = subUrlLength;
           matchFileName = fileName;

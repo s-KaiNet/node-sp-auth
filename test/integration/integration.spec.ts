@@ -15,9 +15,20 @@ interface ITestInfo {
   url: string;
 }
 
-let config: any = require('./config');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const config: any = require('./config');
 
-let tests: ITestInfo[] = [
+const tests: ITestInfo[] = [
+  {
+    name: 'on-premise user+domain credentials',
+    creds: config.onpremUserWithDomainCreds,
+    url: config.onpremNtlmEnabledUrl
+  },
+  {
+    name: 'on-premise user credentials',
+    creds: config.onpremCreds,
+    url: config.onpremNtlmEnabledUrl
+  },
   {
     name: 'online user credentials',
     creds: config.onlineCreds,
@@ -48,11 +59,11 @@ tests.forEach(test => {
     it('should get list title with core http(s)', function (done: Mocha.Done): void {
       this.timeout(90 * 1000);
 
-      let parsedUrl: url.Url = url.parse(test.url);
-      let documentTitle = 'Documents';
-      let isHttps: boolean = parsedUrl.protocol === 'https:';
+      const parsedUrl: url.Url = url.parse(test.url);
+      const documentTitle = 'Documents';
+      const isHttps: boolean = parsedUrl.protocol === 'https:';
 
-      let send: (options: http.RequestOptions, callback?: (res: http.IncomingMessage) => void) => http.ClientRequest =
+      const send: (options: http.RequestOptions, callback?: (res: http.IncomingMessage) => void) => http.ClientRequest =
         isHttps ? https.request : http.request;
       let agent: http.Agent = isHttps ? new https.Agent({ rejectUnauthorized: false }) :
         new http.Agent();
@@ -60,8 +71,8 @@ tests.forEach(test => {
       spauth.getAuth(test.url, test.creds)
         .then(response => {
 
-          let options = getDefaultHeaders();
-          let headers: any = Object.assign(options.headers, response.headers);
+          const options = getDefaultHeaders();
+          const headers: any = Object.assign(options.headers, response.headers);
 
           if (response.options && response.options['agent']) {
             agent = response.options['agent'];
@@ -83,12 +94,12 @@ tests.forEach(test => {
               results += chunk;
             });
 
-            clientRequest.on('error', chunk => {
+            clientRequest.on('error', () => {
               done(new Error('Unexpected error during http(s) request'));
             });
 
             clientRequest.on('end', () => {
-              let data: any = JSON.parse(results);
+              const data: any = JSON.parse(results);
               expect(data.d.Title).to.equal(documentTitle);
               done();
             });
@@ -99,11 +110,11 @@ tests.forEach(test => {
 
     it('should get list title', function (done: Mocha.Done): void {
       this.timeout(90 * 1000);
-      let documentTitle = 'Documents';
+      const documentTitle = 'Documents';
 
       spauth.getAuth(test.url, test.creds)
         .then(response => {
-          let options = getDefaultHeaders();
+          const options = getDefaultHeaders();
           Object.assign(options.headers, response.headers);
           Object.assign(options, response.options);
           options.url = `${test.url}_api/web/lists/getbytitle('${documentTitle}')`;
@@ -119,11 +130,11 @@ tests.forEach(test => {
 
     it('should get Title field', function (done: Mocha.Done): void {
       this.timeout(90 * 1000);
-      let fieldTitle = 'Title';
+      const fieldTitle = 'Title';
 
       spauth.getAuth(test.url, test.creds)
         .then(response => {
-          let options = getDefaultHeaders();
+          const options = getDefaultHeaders();
           Object.assign(options.headers, response.headers);
           Object.assign(options, response.options);
           options.url = `${test.url}_api/web/fields/getbytitle('${fieldTitle}')`;
@@ -173,7 +184,8 @@ tests.forEach(test => {
 });
 
 function getDefaultHeaders(): any {
-  let options: Options = {
+  const options: Options = {
+    responseType: 'json',
     headers: {
       'Accept': 'application/json;odata=verbose',
       'Content-Type': 'application/json;odata=verbose'

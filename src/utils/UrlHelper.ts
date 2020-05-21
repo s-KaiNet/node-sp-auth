@@ -15,7 +15,7 @@ export class UrlHelper {
   }
 
   public static ResolveHostingEnvironment(siteUrl: string): HostingEnvironment {
-    let host: string = (url.parse(siteUrl)).host;
+    const host: string = (url.parse(siteUrl)).host;
 
     if (host.indexOf('.sharepoint.com') !== -1) {
       return HostingEnvironment.Production;

@@ -25,7 +25,7 @@ export class OnDemand implements IAuthResolver {
     // which will never work for on-demand option, so strip the url to just http://site
     // that a case for spsave or sp-request
     if (this._siteUrl.indexOf('/_') !== -1) {
-      let indx = this._siteUrl.indexOf('/_');
+      const indx = this._siteUrl.indexOf('/_');
       this._siteUrl = this._siteUrl.substr(0, indx);
     }
 
@@ -36,11 +36,11 @@ export class OnDemand implements IAuthResolver {
   }
 
   public getAuth(): Promise<IAuthResponse> {
-    let dataFilePath = this.getDataFilePath();
+    const dataFilePath = this.getDataFilePath();
     let cookies: ICookie[];
-    let cacheKey: string = FilesHelper.resolveFileName(this._siteUrl);
+    const cacheKey: string = FilesHelper.resolveFileName(this._siteUrl);
 
-    let cachedCookie: string = OnDemand.CookieCache.get<string>(cacheKey);
+    const cachedCookie: string = OnDemand.CookieCache.get<string>(cacheKey);
 
     if (cachedCookie) {
       return Promise.resolve({
@@ -58,7 +58,7 @@ export class OnDemand implements IAuthResolver {
       cookies = JSON.parse(this._cpass.decode(fs.readFileSync(dataFilePath).toString()));
       let expired = false;
       cookies.forEach((cookie) => {
-        let now = new Date();
+        const now = new Date();
         if (cookie.expirationDate && new Date(cookie.expirationDate * 1000) < now) {
           expired = true;
         }
@@ -98,31 +98,31 @@ export class OnDemand implements IAuthResolver {
 
   private saveAuthData(dataPath: string): ICookie[] {
 
-    let electronExecutable = this._authOptions.electron || 'electron';
-    let isWindows = (process.platform.lastIndexOf('win') === 0);
-    let options: any = isWindows ? { shell: true } : undefined;
+    const electronExecutable = this._authOptions.electron || 'electron';
+    const isWindows = (process.platform.lastIndexOf('win') === 0);
+    const options: any = isWindows ? { shell: true } : undefined;
     const output = childProcess.execFileSync(electronExecutable, [path.join(__dirname, 'electron/main.js'), '--', this._siteUrl, this._authOptions.force.toString()], options).toString();
 
-    let cookieRegex = /#\{([\s\S]+?)\}#/gm;
-    let cookieData = cookieRegex.exec(output);
+    const cookieRegex = /#\{([\s\S]+?)\}#/gm;
+    const cookieData = cookieRegex.exec(output);
 
-    let cookiesJson = cookieData[1].split(';#;');
-    let cookies: ICookie[] = [];
+    const cookiesJson = cookieData[1].split(';#;');
+    const cookies: ICookie[] = [];
 
     cookiesJson.forEach((cookie) => {
-      let data: string = cookie.replace(/(\n|\r)+/g, '').replace(/^["]+|["]+$/g, '');
+      const data: string = cookie.replace(/(\n|\r)+/g, '').replace(/^["]+|["]+$/g, '');
       if (data) {
-        let cookieData = JSON.parse(data) as ICookie;
+        const cookieData = JSON.parse(data) as ICookie;
         if (cookieData.httpOnly) {
           cookies.push(cookieData);
 
           // explicitly set 1 hour expiration for on-premise
           if (isOnPremUrl(this._siteUrl)) {
-            let expiration = new Date();
+            const expiration = new Date();
             expiration.setMinutes(expiration.getMinutes() + (this._authOptions.ttl || 55));
             cookieData.expirationDate = expiration.getTime() / 1000;
           } else if (!cookieData.expirationDate) { // 24 hours for online if no expiration date on cookie
-            let expiration = new Date();
+            const expiration = new Date();
             expiration.setMinutes(expiration.getMinutes() + (this._authOptions.ttl || 1435));
             cookieData.expirationDate = expiration.getTime() / 1000;
           }
@@ -142,8 +142,8 @@ export class OnDemand implements IAuthResolver {
   }
 
   private getDataFilePath(): string {
-    let userDataFolder = FilesHelper.getUserDataFolder();
-    let ondemandFolder = path.join(userDataFolder, 'ondemand');
+    const userDataFolder = FilesHelper.getUserDataFolder();
+    const ondemandFolder = path.join(userDataFolder, 'ondemand');
 
     if (!fs.existsSync(ondemandFolder)) {
       fs.mkdirSync(ondemandFolder);

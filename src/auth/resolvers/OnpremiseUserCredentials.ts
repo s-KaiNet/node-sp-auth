@@ -3,7 +3,8 @@ import { request } from './../../config';
 import * as http from 'http';
 import * as https from 'https';
 
-let ntlm: any = require('node-ntlm-client/lib/ntlm');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const ntlm: any = require('node-ntlm-client/lib/ntlm');
 
 import { IAuthResolver } from './../IAuthResolver';
 import { IOnpremiseUserCredentials } from './../IAuthOptions';
@@ -15,11 +16,11 @@ export class OnpremiseUserCredentials implements IAuthResolver {
 
   public getAuth(): Promise<IAuthResponse> {
 
-    let ntlmOptions: any = Object.assign({}, this._authOptions);
+    const ntlmOptions: any = Object.assign({}, this._authOptions);
     ntlmOptions.url = this._siteUrl;
 
     if (ntlmOptions.username.indexOf('\\') > 0) {
-      let parts = ntlmOptions.username.split('\\');
+      const parts = ntlmOptions.username.split('\\');
       ntlmOptions.username = parts[1];
       ntlmOptions.domain = parts[0].toUpperCase();
     }
@@ -29,11 +30,11 @@ export class OnpremiseUserCredentials implements IAuthResolver {
       ntlmOptions.domain = '';
     }
 
-    let type1msg: any = ntlm.createType1Message();
+    const type1msg: any = ntlm.createType1Message();
 
-    let isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
+    const isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
 
-    let keepaliveAgent: any = isHttps ? new https.Agent({ keepAlive: true, rejectUnauthorized: false }) :
+    const keepaliveAgent: any = isHttps ? new https.Agent({ keepAlive: true, rejectUnauthorized: false }) :
       new http.Agent({ keepAlive: true });
 
     return request({
@@ -47,8 +48,8 @@ export class OnpremiseUserCredentials implements IAuthResolver {
       agent: keepaliveAgent
     })
       .then(response => {
-        let type2msg: any = ntlm.decodeType2Message(response.headers['www-authenticate']);
-        let type3msg: any = ntlm.createType3Message(type2msg, ntlmOptions.username, ntlmOptions.password, ntlmOptions.workstation, ntlmOptions.domain);
+        const type2msg: any = ntlm.decodeType2Message(response.headers['www-authenticate']);
+        const type3msg: any = ntlm.createType3Message(type2msg, ntlmOptions.username, ntlmOptions.password, ntlmOptions.workstation, ntlmOptions.domain);
 
         return {
           headers: {

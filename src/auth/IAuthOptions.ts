@@ -59,7 +59,7 @@ export type IAuthOptions =
   | IOnDemandCredentials;
 
 export function isOnPremUrl(siteUrl: string): boolean {
-  let host: string = (url.parse(siteUrl)).host;
+  const host: string = (url.parse(siteUrl)).host;
   return host.indexOf('.sharepoint.com') === -1 && host.indexOf('.sharepoint.cn') === -1 && host.indexOf('.sharepoint.de') === -1
     && host.indexOf('.sharepoint-mil.us') === -1 && host.indexOf('.sharepoint.us') === -1;
 }
@@ -77,7 +77,7 @@ export function isUserCredentialsOnline(siteUrl: string, T: IAuthOptions): T is 
     return true;
   }
 
-  let isOnPrem: boolean = isOnPremUrl(siteUrl);
+  const isOnPrem: boolean = isOnPremUrl(siteUrl);
 
   if (!isOnPrem && (T as IUserCredentials).username !== undefined && !isAdfsCredentials(T)) {
     return true;
@@ -91,7 +91,7 @@ export function isUserCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T 
     return false;
   }
 
-  let isOnPrem: boolean = isOnPremUrl(siteUrl);
+  const isOnPrem: boolean = isOnPremUrl(siteUrl);
 
   if (isOnPrem && (T as IUserCredentials).username !== undefined && !isAdfsCredentials(T)) {
     return true;
@@ -101,7 +101,7 @@ export function isUserCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T 
 }
 
 export function isTmgCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T is IOnpremiseTmgCredentials {
-  let isOnPrem: boolean = isOnPremUrl(siteUrl);
+  const isOnPrem: boolean = isOnPremUrl(siteUrl);
 
   if (isOnPrem && (T as IOnpremiseFbaCredentials).username !== undefined && (T as IOnpremiseTmgCredentials).tmg) {
     return true;
@@ -111,7 +111,7 @@ export function isTmgCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T i
 }
 
 export function isFbaCredentialsOnpremise(siteUrl: string, T: IAuthOptions): T is IOnpremiseFbaCredentials {
-  let isOnPrem: boolean = isOnPremUrl(siteUrl);
+  const isOnPrem: boolean = isOnPremUrl(siteUrl);
 
   if (isOnPrem && (T as IOnpremiseFbaCredentials).username !== undefined && (T as IOnpremiseFbaCredentials).fba) {
     return true;

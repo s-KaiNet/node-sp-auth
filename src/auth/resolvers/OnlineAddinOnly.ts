@@ -18,10 +18,10 @@ export class OnlineAddinOnly extends OnlineResolver {
   }
 
   public getAuth(): Promise<IAuthResponse> {
-    let sharepointhostname: string = url.parse(this._siteUrl).hostname;
-    let cacheKey = `${this._authOptions.clientSecret}@${this._authOptions.clientId}`;
+    const sharepointhostname: string = url.parse(this._siteUrl).hostname;
+    const cacheKey = `${this._authOptions.clientSecret}@${this._authOptions.clientId}`;
 
-    let cachedToken: string = OnlineAddinOnly.TokenCache.get<string>(cacheKey);
+    const cachedToken: string = OnlineAddinOnly.TokenCache.get<string>(cacheKey);
 
     if (cachedToken) {
       return Promise.resolve({
@@ -36,11 +36,11 @@ export class OnlineAddinOnly extends OnlineResolver {
         return Promise.all([realm, this.getAuthUrl(realm)]);
       })
       .then(data => {
-        let realm: string = data[0];
-        let authUrl: string = data[1];
+        const realm: string = data[0];
+        const authUrl: string = data[1];
 
-        let resource = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${realm}`;
-        let fullClientId = `${this._authOptions.clientId}@${realm}`;
+        const resource = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${realm}`;
+        const fullClientId = `${this._authOptions.clientId}@${realm}`;
 
         return request.post(authUrl, {
           form: {
@@ -52,7 +52,7 @@ export class OnlineAddinOnly extends OnlineResolver {
         }).json<{ expires_in: string, access_token: string }>();
       })
       .then(data => {
-        let expiration: number = parseInt(data.expires_in, 10);
+        const expiration: number = parseInt(data.expires_in, 10);
         OnlineAddinOnly.TokenCache.set(cacheKey, data.access_token, expiration - 60);
 
         return {
@@ -73,7 +73,7 @@ export class OnlineAddinOnly extends OnlineResolver {
 
   private getAuthUrl(realm: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      let url = this.AcsRealmUrl + realm;
+      const url = this.AcsRealmUrl + realm;
 
       request.get(url).json()
         .then((data: { endpoints: { protocol: string, location: string }[] }) => {
@@ -105,8 +105,8 @@ export class OnlineAddinOnly extends OnlineResolver {
       }
     })
       .then(data => {
-        let header: string = data.headers['www-authenticate'];
-        let index: number = header.indexOf('Bearer realm="');
+        const header: string = data.headers['www-authenticate'];
+        const index: number = header.indexOf('Bearer realm="');
         return header.substring(index + 14, index + 50);
       });
   }

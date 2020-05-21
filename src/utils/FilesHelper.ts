@@ -6,7 +6,7 @@ import { UrlHelper } from './UrlHelper';
 export class FilesHelper {
 
   public static getUserDataFolder(): string {
-    let platform = process.platform;
+    const platform = process.platform;
     let homepath: string;
 
     if (platform.lastIndexOf('win') === 0) {
@@ -26,7 +26,7 @@ export class FilesHelper {
       throw new Error('Couldn\'t find the base application data folder');
     }
 
-    let dataPath = path.join(homepath, 'spauth');
+    const dataPath = path.join(homepath, 'spauth');
     if (!fs.existsSync(dataPath)) {
       fs.mkdirSync(dataPath);
     }
@@ -35,8 +35,8 @@ export class FilesHelper {
   }
 
   public static resolveFileName(siteUrl: string): string {
-    let url = FilesHelper.resolveSiteUrl(siteUrl);
-    return url.replace(/[\:/\s]/g, '_');
+    const url = FilesHelper.resolveSiteUrl(siteUrl);
+    return url.replace(/[:/\s]/g, '_');
   }
 
   private static resolveSiteUrl(siteUrl: string): string {

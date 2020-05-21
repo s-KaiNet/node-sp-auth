@@ -3,7 +3,8 @@ import { request } from './../../config';
 import * as cookie from 'cookie';
 import template = require('lodash.template');
 
-let xmldoc: any = require('xmldoc');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const xmldoc: any = require('xmldoc');
 
 import { IAuthResolver } from './../IAuthResolver';
 import { IOnpremiseUserCredentials } from './../IAuthOptions';
@@ -21,10 +22,10 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
 
   public getAuth(): Promise<IAuthResponse> {
 
-    let parsedUrl: url.Url = url.parse(this._siteUrl);
-    let host: string = parsedUrl.host;
-    let cacheKey = `${host}@${this._authOptions.username}@${this._authOptions.password}`;
-    let cachedCookie: string = OnpremiseFbaCredentials.CookieCache.get<string>(cacheKey);
+    const parsedUrl: url.Url = url.parse(this._siteUrl);
+    const host: string = parsedUrl.host;
+    const cacheKey = `${host}@${this._authOptions.username}@${this._authOptions.password}`;
+    const cachedCookie: string = OnpremiseFbaCredentials.CookieCache.get<string>(cacheKey);
 
     if (cachedCookie) {
       return Promise.resolve({
@@ -34,12 +35,12 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
       });
     }
 
-    let soapBody: string = template(fbaLoginWsfedTemplate)({
+    const soapBody: string = template(fbaLoginWsfedTemplate)({
       username: this._authOptions.username,
       password: this._authOptions.password
     });
 
-    let fbaEndPoint = `${parsedUrl.protocol}//${host}/${consts.FbaAuthEndpoint}`;
+    const fbaEndPoint = `${parsedUrl.protocol}//${host}/${consts.FbaAuthEndpoint}`;
 
     return request({
       url: fbaEndPoint,
@@ -52,26 +53,26 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
     })
       .then(response => {
 
-        let xmlDoc: any = new xmldoc.XmlDocument(response.body);
+        const xmlDoc: any = new xmldoc.XmlDocument(response.body);
 
         if (xmlDoc.name === 'm:error') {
-          let errorCode: string = xmlDoc.childNamed('m:code').val;
-          let errorMessage: string = xmlDoc.childNamed('m:message').val;
+          const errorCode: string = xmlDoc.childNamed('m:code').val;
+          const errorMessage: string = xmlDoc.childNamed('m:message').val;
           throw new Error(`${errorCode}, ${errorMessage}`);
         }
 
-        let errorCode: string =
+        const errorCode: string =
           xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('ErrorCode').val;
-        let cookieName: string =
+        const cookieName: string =
           xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('CookieName').val;
-        let diffSeconds: number = parseInt(
+        const diffSeconds: number = parseInt(
           xmlDoc.childNamed('soap:Body').childNamed('LoginResponse').childNamed('LoginResult').childNamed('TimeoutSeconds').val,
           null
         );
         let cookieValue: string;
 
         if (errorCode === 'PasswordNotMatch') {
-          throw new Error(`Password doesn't not match`);
+          throw new Error('Password doesn\'t not match');
         }
         if (errorCode !== 'NoError') {
           throw new Error(errorCode);
@@ -83,7 +84,7 @@ export class OnpremiseFbaCredentials implements IAuthResolver {
           }
         });
 
-        let authCookie = `${cookieName}=${cookieValue}`;
+        const authCookie = `${cookieName}=${cookieValue}`;
 
         OnpremiseFbaCredentials.CookieCache.set(cacheKey, authCookie, diffSeconds);
 

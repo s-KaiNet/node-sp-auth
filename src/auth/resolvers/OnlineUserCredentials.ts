@@ -1,10 +1,10 @@
 import * as url from 'url';
 import { request } from './../../config';
 import * as cookie from 'cookie';
-import { IncomingMessage } from 'http';
 import template = require('lodash.template');
 
-let xmldoc: any = require('xmldoc');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const xmldoc: any = require('xmldoc');
 
 import { IUserCredentials } from './../IAuthOptions';
 import { IAuthResponse } from './../IAuthResponse';
@@ -43,10 +43,10 @@ export class OnlineUserCredentials extends OnlineResolver {
   }
 
   public getAuth(): Promise<IAuthResponse> {
-    let parsedUrl: url.Url = url.parse(this._siteUrl);
-    let host: string = parsedUrl.host;
-    let cacheKey = `${host}@${this._authOptions.username}@${this._authOptions.password}`;
-    let cachedCookie: string = OnlineUserCredentials.CookieCache.get<string>(cacheKey);
+    const parsedUrl: url.Url = url.parse(this._siteUrl);
+    const host: string = parsedUrl.host;
+    const cacheKey = `${host}@${this._authOptions.username}@${this._authOptions.password}`;
+    const cachedCookie: string = OnlineUserCredentials.CookieCache.get<string>(cacheKey);
 
     if (cachedCookie) {
       return Promise.resolve({
@@ -61,13 +61,13 @@ export class OnlineUserCredentials extends OnlineResolver {
         return this.postToken(xmlResponse);
       })
       .then(data => {
-        let response = data[1];
-        let diffSeconds: number = data[0];
+        const response = data[1];
+        const diffSeconds: number = data[0];
         let fedAuth: string;
         let rtFa: string;
 
         for (let i = 0; i < response.headers['set-cookie'].length; i++) {
-          let headerCookie: string = response.headers['set-cookie'][i];
+          const headerCookie: string = response.headers['set-cookie'][i];
           if (headerCookie.indexOf(consts.FedAuth) !== -1) {
             fedAuth = cookie.parse(headerCookie)[consts.FedAuth];
           }
@@ -76,7 +76,7 @@ export class OnlineUserCredentials extends OnlineResolver {
           }
         }
 
-        let authCookie: string = 'FedAuth=' + fedAuth + '; rtFa=' + rtFa;
+        const authCookie: string = 'FedAuth=' + fedAuth + '; rtFa=' + rtFa;
 
         OnlineUserCredentials.CookieCache.set(cacheKey, authCookie, diffSeconds);
 
@@ -103,7 +103,7 @@ export class OnlineUserCredentials extends OnlineResolver {
       }
     }).json()
       .then((userRealm: any) => {
-        let authType: string = userRealm.NameSpaceType;
+        const authType: string = userRealm.NameSpaceType;
 
         if (!authType) {
           throw new Error('Unable to define namespace type for Online authentiation');
@@ -130,9 +130,9 @@ export class OnlineUserCredentials extends OnlineResolver {
     })
       .then(samlAssertion => {
 
-        let siteUrlParsed: url.Url = url.parse(this._siteUrl);
-        let rootSiteUrl: string = siteUrlParsed.protocol + '//' + siteUrlParsed.host;
-        let tokenRequest: string = template(onlineSamlWsfedAdfsTemplate)({
+        const siteUrlParsed: url.Url = url.parse(this._siteUrl);
+        const rootSiteUrl: string = siteUrlParsed.protocol + '//' + siteUrlParsed.host;
+        const tokenRequest: string = template(onlineSamlWsfedAdfsTemplate)({
           endpoint: rootSiteUrl,
           token: samlAssertion.value
         });
@@ -149,11 +149,11 @@ export class OnlineUserCredentials extends OnlineResolver {
   }
 
   private getSecurityTokenWithOnline(): Promise<string> {
-    let parsedUrl: url.Url = url.parse(this._siteUrl);
-    let host: string = parsedUrl.host;
-    let spFormsEndPoint = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
+    const parsedUrl: url.Url = url.parse(this._siteUrl);
+    const host: string = parsedUrl.host;
+    const spFormsEndPoint = `${parsedUrl.protocol}//${host}/${consts.FormsPath}`;
 
-    let samlBody: string = template(onlineSamlWsfedTemplate)({
+    const samlBody: string = template(onlineSamlWsfedTemplate)({
       username: this._authOptions.username,
       password: this._authOptions.password,
       endpoint: spFormsEndPoint
@@ -170,21 +170,21 @@ export class OnlineUserCredentials extends OnlineResolver {
   }
 
   private postToken(xmlResponse: any): Promise<[number, Response<string>]> {
-    let xmlDoc: any = new xmldoc.XmlDocument(xmlResponse);
-    let parsedUrl: url.Url = url.parse(this._siteUrl);
-    let spFormsEndPoint = `${parsedUrl.protocol}//${parsedUrl.host}/${consts.FormsPath}`;
+    const xmlDoc: any = new xmldoc.XmlDocument(xmlResponse);
+    const parsedUrl: url.Url = url.parse(this._siteUrl);
+    const spFormsEndPoint = `${parsedUrl.protocol}//${parsedUrl.host}/${consts.FormsPath}`;
 
-    let securityTokenResponse: any = xmlDoc.childNamed('S:Body').firstChild;
+    const securityTokenResponse: any = xmlDoc.childNamed('S:Body').firstChild;
     if (securityTokenResponse.name.indexOf('Fault') !== -1) {
       throw new Error(securityTokenResponse.toString());
     }
 
-    let binaryToken: any = securityTokenResponse.childNamed('wst:RequestedSecurityToken').firstChild.val;
-    let now: any = new Date().getTime();
-    let expires: number = new Date(securityTokenResponse.childNamed('wst:Lifetime').childNamed('wsu:Expires').val).getTime();
-    let diff: number = (expires - now) / 1000;
+    const binaryToken: any = securityTokenResponse.childNamed('wst:RequestedSecurityToken').firstChild.val;
+    const now: any = new Date().getTime();
+    const expires: number = new Date(securityTokenResponse.childNamed('wst:Lifetime').childNamed('wsu:Expires').val).getTime();
+    const diff: number = (expires - now) / 1000;
 
-    let diffSeconds: number = parseInt(diff.toString(), 10);
+    const diffSeconds: number = parseInt(diff.toString(), 10);
 
     return Promise.all([Promise.resolve(diffSeconds), request
       .post(spFormsEndPoint, {

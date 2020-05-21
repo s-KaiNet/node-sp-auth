@@ -15,23 +15,23 @@ export class OnpremiseAddinOnly implements IAuthResolver {
 
   public getAuth(): Promise<IAuthResponse> {
 
-      let sharepointhostname: string = url.parse(this._siteUrl).host;
-      let audience = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${this._authOptions.realm}`;
-      let fullIssuerIdentifier = `${this._authOptions.issuerId}@${this._authOptions.realm}`;
+      const sharepointhostname: string = url.parse(this._siteUrl).host;
+      const audience = `${consts.SharePointServicePrincipal}/${sharepointhostname}@${this._authOptions.realm}`;
+      const fullIssuerIdentifier = `${this._authOptions.issuerId}@${this._authOptions.realm}`;
 
-      let options: any = {
+      const options: any = {
         key: fs.readFileSync(this._authOptions.rsaPrivateKeyPath)
       };
 
-      let dateref: number = parseInt(((new Date()).getTime() / 1000).toString(), 10);
+      const dateref: number = parseInt(((new Date()).getTime() / 1000).toString(), 10);
 
-      let rs256: any = {
+      const rs256: any = {
         typ: 'JWT',
         alg: 'RS256',
         x5t: this._authOptions.shaThumbprint
       };
 
-      let actortoken: any = {
+      const actortoken: any = {
         aud: audience,
         iss: fullIssuerIdentifier,
         nameid: this._authOptions.clientId + '@' + this._authOptions.realm,
@@ -40,8 +40,8 @@ export class OnpremiseAddinOnly implements IAuthResolver {
         trustedfordelegation: true
       };
 
-      let cacheKey: string = actortoken.nameid;
-      let cachedToken: string = OnpremiseAddinOnly.TokenCache.get<string>(cacheKey);
+      const cacheKey: string = actortoken.nameid;
+      const cachedToken: string = OnpremiseAddinOnly.TokenCache.get<string>(cacheKey);
       let accessToken: string;
 
       if (cachedToken) {

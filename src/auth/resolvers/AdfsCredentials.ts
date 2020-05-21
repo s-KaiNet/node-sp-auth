@@ -1,10 +1,10 @@
 import { request } from './../../config';
 import * as url from 'url';
 import * as cookie from 'cookie';
-import { IncomingMessage } from 'http';
 import template = require('lodash.template');
 import { Response } from 'got';
-let xmldoc: any = require('xmldoc');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const xmldoc: any = require('xmldoc');
 
 import { IAuthResolver } from './../IAuthResolver';
 import { IAdfsUserCredentials } from './../IAuthOptions';
@@ -44,10 +44,10 @@ export class AdfsCredentials implements IAuthResolver {
   }
 
   public getAuth(): Promise<IAuthResponse> {
-    let siteUrlParsed: url.Url = url.parse(this._siteUrl);
+    const siteUrlParsed: url.Url = url.parse(this._siteUrl);
 
-    let cacheKey = `${siteUrlParsed.host}@${this._authOptions.username}@${this._authOptions.password}`;
-    let cachedCookie: string = AdfsCredentials.CookieCache.get<string>(cacheKey);
+    const cacheKey = `${siteUrlParsed.host}@${this._authOptions.username}@${this._authOptions.password}`;
+    const cachedCookie: string = AdfsCredentials.CookieCache.get<string>(cacheKey);
 
     if (cachedCookie) {
       return Promise.resolve({
@@ -62,12 +62,12 @@ export class AdfsCredentials implements IAuthResolver {
         return this.postTokenData(data);
       })
       .then(data => {
-        let adfsCookie: string = this._authOptions.adfsCookie || consts.FedAuth;
-        let notAfter: number = new Date(data[0]).getTime();
-        let expiresIn: number = parseInt(((notAfter - new Date().getTime()) / 1000).toString(), 10);
-        let response = data[1];
+        const adfsCookie: string = this._authOptions.adfsCookie || consts.FedAuth;
+        const notAfter: number = new Date(data[0]).getTime();
+        const expiresIn: number = parseInt(((notAfter - new Date().getTime()) / 1000).toString(), 10);
+        const response = data[1];
 
-        let authCookie: string = adfsCookie + '=' +
+        const authCookie: string = adfsCookie + '=' +
           response.headers['set-cookie']
             .map((cookieString: string) => cookie.parse(cookieString)[adfsCookie])
             .filter((cookieString: string) => typeof cookieString !== 'undefined')[0];
@@ -83,16 +83,16 @@ export class AdfsCredentials implements IAuthResolver {
   }
 
   private postTokenData(samlAssertion: SamlAssertion): Promise<[string, Response<string>]> {
-    let result: string = template(adfsSamlTokenTemplate)({
+    const result: string = template(adfsSamlTokenTemplate)({
       created: samlAssertion.notBefore,
       expires: samlAssertion.notAfter,
       relyingParty: this._authOptions.relyingParty,
       token: samlAssertion.value
     });
 
-    let tokenXmlDoc: any = new xmldoc.XmlDocument(result);
-    let siteUrlParsed: url.Url = url.parse(this._siteUrl);
-    let rootSiteUrl = `${siteUrlParsed.protocol}//${siteUrlParsed.host}`;
+    const tokenXmlDoc: any = new xmldoc.XmlDocument(result);
+    const siteUrlParsed: url.Url = url.parse(this._siteUrl);
+    const rootSiteUrl = `${siteUrlParsed.protocol}//${siteUrlParsed.host}`;
 
     return Promise.all([samlAssertion.notAfter, request.post(`${rootSiteUrl}/_trust/`, {
       form: {

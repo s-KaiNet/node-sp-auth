@@ -17,10 +17,10 @@ export class OnpremiseTmgCredentials implements IAuthResolver {
 
   public getAuth(): Promise<IAuthResponse> {
 
-    let parsedUrl: url.Url = url.parse(this._siteUrl);
-    let host: string = parsedUrl.host;
-    let cacheKey = `${host}@${this._authOptions.username}@${this._authOptions.password}`;
-    let cachedCookie: string = OnpremiseTmgCredentials.CookieCache.get<string>(cacheKey);
+    const parsedUrl: url.Url = url.parse(this._siteUrl);
+    const host: string = parsedUrl.host;
+    const cacheKey = `${host}@${this._authOptions.username}@${this._authOptions.password}`;
+    const cachedCookie: string = OnpremiseTmgCredentials.CookieCache.get<string>(cacheKey);
 
     if (cachedCookie) {
       return Promise.resolve({
@@ -30,11 +30,11 @@ export class OnpremiseTmgCredentials implements IAuthResolver {
       });
     }
 
-    let tmgEndPoint = `${parsedUrl.protocol}//${host}/${consts.TmgAuthEndpoint}`;
+    const tmgEndPoint = `${parsedUrl.protocol}//${host}/${consts.TmgAuthEndpoint}`;
 
-    let isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
+    const isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
 
-    let keepaliveAgent: any = isHttps ?
+    const keepaliveAgent: any = isHttps ?
       new https.Agent({ keepAlive: true, rejectUnauthorized: false }) :
       new http.Agent({ keepAlive: true });
 
@@ -44,14 +44,14 @@ export class OnpremiseTmgCredentials implements IAuthResolver {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: `curl=Z2F&flags=0&forcedownlevel=0&formdir=1&trusted=0&` +
+      body: 'curl=Z2F&flags=0&forcedownlevel=0&formdir=1&trusted=0&' +
         `username=${encodeURIComponent(this._authOptions.username)}&` +
         `password=${encodeURIComponent(this._authOptions.password)}`,
       agent: keepaliveAgent
     })
       .then(response => {
 
-        let authCookie = response.headers['set-cookie'][0];
+        const authCookie = response.headers['set-cookie'][0];
 
         return {
           headers: {
