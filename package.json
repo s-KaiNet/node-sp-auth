@@ -1,5 +1,5 @@
 {
-  "version": "3.0.0-beta.0",
+  "version": "3.0.0-beta.1",
   "name": "node-sp-auth",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com> (https://github.com/s-KaiNet)",
   "description": "Unattended SharePoint http authentication with nodejs",
@@ -69,15 +69,15 @@
     "ts-node": "8.10.1",
     "tslint": "6.1.2",
     "tslint-config-standard": "9.0.0",
-    "typescript": "3.9.2"
+    "typescript": "3.9.3"
   },
   "dependencies": {
-    "@types/cookie": "0.3.3",
+    "@types/cookie": "0.4.0",
     "@types/core-js": "2.5.3",
     "@types/global-agent": "2.1.0",
-    "@types/jsonwebtoken": "8.3.9",
+    "@types/jsonwebtoken": "8.5.0",
     "@types/lodash.template": "4.4.6",
-    "@types/node": "13.13.5",
+    "@types/node": "14.0.5",
     "cookie": "0.4.1",
     "cpass": "2.3.0",
     "global-agent": "2.1.8",
