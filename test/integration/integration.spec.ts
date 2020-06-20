@@ -87,6 +87,8 @@ const tests: any[] = [
 ];
 
 tests.forEach(test => {
+  test.url = UrlHelper.removeTrailingSlash(test.url);
+
   describe(`node-sp-auth: integration - ${test.name}`, () => {
 
     it('should get list title with core http(s)', function (done: Mocha.Done): void {
