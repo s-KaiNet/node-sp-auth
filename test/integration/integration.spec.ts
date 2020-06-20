@@ -8,6 +8,7 @@ import 'mocha';
 import { IAuthOptions } from './../../src/auth/IAuthOptions';
 import * as spauth from './../../src/index';
 import { request as configuredRequest } from './../../src/config';
+import { UrlHelper } from '../../src/utils/UrlHelper';
 
 interface ITestInfo {
   name: string;
@@ -115,7 +116,7 @@ tests.forEach(test => {
             hostname: parsedUrl.hostname,
             port: parseInt(parsedUrl.port, 10),
             protocol: parsedUrl.protocol,
-            path: `${parsedUrl.path}_api/web/lists/getbytitle('${documentTitle}')`,
+            path: `${parsedUrl.path}/_api/web/lists/getbytitle('${documentTitle}')`,
             method: 'GET',
             headers: headers,
             agent: agent
@@ -149,7 +150,7 @@ tests.forEach(test => {
           const options = getDefaultHeaders();
           Object.assign(options.headers, response.headers);
           Object.assign(options, response.options);
-          options.url = `${test.url}_api/web/lists/getbytitle('${documentTitle}')`;
+          options.url = `${test.url}/_api/web/lists/getbytitle('${documentTitle}')`;
 
           return got.get(options).json();
         })
@@ -169,7 +170,7 @@ tests.forEach(test => {
           const options = getDefaultHeaders();
           Object.assign(options.headers, response.headers);
           Object.assign(options, response.options);
-          options.url = `${test.url}_api/web/fields/getbytitle('${fieldTitle}')`;
+          options.url = `${test.url}/_api/web/fields/getbytitle('${fieldTitle}')`;
 
           return got(options).json();
         })
@@ -178,6 +179,32 @@ tests.forEach(test => {
           done();
         })
         .catch(done);
+    });
+
+    it('should throw 500 error', function (done: Mocha.Done): void {
+      this.timeout(90 * 1000);
+
+      spauth.getAuth(test.url, test.creds)
+        .then(response => {
+          const options = getDefaultHeaders();
+          Object.assign(options.headers, response.headers);
+          Object.assign(options, response.options);
+          const path = UrlHelper.trimSlashes(url.parse(test.url).path);
+          options.url = `${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)?@FileUrl='/${path}/SiteAssets/${encodeURIComponent('undefined.txt')}'`;
+          options.retry = 0;
+
+          return got.get(options);
+        })
+        .then(() => {
+          done(new Error('Should throw'));
+        })
+        .catch(err => {
+          if (err.message.indexOf('500') !== -1 || err.message.indexOf('404') !== -1) {
+            done()
+          } else {
+            done(err);
+          }
+        });
     });
 
     it('should not setup custom options for request', function (done: Mocha.Done): void {
