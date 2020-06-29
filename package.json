@@ -85,7 +85,7 @@
     "jsonwebtoken": "8.5.1",
     "lodash.template": "4.5.0",
     "node-ntlm-client": "0.1.2",
-    "node-sp-auth-config": "2.9.4",
+    "node-sp-auth-config": "3.0.1",
     "xmldoc": "1.1.2"
   }
 }
