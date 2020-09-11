@@ -20,7 +20,7 @@ interface ITestInfo {
 const config: any = require('./config');
 
 const tests: any[] = [
-  {
+ /* {
     name: 'adfs user credentials',
     creds: config.adfsCredentials,
     url: config.onpremAdfsEnabledUrl
@@ -44,12 +44,12 @@ const tests: any[] = [
     name: 'online user credentials',
     creds: config.onlineCreds,
     url: config.onlineUrl
-  },
+  },*/
   {
     name: 'on-premise addin only',
     creds: config.onpremAddinOnly,
-    url: config.onpremAdfsEnabledUrl
-  },
+    url: config.onpremNtlmEnabledUrl
+  } /*
   {
     name: 'online addin only',
     creds: config.onlineAddinOnly,
@@ -83,7 +83,7 @@ const tests: any[] = [
     name: 'file creds - on-premise - ADFS',
     creds: null,
     url: config.onpremAdfsEnabledUrl
-  }
+  }*/
 ];
 
 tests.forEach(test => {
