@@ -102,7 +102,7 @@ tests.forEach(test => {
         isHttps ? https.request : http.request;
       let agent: http.Agent = isHttps ? new https.Agent({ rejectUnauthorized: false }) :
         new http.Agent();
-
+//test
       spauth.getAuth(test.url, test.creds)
         .then(response => {
 
