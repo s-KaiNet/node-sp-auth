@@ -34,13 +34,17 @@ const createWindow = () => {
 
   mainWindow.setMenu(null);
   // and load the index.html of the app.
-  if (force) {
-    mainWindow.webContents.session.clearStorageData([], () => {
-      mainWindow.loadURL(siteUrl);
-    });
-  } else {
-    mainWindow.loadURL(siteUrl);
-  }
+	if (force) {
+		(async () => {
+			await mainWindow.webContents.session.clearStorageData();
+			mainWindow.loadURL(siteUrl);
+		})().catch(error => {
+			console.log(error);
+			throw error;
+		});
+	} else {
+		mainWindow.loadURL(siteUrl);
+	}
 
   mainWindow.webContents.on('dom-ready', (data) => {
     const loadedUrl = mainWindow.webContents.getURL();
