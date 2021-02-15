@@ -33,6 +33,7 @@ export interface IOnpremiseFbaCredentials extends IUserCredentials {
 export interface IOnpremiseUserCredentials extends IUserCredentials {
   domain?: string;
   workstation?: string;
+  rejectUnauthorized?: boolean;
 }
 
 export interface IAdfsUserCredentials extends IUserCredentials {

@@ -34,7 +34,7 @@ export class OnpremiseUserCredentials implements IAuthResolver {
 
     const isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
 
-    const keepaliveAgent: any = isHttps ? new https.Agent({ keepAlive: true, rejectUnauthorized: false }) :
+    const keepaliveAgent: any = isHttps ? new https.Agent({ keepAlive: true, rejectUnauthorized: !!ntlmOptions.rejectUnauthorized }) :
       new http.Agent({ keepAlive: true });
 
     return request({

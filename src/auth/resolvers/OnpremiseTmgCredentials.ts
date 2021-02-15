@@ -35,7 +35,7 @@ export class OnpremiseTmgCredentials implements IAuthResolver {
     const isHttps: boolean = url.parse(this._siteUrl).protocol === 'https:';
 
     const keepaliveAgent: any = isHttps ?
-      new https.Agent({ keepAlive: true, rejectUnauthorized: false }) :
+      new https.Agent({ keepAlive: true, rejectUnauthorized: !!this._authOptions.rejectUnauthorized }) :
       new http.Agent({ keepAlive: true });
 
     return request({
