@@ -19,7 +19,7 @@ export class OnlineAddinOnly extends OnlineResolver {
 
   public getAuth(): Promise<IAuthResponse> {
     const sharepointhostname: string = url.parse(this._siteUrl).hostname;
-    const cacheKey = `${this._authOptions.clientSecret}@${this._authOptions.clientId}`;
+    const cacheKey = `${sharepointhostname}@${this._authOptions.clientSecret}@${this._authOptions.clientId}`;
 
     const cachedToken: string = OnlineAddinOnly.TokenCache.get<string>(cacheKey);
 
