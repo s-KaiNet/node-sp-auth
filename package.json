@@ -79,7 +79,7 @@
     "cookie": "0.4.1",
     "cpass": "2.3.0",
     "global-agent": "2.1.12",
-    "got": "10.7.0",
+    "got": "11.8.5",
     "jsonwebtoken": "8.5.1",
     "lodash.template": "4.5.0",
     "node-ntlm-client": "0.1.2",
