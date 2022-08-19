@@ -251,9 +251,7 @@ function getDefaultHeaders(): any {
       'Accept': 'application/json;odata=verbose',
       'Content-Type': 'application/json;odata=verbose'
     },
-    https: {
-      rejectUnauthorized: false
-    }
+    rejectUnauthorized: false
   };
 
   return options;
