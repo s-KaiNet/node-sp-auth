@@ -31,12 +31,12 @@ Authentication options:
 ### How to use:
 #### Install:
 ```bash
-npm install node-sp-auth --save-dev
+npm install @lucaselb/node-sp-auth --save-dev
 ```
 #### Create authentication headers and perform http request:
 
 ```javascript
-import * as spauth from 'node-sp-auth';
+import * as spauth from '@lucaselb/node-sp-auth';
 import * as request from 'request-promise';
 
 //get auth options
