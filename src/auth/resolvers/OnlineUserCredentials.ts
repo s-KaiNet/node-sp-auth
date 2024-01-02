@@ -93,7 +93,7 @@ export class OnlineUserCredentials extends OnlineResolver {
     this.endpointsMappings.set(HostingEnvironment.China, 'login.chinacloudapi.cn');
     this.endpointsMappings.set(HostingEnvironment.German, 'login.microsoftonline.de');
     this.endpointsMappings.set(HostingEnvironment.USDefence, 'login-us.microsoftonline.com');
-    this.endpointsMappings.set(HostingEnvironment.USGovernment, 'login-us.microsoftonline.com');
+    this.endpointsMappings.set(HostingEnvironment.USGovernment, 'login.microsoftonline.us');
   }
 
   private getSecurityToken(): Promise<any> {
