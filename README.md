@@ -64,7 +64,7 @@ Promise resolving into object with following properties:
  - `options` - any additional options you may need to include for succesful request. For example, in case of on premise user credentials authentication, you need to set `agent` property on corresponding http client
 
 #### params:
- - `url` - required, string, url to SharePoint site, `https://sp2013/sites/dev/` or `https:/[your tenant].sharepoint.com/sites/dev/`
+ - `url` - required, string, url to SharePoint site, `https://sp2013/sites/dev/` or `https://[your tenant].sharepoint.com/sites/dev/`
  - `credentialOptions` - optional, object in a form of key-value. Each authentication option requires predefined credential object, depending on authentication type. Based on credentials provided, `node-sp-auth` automatically determines which authentication strategy to use (strategies listed in the top of the readme file).  
  
 Possible values for `credentialOptions` (depending on authentication strategy):
