@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/node-sp-auth.svg)](https://badge.fury.io/js/node-sp-auth)
 
 ---
-> **IMPORTANT!** OUT OF SUPPORT.  
+> [!CAUTION] OUT OF SUPPORT.  
 >
 > I don't use this module for many years and don't have time to actively maintain it. Thus no new versions are expected and no new features. Only your PR requests, if they are valid.
 >

@@ -14,7 +14,7 @@
     "**/*.js.map": true
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
   "editor.wordWrap": "on",
   "files.autoSave": "onFocusChange",
