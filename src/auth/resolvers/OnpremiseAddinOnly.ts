@@ -40,7 +40,7 @@ export class OnpremiseAddinOnly implements IAuthResolver {
         trustedfordelegation: true
       };
 
-      const cacheKey: string = actortoken.nameid;
+      const cacheKey: string = audience;
       const cachedToken: string = OnpremiseAddinOnly.TokenCache.get<string>(cacheKey);
       let accessToken: string;
 
