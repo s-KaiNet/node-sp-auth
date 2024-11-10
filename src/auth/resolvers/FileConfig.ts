@@ -40,7 +40,6 @@ export class FileConfig implements IAuthResolver {
       configPath = path.join(credsFolder, `${fileNameTemplate}.json`);
     } else {
       configPath = path.join(credsFolder, `${configPath}.json`);
-      console.log(`[node-sp-auth]: reading auth data from ${configPath}`);
     }
 
     const config = new AuthConfig({
